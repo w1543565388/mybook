@@ -33,19 +33,19 @@ location /proxy/ { proxy_pass http://127.0.0.1:81/ftlynx; } 会被代理到http:
     <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
     <title>nginx 相关 :: My New Hugo Site</title>
     <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
-    <link href="/css/fontawesome-all.min.css?1716876878" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716876878" rel="stylesheet"></noscript>
-    <link href="/css/nucleus.css?1716876878" rel="stylesheet">
-    <link href="/css/auto-complete.css?1716876878" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716876878" rel="stylesheet"></noscript>
-    <link href="/css/perfect-scrollbar.min.css?1716876878" rel="stylesheet">
-    <link href="/css/fonts.css?1716876878" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716876878" rel="stylesheet"></noscript>
-    <link href="/css/theme.css?1716876878" rel="stylesheet">
-    <link href="/css/theme-auto.css?1716876878" rel="stylesheet" id="R-variant-style">
-    <link href="/css/chroma-auto.css?1716876878" rel="stylesheet" id="R-variant-chroma-style">
-    <link href="/css/variant.css?1716876878" rel="stylesheet">
-    <link href="/css/print.css?1716876878" rel="stylesheet" media="print">
-    <link href="/css/ie.css?1716876878" rel="stylesheet">
-    <script src="/js/url.js?1716876878"></script>
-    <script src="/js/variant.js?1716876878"></script>
+    <link href="/css/fontawesome-all.min.css?1716882005" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716882005" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1716882005" rel="stylesheet">
+    <link href="/css/auto-complete.css?1716882005" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716882005" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1716882005" rel="stylesheet">
+    <link href="/css/fonts.css?1716882005" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716882005" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1716882005" rel="stylesheet">
+    <link href="/css/theme-auto.css?1716882005" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1716882005" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1716882005" rel="stylesheet">
+    <link href="/css/print.css?1716882005" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1716882005" rel="stylesheet">
+    <script src="/js/url.js?1716882005"></script>
+    <script src="/js/variant.js?1716882005"></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.relBasePath='..\/..';
@@ -112,11 +112,11 @@ location /proxy/ { proxy_pass http://127.0.0.1:81/ftlynx; } 会被代理到http:
 
 <h1 id="一介绍">一、介绍</h1>
 <h5 id="正向代理">正向代理</h5>
-<p><a href="#R-image-678a46e32ef37d0497b56816dcb5e5f8" class="lightbox-link"><img alt="forward_proxy" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/forward_proxy.jpg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-678a46e32ef37d0497b56816dcb5e5f8"><img alt="forward_proxy" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/forward_proxy.jpg"></a></p>
+<p><a href="#R-image-c253be6af30b272377ac5f6e17c87c6a" class="lightbox-link"><img alt="forward_proxy" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/forward_proxy.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-c253be6af30b272377ac5f6e17c87c6a"><img alt="forward_proxy" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/forward_proxy.jpg"></a></p>
 <h5 id="反向代理">反向代理</h5>
-<p><a href="#R-image-453a6f2baeb75b84b7edc00fb9a5ddf9" class="lightbox-link"><img alt="reverse_proxy" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/reverse_proxy.jpg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-453a6f2baeb75b84b7edc00fb9a5ddf9"><img alt="reverse_proxy" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/reverse_proxy.jpg"></a></p>
+<p><a href="#R-image-31e724e14fcb872c88f2945121aac259" class="lightbox-link"><img alt="reverse_proxy" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/reverse_proxy.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-31e724e14fcb872c88f2945121aac259"><img alt="reverse_proxy" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/reverse_proxy.jpg"></a></p>
 <p>由于不能直接访问google，那么可以借助NPV来实现，这就是一个简单的正向代理的例子。可以发现，正向代理“代理”的是客户端，而且客户端是知道目标的，而目标是不知道客户端是通过NPV访问的。</p>
 <p>当我们在外网访问百度的时候，其实会进行一个转发，代理到内网去，这就是所谓的反向代理，即反向代理“代理”的是服务器端，而且这一个过程对于客户端而言是透明的。</p>
 <h5 id="1启动ngnx">1、启动ngnx</h5>
@@ -329,12 +329,12 @@ spec:
         <script>
           var contentLangs=['zh'];
         </script>
-        <script src="/js/auto-complete.js?1716876878" defer></script>
-        <script src="/js/lunr/lunr.min.js?1716876878" defer></script>
-        <script src="/js/lunr/lunr.stemmer.support.min.js?1716876878" defer></script>
-        <script src="/js/lunr/lunr.multi.min.js?1716876878" defer></script>
-        <script src="/js/lunr/lunr.zh.min.js?1716876878" defer></script>
-        <script src="/js/search.js?1716876878" defer></script>
+        <script src="/js/auto-complete.js?1716882005" defer></script>
+        <script src="/js/lunr/lunr.min.js?1716882005" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1716882005" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1716882005" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1716882005" defer></script>
+        <script src="/js/search.js?1716882005" defer></script>
       </div>
       <div id="R-homelinks" class="default-animation homelinks">
         <ul>
@@ -551,8 +551,8 @@ spec:
         </div>
       </div>
     </aside>
-    <script src="/js/clipboard.min.js?1716876878" defer></script>
-    <script src="/js/perfect-scrollbar.min.js?1716876878" defer></script>
-    <script src="/js/theme.js?1716876878" defer></script>
+    <script src="/js/clipboard.min.js?1716882005" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1716882005" defer></script>
+    <script src="/js/theme.js?1716882005" defer></script>
   </body>
 </html>

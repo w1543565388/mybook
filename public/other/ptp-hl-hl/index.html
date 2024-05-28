@@ -42,19 +42,19 @@ refclock PHC /dev/ptp0 poll 3 dpoll -2 offset 0 确认ptp设备是否在时间�
     <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
     <title></title>
     <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
-    <link href="/css/fontawesome-all.min.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716876879" rel="stylesheet"></noscript>
-    <link href="/css/nucleus.css?1716876879" rel="stylesheet">
-    <link href="/css/auto-complete.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716876879" rel="stylesheet"></noscript>
-    <link href="/css/perfect-scrollbar.min.css?1716876879" rel="stylesheet">
-    <link href="/css/fonts.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716876879" rel="stylesheet"></noscript>
-    <link href="/css/theme.css?1716876879" rel="stylesheet">
-    <link href="/css/theme-auto.css?1716876879" rel="stylesheet" id="R-variant-style">
-    <link href="/css/chroma-auto.css?1716876879" rel="stylesheet" id="R-variant-chroma-style">
-    <link href="/css/variant.css?1716876879" rel="stylesheet">
-    <link href="/css/print.css?1716876879" rel="stylesheet" media="print">
-    <link href="/css/ie.css?1716876879" rel="stylesheet">
-    <script src="/js/url.js?1716876879"></script>
-    <script src="/js/variant.js?1716876879"></script>
+    <link href="/css/fontawesome-all.min.css?1716882006" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716882006" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1716882006" rel="stylesheet">
+    <link href="/css/auto-complete.css?1716882006" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716882006" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1716882006" rel="stylesheet">
+    <link href="/css/fonts.css?1716882006" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716882006" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1716882006" rel="stylesheet">
+    <link href="/css/theme-auto.css?1716882006" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1716882006" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1716882006" rel="stylesheet">
+    <link href="/css/print.css?1716882006" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1716882006" rel="stylesheet">
+    <script src="/js/url.js?1716882006"></script>
+    <script src="/js/variant.js?1716882006"></script>
     <script>
       window.relearn = window.relearn || {};
       window.relearn.relBasePath='..\/..';
@@ -170,8 +170,8 @@ draft = true
 <div class="highlight wrap-code"><pre tabindex="0"><code>refclock PHC /dev/ptp0 poll 3 dpoll -2 offset 0</code></pre></div><ol start="3">
 <li>确认ptp设备是否在时间源列表里</li>
 </ol>
-<div class="highlight wrap-code"><pre tabindex="0"><code>chronyc sources</code></pre></div><p><a href="#R-image-ed5a753a84f5f81552cc69a99ec8b9c4" class="lightbox-link"><img alt="ptp" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../imgs/ptp.jpg" style=" height: auto; width: auto;"></a>
-<a href="javascript:history.back();" class="lightbox-back" id="R-image-ed5a753a84f5f81552cc69a99ec8b9c4"><img alt="ptp" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../imgs/ptp.jpg"></a>
+<div class="highlight wrap-code"><pre tabindex="0"><code>chronyc sources</code></pre></div><p><a href="#R-image-58d0934737d97e2768e45cdb7219c7ca" class="lightbox-link"><img alt="ptp" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../imgs/ptp.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-58d0934737d97e2768e45cdb7219c7ca"><img alt="ptp" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../imgs/ptp.jpg"></a>
 1）网络（PTP）驱动是一个公共的支持硬件PTP的linux网络驱动（如：ixgbe.ko），使用ethtool -T eth0来检查硬件网络是否支持PTP。
 2）Linuxptp是针对Linux根据IEEE 1588v2标准实现的精准时钟协议（PTP）。
 3）Linuxptp：ptp4l实现Boundary Clock (BC) 和Ordinary Clock (OC)，为了同步ptp硬件时钟（PHC）到远端主时钟。
@@ -366,12 +366,12 @@ for f in `seq 1 100`; do chronyc sources | grep PHC0 ; sleep 1s; done</code></pr
         <script>
           var contentLangs=['zh'];
         </script>
-        <script src="/js/auto-complete.js?1716876879" defer></script>
-        <script src="/js/lunr/lunr.min.js?1716876879" defer></script>
-        <script src="/js/lunr/lunr.stemmer.support.min.js?1716876879" defer></script>
-        <script src="/js/lunr/lunr.multi.min.js?1716876879" defer></script>
-        <script src="/js/lunr/lunr.zh.min.js?1716876879" defer></script>
-        <script src="/js/search.js?1716876879" defer></script>
+        <script src="/js/auto-complete.js?1716882006" defer></script>
+        <script src="/js/lunr/lunr.min.js?1716882006" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1716882006" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1716882006" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1716882006" defer></script>
+        <script src="/js/search.js?1716882006" defer></script>
       </div>
       <div id="R-homelinks" class="default-animation homelinks">
         <ul>
@@ -589,8 +589,8 @@ for f in `seq 1 100`; do chronyc sources | grep PHC0 ; sleep 1s; done</code></pr
         </div>
       </div>
     </aside>
-    <script src="/js/clipboard.min.js?1716876880" defer></script>
-    <script src="/js/perfect-scrollbar.min.js?1716876880" defer></script>
-    <script src="/js/theme.js?1716876880" defer></script>
+    <script src="/js/clipboard.min.js?1716882006" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1716882006" defer></script>
+    <script src="/js/theme.js?1716882006" defer></script>
   </body>
 </html>
