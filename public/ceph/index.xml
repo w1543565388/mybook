@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cephs on My New Hugo Site</title>
+    <link>http://ip:1313/ceph/index.html</link>
+    <description>Recent content in Cephs on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <lastBuildDate>Fri, 24 May 2024 08:34:17 +0000</lastBuildDate>
+    <atom:link href="http://ip:1313/ceph/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>First</title>
+      <link>http://ip:1313/ceph/first/index.html</link>
+      <pubDate>Fri, 24 May 2024 08:34:17 +0000</pubDate>
+      <guid>http://ip:1313/ceph/first/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ceph 启用 Dashboard</title>
+      <link>http://ip:1313/ceph/ceph_dashboard-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/ceph/ceph_dashboard-hl/index.html</guid>
+      <description>1、查看 ceph 状态 ceph -s2、启用 dashboard ceph mgr module enable dashboard3、生成并安装一个自签名证书 ceph dashboard create-self-signed-cert4、配置服务地址、端口，默认的端口是8443 ceph config set mgr mgr/dashboard/server_addr 192.168.0.10 ceph config set mgr mgr/dashboard/server_port 8443 ceph mgr services5、创建一个用户、密码 ceph dashboard set-login-credentials admin admin6、重启 mgr systemctl restart ceph-mgr@node17、访问 https://192.</description>
+    </item>
+    <item>
+      <title>Ceph 相关</title>
+      <link>http://ip:1313/ceph/ceph_deploy-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/ceph/ceph_deploy-hl/index.html</guid>
+      <description>PG = Placement Group PGP = Placement Group for Placement purpose&#xA;pg_num = number of placement groups mapped to an OSD&#xA;When pg_num is increased for any pool, every PG of this pool splits into half, but they all remain mapped to their parent OSD.&#xA;Until this time, Ceph does not start rebalancing. Now, when you increase the pgp_num value for the same pool, PGs start to migrate from the parent to some other OSD, and cluster rebalancing starts.</description>
+    </item>
+    <item>
+      <title>Ceph 调优参考</title>
+      <link>http://ip:1313/ceph/ceph_optimize-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/ceph/ceph_optimize-hl/index.html</guid>
+      <description>ceph -s cluster: id: 79d60ec1-cece-464e-9d2c-37ed3581a3dd health: HEALTH_ERR 1 scrub errors Possible data damage: 1 pg inconsistent ceph health detail ceph healthrepair 14.1a #保留一段时间以来的访问记录，这样 Ceph 就能判断一客户端在一段时间内访问了某对象一次、还是多次（存活期与热度）。 #为缓存存储池保留的命中集数量 ceph osd pool set vms.cache hit_set_count 1 #为缓存存储池保留的命中集有效期 ceph osd pool set vms.cache hit_set_period 3600 #缓存存储池包含的脏对象达到多少比例时就把它们回写到后端的存储池 ceph osd pool set vms.cache cache_target_dirty_ratio 0.4 #缓存存储池内包含的已修改（脏的）对象达到此比例时，缓存层代理就会更快地把脏对象刷回到后端存储池 ceph osd pool set vms.cache cache_target_dirty_high_ratio 0.6 #缓存存储池包含的干净对象达到多少比例时，缓存代理就把它们赶出缓存存储池 ceph osd pool set vms.cache cache_target_full_ratio 0.8 #达到 max_bytes 阀值时 Ceph 就回写或赶出对象（200G） ceph osd pool set vms.</description>
+    </item>
+    <item>
+      <title>ceph.conf</title>
+      <link>http://ip:1313/ceph/cephconf-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/ceph/cephconf-hl/index.html</guid>
+      <description>一、优化 1、 Kernel pid max echo 4194303 &amp;gt; /proc/sys/kernel/pid_max2、 设置MTU，交换机端需要支持该功能，系统网卡设置才有效果 配置文件追加MTU=90003、 read_ahead, 通过数据预读并且记载到随机访问内存方式提高磁盘读操作 echo “8192” &amp;gt; /sys/block/sda/queue/read_ahead_kb4、 swappiness, 主要控制系统对swap的使用 echo “vm.swappiness = 0″/etc/sysctl.conf ; sysctl –p5、 I/O Scheduler，SSD要用noop，SATA/SAS使用deadline echo “deadline” &amp;gt;/sys/block/sd[x]/queue/scheduler echo “noop” &amp;gt;/sys/block/sd[x]/queue/scheduler二、ceph.conf [global] fsid = 6c4d5e9e-03ee-4812-a565-cec78596ae68 mon_initial_members = comp-1, comp-2, comp-3, comp-4, comp-5 mon_host = 172.18.20.1,172.18.20.2,172.18.20.3,172.18.20.4,172.18.20.5 auth_cluster_required = cephx auth_service_required = cephx auth_client_required = cephx osd pool default size = 2 osd pool default min size = 1 mon_pg_warn_max_per_osd = 0 mon osd full ratio = .</description>
+    </item>
+    <item>
+      <title>crushmap</title>
+      <link>http://ip:1313/ceph/crushmap-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/ceph/crushmap-hl/index.html</guid>
+      <description>一、获取与使用 crushmap 1、获得 crush map，获得默认 crushmap (加密) ceph osd getcrushmap -o crushmap.dump2、转换 crushmap 格式 (加密 -&amp;gt; 明文格式) crushtool -d crushmap.dump -o crushmap.txt3、转换 crushmap 格式(明文 -&amp;gt; 加密格式) crushtool -c crushmap.txt -o crushmap.done4、重新使用新 crushmap ceph osd setcrushmap -i crushmap.done二、crushmap # begin crush map tunable choose_local_tries 0 tunable choose_local_fallback_tries 0 tunable choose_total_tries 50 tunable chooseleaf_descend_once 1 tunable chooseleaf_vary_r 1 tunable straw_calc_version 1 # devices device 0 osd.0 device 1 osd.1 device 2 osd.2 device 3 osd.</description>
+    </item>
+  </channel>
+</rss>

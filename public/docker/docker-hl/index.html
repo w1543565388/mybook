@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="zh_CN" dir="ltr">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.126.1">
+    <meta name="generator" content="Relearn 5.27.0+tip">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="docker 相关 :: My New Hugo Site">
+    <meta name="twitter:description" content="一、常用 1、在线安装docker aliyun 安装docker-ce
+tsinghua 安装docker-ce
+curl -sSL https://get.docker.io | bashcurl -fsSL https://get.docker.com | bash -s docker --mirror Aliyundocker --version docker info2、二进制安装 wget https://download.docker.com/linux/static/stable/aarch64/docker-20.10.8.tgz #wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.8.tgz tar -zxvf docker-20.10.8.tgz cp docker/* /usr/bin/ dockerd &amp; cat /etc/systemd/system/docker.service
+[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target docker.socket Wants=network-online.target Requires=docker.socket [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd -H fd:// ExecReload=/bin/kill -s HUP $MAINPID LimitNOFILE=1048576 # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel.">
+    <meta property="og:url" content="http://ip:1313/docker/docker-hl/index.html">
+    <meta property="og:site_name" content="My New Hugo Site">
+    <meta property="og:title" content="docker 相关 :: My New Hugo Site">
+    <meta property="og:description" content="一、常用 1、在线安装docker aliyun 安装docker-ce
+tsinghua 安装docker-ce
+curl -sSL https://get.docker.io | bashcurl -fsSL https://get.docker.com | bash -s docker --mirror Aliyundocker --version docker info2、二进制安装 wget https://download.docker.com/linux/static/stable/aarch64/docker-20.10.8.tgz #wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.8.tgz tar -zxvf docker-20.10.8.tgz cp docker/* /usr/bin/ dockerd &amp;amp; cat /etc/systemd/system/docker.service
+[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target docker.socket Wants=network-online.target Requires=docker.socket [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd -H fd:// ExecReload=/bin/kill -s HUP $MAINPID LimitNOFILE=1048576 # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel.">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="Docker :: My New Hugo Site">
+    <meta property="article:published_time" content="2024-04-12T09:39:39+00:00">
+    <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
+    <title>docker 相关 :: My New Hugo Site</title>
+    <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
+    <link href="/css/fontawesome-all.min.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1716876877" rel="stylesheet">
+    <link href="/css/auto-complete.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1716876877" rel="stylesheet">
+    <link href="/css/fonts.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1716876877" rel="stylesheet">
+    <link href="/css/theme-auto.css?1716876877" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1716876877" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1716876877" rel="stylesheet">
+    <link href="/css/print.css?1716876877" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1716876877" rel="stylesheet">
+    <script src="/js/url.js?1716876877"></script>
+    <script src="/js/variant.js?1716876877"></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/ip:1313';
+      // variant stuff
+      window.relearn.themeVariantModifier='';
+      window.variants && variants.init( [ 'auto' ] );
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/docker/docker-hl/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"><nav class="TableOfContents">
+  <ul>
+    <li><a href="#1在线安装docker">1、在线安装docker</a></li>
+    <li><a href="#2二进制安装">2、二进制安装</a></li>
+    <li><a href="#3导入导出镜像">3、导入、导出镜像</a></li>
+    <li><a href="#4启动容器">4、启动容器</a></li>
+    <li><a href="#5使用dockerpy">5、使用dockerpy</a></li>
+    <li><a href="#6docker-update">6、docker update</a></li>
+    <li><a href="#7查看容器ip地址id">7、查看容器ip地址、id</a></li>
+    <li><a href="#8查看全部容器id占用空间">8、查看全部容器id、占用空间</a></li>
+    <li><a href="#9保存镜像">9、保存镜像</a></li>
+    <li><a href="#10--restart">10、&ndash;restart</a></li>
+    <li><a href="#11资源限制">11、资源限制</a></li>
+    <li><a href="#12一个容器连接到另一个容器">12、一个容器连接到另一个容器</a></li>
+    <li><a href="#13构建自己的镜像">13、构建自己的镜像</a></li>
+    <li><a href="#14查看容器端口">14、查看容器端口</a></li>
+    <li><a href="#15查看容器进程">15、查看容器进程</a></li>
+    <li><a href="#16监控容器资源使用情况">16、监控容器资源使用情况</a></li>
+    <li><a href="#17批量删除名字包含none的镜像">17、批量删除名字包含&quot;none&quot;的镜像</a></li>
+    <li><a href="#18查看可用命令">18、查看可用命令</a></li>
+    <li><a href="#19login">19、login</a></li>
+    <li><a href="#20删除已安装docker">20、删除已安装docker</a></li>
+    <li><a href="#21配置国内docker源">21、配置国内docker源</a></li>
+    <li><a href="#22使用---volumes-from-备份">22、使用 &ndash;volumes-from 备份</a></li>
+    <li><a href="#23清理">23、清理</a></li>
+    <li><a href="#24docker-代理">24、docker 代理</a></li>
+    <li><a href="#25使用本地仓库">25、使用本地仓库</a></li>
+    <li><a href="#26azk8scn-支持镜像转换列表">26、azk8s.cn 支持镜像转换列表</a></li>
+    <li><a href="#27docker-in-docker">27、docker in docker</a></li>
+    <li><a href="#28不裁剪输出">28、不裁剪输出</a></li>
+    <li><a href="#29创建docker网络并使用">29、创建docker网络并使用</a></li>
+    <li><a href="#30多阶段构建">30、多阶段构建</a></li>
+    <li><a href="#31修改-cgroupdriver">31、修改 cgroupdriver</a></li>
+    <li><a href="#32build-不交互ubuntudebian">32、build 不交互，ubuntu、debian</a></li>
+    <li><a href="#33以非root用户运行docker">33、以非root用户运行docker</a></li>
+    <li><a href="#32qt-in-docker">32、qt in docker</a></li>
+    <li><a href="#33最小化安装应用">33、最小化安装应用</a></li>
+    <li><a href="#34使用cache构建镜像">34、使用cache构建镜像</a></li>
+    <li><a href="#35docker远程访问">35、docker远程访问</a></li>
+    <li><a href="#36k8s-http-api-server">36、k8s http api server</a></li>
+    <li><a href="#37docker-目录迁移">37、docker 目录迁移</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#38设备空间不足">38、设备空间不足</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#39docker-容器文件损坏">39、docker 容器文件损坏</a></li>
+    <li><a href="#40docker-容器优雅的重启">40、docker 容器优雅的重启</a></li>
+    <li><a href="#41docker-容器无法删除">41、docker 容器无法删除</a></li>
+    <li><a href="#42docker-容器中文异常">42、docker 容器中文异常</a></li>
+    <li><a href="#43docker容器总线错误">43、docker容器总线错误</a></li>
+    <li><a href="#44docker配置默认网段">44、docker配置默认网段</a></li>
+    <li><a href="#45docker定时任务">45、docker定时任务</a></li>
+    <li><a href="#46docker删除镜像报错">46、docker删除镜像报错</a></li>
+    <li><a href="#47scratch镜像">47、scratch镜像</a></li>
+    <li><a href="#48通过镜像提取dockerfile">48、通过镜像提取dockerfile</a></li>
+    <li><a href="#49distroless镜像">49、distroless镜像</a></li>
+    <li><a href="#50清除未使用容器">50、清除未使用容器</a></li>
+    <li><a href="#51dockermoby-官方工具">51、docker/moby 官方工具</a></li>
+    <li><a href="#52拉取arm镜像">52、拉取arm镜像</a></li>
+    <li><a href="#53daemonjson-常用配置">53、daemon.json 常用配置</a></li>
+    <li><a href="#54dozzle-日志查看器">54、Dozzle 日志查看器</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#1提前准备windows-ios">1、提前准备windows ios</a></li>
+    <li><a href="#2启动容器">2、启动容器</a></li>
+    <li><a href="#3通过浏览器安装">3、通过浏览器安装</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/docker/index.html"><span itemprop="name">Docker</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><span itemprop="name">docker 相关</span><meta itemprop="position" content="2"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docker/docker_swarm-hl/index.html" title="docker swarm 相关 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docker/docker_net-hl/index.html" title="docker 网络相关 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable default" tabindex="-1">
+        <div class="flex-block-wrapper">
+          <article class="default">
+            <header class="headline">
+            </header>
+
+<h1 id="docker-相关">docker 相关</h1>
+
+<h1 id="一常用">一、常用</h1>
+<h2 id="1在线安装docker">1、在线安装docker</h2>
+<p><a href="https://yq.aliyun.com/articles/110806" rel="external" target="_blank">aliyun 安装docker-ce</a></p>
+<p><a href="https://mirrors.tuna.tsinghua.edu.cn/help/docker-ce/" rel="external" target="_blank">tsinghua 安装docker-ce</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>curl -sSL https://get.docker.io | bash</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>docker --version
+docker info</code></pre></div><h2 id="2二进制安装">2、二进制安装</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>wget https://download.docker.com/linux/static/stable/aarch64/docker-20.10.8.tgz
+
+#wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.8.tgz
+
+tar -zxvf docker-20.10.8.tgz
+cp docker/* /usr/bin/
+dockerd &amp;</code></pre></div><blockquote>
+<p>cat /etc/systemd/system/docker.service</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[Unit]
+Description=Docker Application Container Engine
+Documentation=https://docs.docker.com
+After=network-online.target docker.socket
+Wants=network-online.target
+Requires=docker.socket
+
+[Service]
+Type=notify
+# the default is not to use systemd for cgroups because the delegate issues still
+# exists and systemd currently does not support the cgroup feature set required
+# for containers run by docker
+ExecStart=/usr/bin/dockerd -H fd://
+ExecReload=/bin/kill -s HUP $MAINPID
+LimitNOFILE=1048576
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNPROC=infinity
+LimitCORE=infinity
+# Uncomment TasksMax if your systemd version supports it.
+# Only systemd 226 and above support this version.
+#TasksMax=infinity
+TimeoutStartSec=0
+# set delegate yes so that systemd does not reset the cgroups of docker containers
+Delegate=yes
+# kill only the docker process, not all processes in the cgroup
+KillMode=process
+# restart the docker process if it exits prematurely
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target</code></pre></div><blockquote>
+<p>cat /etc/systemd/system/docker.socket</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[Unit]
+Description=Docker Socket for the API
+PartOf=docker.service
+
+[Socket]
+ListenStream=/var/run/docker.sock
+SocketMode=0660
+SocketUser=root
+SocketGroup=docker
+
+[Install]
+WantedBy=sockets.target</code></pre></div><h2 id="3导入导出镜像">3、导入、导出镜像</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker save registry:latest &gt; registry.tar.gz
+docker save -o registry.tar.gz registry:latest
+
+docker load &lt; registry.tar.gz
+docker load -i registry.tar.gz</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>docker export &lt;容器ID&gt; | docker import - &lt;镜像名&gt;[:标签]</code></pre></div><blockquote>
+<p>docker-squash</p>
+</blockquote>
+<p><a href="https://github.com/jwilder/docker-squash" rel="external" target="_blank">https://github.com/jwilder/docker-squash</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker save &lt;image id&gt; | sudo docker-squash -t newtag | docker load</code></pre></div><h2 id="4启动容器">4、启动容器</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker run -itd --name mariadb --restart=always -v /opt/mysql:/etc/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=qwe mariadb
+
+docker run --name mariadb -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -v /tmp/my.cnf:/etc/mysql/my.cnf -d mariadb</code></pre></div><h2 id="5使用dockerpy">5、使用dockerpy</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>&gt;&gt;&gt; import docker
+&gt;&gt;&gt; client = docker.DockerClient(base_url=&#39;unix://var/run/docker.sock&#39;)</code></pre></div><h2 id="6docker-update">6、docker update</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker update --restart=always wiki
+docker update --cpu-shares 512 -m 300M abebf7571666 hopeful_morse
+docker update --kernel-memory 80M test</code></pre></div><h2 id="7查看容器ip地址id">7、查看容器ip地址、id</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker inspect -f &#39;\{\{.NetworkSettings.IPAddress\}\}&#39; wiki
+docker inspect -f &#39;\{\{.Id\}\}&#39; registry
+docker inspect --format &#39;\{\{.Id\}\}&#39; registry</code></pre></div><h2 id="8查看全部容器id占用空间">8、查看全部容器id、占用空间</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker ps -qa
+docker ps -as</code></pre></div><h2 id="9保存镜像">9、保存镜像</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker commit
+docker commit -a &#34;user&#34; -m &#34;commit info&#34; [CONTAINER] [imageName]:[imageTag]
+docker login --username=[userName] --password=[pwd] [registryURL]
+docker tag [imageID] [remoteURL]:[imageTag]
+docker push [remoteURL]:[imageTag]
+docker pull [remoteURL]:[imageTag]
+docker diff</code></pre></div><h2 id="10--restart">10、&ndash;restart</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>no – 默认值，如果容器挂掉不自动重启
+
+on-failure – 当容器以非 0 码退出时重启容器,同时可接受一个可选的最大重启次数参数 (e.g. on-failure:10)
+
+always – 不管退出码是多少都要重启</code></pre></div><h2 id="11资源限制">11、资源限制</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code># 限制内存最大使用
+-m 1024m --memory-swap=1024m
+# 限制容器使用CPU
+--cpuset-cpus=&#34;0,1&#34;</code></pre></div><h2 id="12一个容器连接到另一个容器">12、一个容器连接到另一个容器</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker run -i -t --name sonar -d -link mmysql:db  tpires/sonar-server sonar</code></pre></div><h2 id="13构建自己的镜像">13、构建自己的镜像</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker build -t &lt;镜像名&gt; &lt;Dockerfile路径&gt;
+docker build -t xx/gitlab .</code></pre></div><h2 id="14查看容器端口">14、查看容器端口</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker port registry</code></pre></div><h2 id="15查看容器进程">15、查看容器进程</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker top registry</code></pre></div><h2 id="16监控容器资源使用情况">16、监控容器资源使用情况</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker stats
+docker stats --no-stream</code></pre></div><h2 id="17批量删除名字包含none的镜像">17、批量删除名字包含&quot;none&quot;的镜像</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker rmi $(docker images | grep &#34;none&#34; | awk &#39;{print $3}&#39;)</code></pre></div><h2 id="18查看可用命令">18、查看可用命令</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker help</code></pre></div><h2 id="19login">19、login</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker login --username=yourhubusername --email=youremail@company.com</code></pre></div><h2 id="20删除已安装docker">20、删除已安装docker</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum list installed | grep docker
+yum remove -y docker.x86_64
+yum remove -y docker-client.x86_64
+yum remove -y docker-common.x86_64</code></pre></div><h2 id="21配置国内docker源">21、配置国内docker源</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/docker/daemon.json
+{&#34;registry-mirrors&#34;: [&#34;https://docker.mirrors.ustc.edu.cn&#34;]  }
+systemctl restart docker</code></pre></div><h2 id="22使用---volumes-from-备份">22、使用 &ndash;volumes-from 备份</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker run --rm --volumes-from gitlab -v /backup1:/backup2 ubuntu tar cvf /backup2/gitlab-etc.tar /etc/gitlab</code></pre></div><h2 id="23清理">23、清理</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>$ cat /usr/bin/prune_docker.sh
+#!/bin/bash
+docker container prune -f # 删除所有退出状态的容器
+docker volume prune -f # 删除未被使用的数据卷
+docker image prune -f # 删除 dangling 或所有未被使用的镜像
+
+$ crontab -l
+0 0 * * * /usr/bin/prune_docker.sh &gt;&gt; /var/log/prune_docker.log 2&gt;&amp;1</code></pre></div><h2 id="24docker-代理">24、docker 代理</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>cat /etc/systemd/system/docker.service.d/http-proxy.conf
+
+[Service]
+Environment=&#34;HTTP_PROXY=http://proxy.server:port&#34;
+Environment=&#34;HTTPS_PROXY=http://proxy.server:port&#34;
+Environment=&#34;NO_PROXY=localhost,127.0.0.1&#34;
+
+systemctl daemon-reload
+systemctl restart docker</code></pre></div><h2 id="25使用本地仓库">25、使用本地仓库</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/docker/daemon.json
+
+{
+    &#34;insecure-registries&#34;: [&#34;192.168.0.11:30002&#34;]
+}
+
+systemctl daemon-reload
+systemctl restart docker</code></pre></div><h2 id="26azk8scn-支持镜像转换列表">26、azk8s.cn 支持镜像转换列表</h2>
+<table>
+<thead>
+<tr>
+<th>global</th>
+<th>proxy in China</th>
+<th>format</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cnblogs.com/xuxinkun/p/hub.docker.com" rel="external" target="_blank">dockerhub</a> (docker.io)</td>
+<td><a href="http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html" rel="external" target="_blank">dockerhub.azk8s.cn</a></td>
+<td><code>dockerhub.azk8s.cn//:</code></td>
+<td><code>dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61</code> <code>dockerhub.azk8s.cn/library/nginx:1.15</code></td>
+</tr>
+<tr>
+<td>gcr.io</td>
+<td><a href="http://mirror.azk8s.cn/help/gcr-proxy-cache.html" rel="external" target="_blank">gcr.azk8s.cn</a></td>
+<td><code>gcr.azk8s.cn//:</code></td>
+<td><code>gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.13.5</code></td>
+</tr>
+<tr>
+<td>quay.io</td>
+<td><a href="http://mirror.azk8s.cn/help/quay-proxy-cache.html" rel="external" target="_blank">quay.azk8s.cn</a></td>
+<td><code>quay.azk8s.cn//:</code></td>
+<td><code>quay.azk8s.cn/deis/go-dev:v1.10.0</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="27docker-in-docker">27、docker in docker</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker run -itd --privileged=true -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/bin/docker --name centos centos</code></pre></div><h2 id="28不裁剪输出">28、不裁剪输出</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker ps -a --no-trunc</code></pre></div><h2 id="29创建docker网络并使用">29、创建docker网络并使用</h2>
+<blockquote>
+<p>备注：subnet指定一个网段， -o选项可以解决使用ifconfig命令看不到自己创建的网桥名字的问题</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker network create docker01 --subnet=10.10.10.0/24 -o com.docker.network.bridge.name=docker01</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>docker run -itd --net docker01 --ip 10.10.10.51  镜像名</code></pre></div><h2 id="30多阶段构建">30、多阶段构建</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>FROM gcc AS mybuildstage
+COPY hello.c .
+RUN gcc -o hello hello.c
+FROM ubuntu
+COPY --from=mybuildstage hello .
+CMD [&#34;./hello&#34;]</code></pre></div><h2 id="31修改-cgroupdriver">31、修改 cgroupdriver</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/systemd/system/docker.service.d/docker-options.conf
+...
+--exec-opt native.cgroupdriver=systemd
+...
+--exec-opt native.cgroupdriver=cgroupfs
+...</code></pre></div><h2 id="32build-不交互ubuntudebian">32、build 不交互，ubuntu、debian</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>export DEBIAN_FRONTEND=noninteractive</code></pre></div><h2 id="33以非root用户运行docker">33、以非root用户运行docker</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sudo groupadd docker 
+sudo usermod –aG docker $USER </code></pre></div><h2 id="32qt-in-docker">32、qt in docker</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>xhost + &gt; /dev/null 2&gt;&amp;1</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>#!/bin/bash
+  
+xhost + &gt; /dev/null 2&gt;&amp;1
+
+create_data_volume(){
+  for i in $@; do
+    name=$(echo $i|cut -d: -f1)
+    version=$(echo $i|cut -d: -f2)
+    if [ -z &#34;$(docker ps -a -f NAME=$name |grep -v CONTAINER)&#34; ]; then
+      echo &#34;Creating $name...&#34;
+      docker create --name $name $name:$version
+    else
+      echo &#34;$name is existed, skipped.&#34;
+    fi
+  done
+}
+
+create_data_volume poky:1.0.0
+
+if [ ! -z &#34;$(docker ps -a -f NAME=qt5.6.3 |grep -v CONTAINER)&#34; ]; then
+  echo &#34;Starting qt5.6.3...&#34;
+  docker restart -t 1 qt5.6.3
+else
+  echo &#34;Runing qt5.6.3...&#34;
+  docker run -itd --net=host \
+    -v $HOME/.Xauthority:$HOME/.Xauthority \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -e DISPLAY=$DISPLAY \
+    --volumes-from poky:ro \
+    -v /opt/qtworkspace:/opt/workspace \
+    --name qt5.6.3 qt5.6.3:1.0.0
+fi</code></pre></div><h2 id="33最小化安装应用">33、最小化安装应用</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt install --no-install-recommends --no-install-suggests
+rm -rf /var/lib/apt/lists/*</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>apk add --no-cache
+rm -rf /var/cache/apk/*</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>pip install --no-cache-dir
+docker build --no-cache</code></pre></div><h2 id="34使用cache构建镜像">34、使用cache构建镜像</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker build –cache-from mongo:3.2 -t mongo:3.2.1 .</code></pre></div><h2 id="35docker远程访问">35、docker远程访问</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /lib/systemd/system/docker.service
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2376 -H fd:// --containerd=/run/containerd/containerd.sock</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>systemctl daemon-reload
+service docker restart</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>curl http://localhost:2375/version</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>tcp://192.168.0.127:2376</code></pre></div><h2 id="36k8s-http-api-server">36、k8s http api server</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>kubectl proxy --address=&#39;0.0.0.0&#39; --accept-hosts=&#39;^*$&#39; --port=8080</code></pre></div><h2 id="37docker-目录迁移">37、docker 目录迁移</h2>
+<h5 id="方法一">方法一</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>systemctl stop docker
+mv /var/lib/docker /data/
+#cp -arv /var/lib/docker /data/
+ln -s /data/docker /var/lib/docker
+systemctl start docker</code></pre></div><h5 id="方法二">方法二</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /lib/systemd/system/docker.service
+ExecStart=/usr/bin/dockerd --graph=/data/docker/</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/docker/daemon.json
+{
+    &#34;live-restore&#34;: true,
+    &#34;graph&#34;: [ &#34;/data/docker/&#34; ]
+}</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/docker/daemon.json
+{
+    &#34;data-root&#34;: &#34;/data/docker/&#34;,
+}</code></pre></div><h2 id="38设备空间不足">38、设备空间不足</h2>
+<h5 id="1磁盘用完">1、磁盘用完</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker info
+
+du -d1 -h /var/lib/docker/containers | sort -h
+cat /dev/null &gt; /var/lib/docker/containers/container_id/container_log_name</code></pre></div><h5 id="2容器默认大小限制">2、容器默认大小限制</h5>
+<blockquote>
+<p>CentOS7 使用docker容器默认的创建大小为10GB</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim  /etc/docker/daemon.json
+{
+    &#34;live-restore&#34;: true,
+    &#34;storage-opt&#34;: [ &#34;dm.basesize=20G&#34; ]
+}</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>systemctl stop docker
+rm -rf /var/lib/docker
+
+vim /usr/lib/systemd/system/docker.service
+ExecStart=/usr/bin/dockerd
+and change it to:
+ExecStart=/usr/bin/dockerd --storage-opt dm.basesize=20G
+
+systemctl daemon-reload
+systemctl start docker</code></pre></div><h5 id="3inode节点数满了">3、inode节点数满了</h5>
+<blockquote>
+<p>文件存储在磁盘上，磁盘的最小存储单位叫做扇区（Sector）。每个扇区存储 512字节（0.5KB），操作系统读取硬盘的时候，不会一个扇区的读取，效率太低，而是一次性读取多个扇区，即一次性读取一个块（block）。这种由多个扇区组成的块，是文件系统存取的最小单位。块的大小，最常见的是4KB，即连续八个sector组成一个块。文件数据存储在块中，还必须找个一个地方存储文件的元数据，比如文件的创建者、文件的创建日期 、文件的大小等等。这种存储元数据的区域就叫做索引节点（inode）。每个文件都有对应的inode，里面包含了文件名以外的所有文件信息。</p>
+</blockquote>
+<blockquote>
+<p>inode也会消耗磁盘空间，所以磁盘格式化的时候，操作系统自动将磁盘分为两个区域。一个是数据区，存放文件数据；另一个是inode区（inode table）存放inode所包含的信息。每个inode节点的大小，一般是128字节或256字节。inode节点的总数在格式化时就给定，一般是每1KB或每2KB就设置一个inode节点。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code># 报错信息
+No space left on device
+
+# 查看系统的inode节点使用情况
+df -i
+
+# 尝试重新挂载
+mount -o remount -o noatime,nodiratime,inode64,nobarrier /dev/vda1</code></pre></div><h2 id="39docker-容器文件损坏">39、docker 容器文件损坏</h2>
+<blockquote>
+<p>容器文件损坏，经常导致容器无法操作。正常的docker命令已经无法操控这台容器，无法关闭、重启、删除。</p>
+</blockquote>
+<blockquote>
+<p># 操作容器遇到类似的错误
+b&rsquo;devicemapper: Error running deviceCreate (CreateSnapDeviceRaw) dm_task_run failed'</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>systemctl stop docker
+
+删除容器文件
+rm -rf /var/lib/docker/containers
+
+重新整理容器元数据
+thin_check /var/lib/docker/devicemapper/devicemapper/metadata
+thin_check --clear-needs-check-flag /var/lib/docker/devicemapper/devicemapper/metadata
+
+systemctl start docker</code></pre></div><h2 id="40docker-容器优雅的重启">40、docker 容器优雅的重启</h2>
+<blockquote>
+<p>不停止服务器上面的容器，重启dockerd服务。</p>
+</blockquote>
+<blockquote>
+<p>从docker-ce1.12开始，可以配置live-restore参数，以便在守护进程变得不可用时容器保持运行。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/docker/daemon.yaml
+{
+  &#34;live-restore&#34;: true
+}
+
+# 在守护进程停机期间保持容器存活
+dockerd --live-restore
+
+# 只能使用reload重载
+# 相当于发送SIGHUP信号量给dockerd守护进程
+systemctl reload docker
+
+# 但是对应网络的设置需要restart才能生效
+systemctl restart docker</code></pre></div><h2 id="41docker-容器无法删除">41、docker 容器无法删除</h2>
+<blockquote>
+<p>Error response from daemon: Conflict, cannot remove the default name of the container</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code># 删除容器文件
+rm -rf /var/lib/docker/containers/f8e8c3...65720
+
+# 重启服务
+systemctl restart docker.service</code></pre></div><h2 id="42docker-容器中文异常">42、docker 容器中文异常</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code># 临时解决
+docker exec -it some-mysql env LANG=C.UTF-8 /bin/bash
+
+# 永久解决
+docker run --name some-mysql \
+    -e MYSQL_ROOT_PASSWORD=my-secret-pw \
+    -d mysql:tag --character-set-server=utf8mb4 \
+    --collation-server=utf8mb4_unicode_ci</code></pre></div><h2 id="43docker容器总线错误">43、docker容器总线错误</h2>
+<blockquote>
+<p>Bus error (core dumped)</p>
+</blockquote>
+<blockquote>
+<p>原因是在 <code>docker</code> 运行的时候，<code>shm</code> 分区设置太小导致 <code>share memory</code> 不够。不设置 <code>--shm-size</code> 参数时，<code>docker</code> 给容器默认分配的 <code>shm</code> 大小为 <code>64M</code>，导致程序启动时不足。具体原因还是因为安装 <code>pytorch</code> 包导致了，多进程跑任务的时候，<code>docker</code> 容器分配的共享内存太小，导致 <code>torch</code> 要在 <code>tmpfs</code> 上面放模型数据用于子线程的 共享不足，就出现报错了。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code># 问题原因
+df -TH
+Filesystem     Type     Size  Used Avail Use% Mounted on
+overlay        overlay  2.0T  221G  1.4T   3% /
+tmpfs          tmpfs     68M     0   68M   0% /dev
+shm            tmpfs     68M   41k   68M   1% /dev/shm
+
+# 启动docker的时候加上--shm-size参数(单位为b,k,m或g)
+docker run -it --rm --shm-size=200m pytorch/pytorch:latest
+
+# 在docker-compose添加对应配置
+shm_size: &#39;2gb&#39;</code></pre></div><h2 id="44docker配置默认网段">44、docker配置默认网段</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>cat /etc/docker/daemon.json
+{
+    &#34;registry-mirrors&#34;: [&#34;https://XXXX&#34;],
+    &#34;default-address-pools&#34;:[{&#34;base&#34;:&#34;172.17.0.0/12&#34;, &#34;size&#34;:24}],
+    &#34;experimental&#34;: true,
+    &#34;default-runtime&#34;: &#34;nvidia&#34;,
+    &#34;live-restore&#34;: true,
+    &#34;runtimes&#34;: {
+        &#34;nvidia&#34;: {
+            &#34;path&#34;: &#34;/usr/bin/nvidia-container-runtime&#34;,
+            &#34;runtimeArgs&#34;: []
+        }
+    }
+}
+
+docker network inspect app | grep Subnet</code></pre></div><h2 id="45docker定时任务">45、docker定时任务</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code># Crontab定时任务
+0 */6 * * * \
+    docker exec -t &lt;container_name&gt; sh -c \
+        &#39;exec mysqldump --all-databases -uroot -ppassword ......&#39;</code></pre></div><h2 id="46docker删除镜像报错">46、docker删除镜像报错</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code># 查询依赖 - image_id表示镜像名称
+docker image inspect --format=&#39;{{.RepoTags}} {{.Id}} {{.Parent}}&#39; $(docker image ls -q --filter since=&lt;image_id&gt;)
+
+# 根据TAG删除镜像
+docker rmi -f c565xxxxc87f
+
+# 删除悬空镜像
+docker rmi $(docker images --filter &#34;dangling=true&#34; -q --no-trunc)</code></pre></div><h2 id="47scratch镜像">47、scratch镜像</h2>
+<p><a href="https://docs.docker.com/develop/develop-images/baseimages/#create-a-simple-parent-image-using-scratch" rel="external" target="_blank">https://docs.docker.com/develop/develop-images/baseimages/#create-a-simple-parent-image-using-scratch</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>FROM scratch
+ADD hello /
+CMD [&#34;/hello&#34;]</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>apt-get install build-essential
+gcc -o hello -static hello.c
+
+musl-gcc -o hello -static hello.c</code></pre></div><h2 id="48通过镜像提取dockerfile">48、通过镜像提取dockerfile</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>alias dfimage=&#34;docker run -v /var/run/docker.sock:/var/run/docker.sock --rm alpine/dfimage&#34;
+dfimage -sV=1.36 mariadb:10.4</code></pre></div><h2 id="49distroless镜像">49、distroless镜像</h2>
+<p><a href="https://github.com/GoogleContainerTools/distroless" rel="external" target="_blank">distroless</a></p>
+<p><a href="https://github.com/bazelbuild/rules_docker" rel="external" target="_blank">rules_docker</a></p>
+<blockquote>
+<p>static      2.34MB</p>
+<p>base       20.3MB</p>
+<p>cc            22.6MB</p>
+</blockquote>
+<blockquote>
+<p>latest</p>
+<p>nonroot</p>
+<p>debug</p>
+<p>debug-nonroot</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker pull gcr.io/distroless/base
+docker pull gcr.dockerproxy.com/distroless/static:nonroot
+docker pull gcr.dockerproxy.com/distroless/base
+docker pull gcr.dockerproxy.com/distroless/base-debian10
+docker pull gcr.dockerproxy.com/distroless/base-debian11
+docker pull gcr.dockerproxy.com/distroless/base-debian9
+docker pull gcr.dockerproxy.com/distroless/cc
+docker pull gcr.dockerproxy.com/distroless/cc-debian10
+docker pull gcr.dockerproxy.com/distroless/cc-debian11
+docker pull gcr.dockerproxy.com/distroless/cc-debian9
+docker pull gcr.dockerproxy.com/distroless/dotnet
+docker pull gcr.dockerproxy.com/distroless/dotnet-debian10
+docker pull gcr.dockerproxy.com/distroless/dotnet-debian9
+docker pull gcr.dockerproxy.com/distroless/java
+docker pull gcr.dockerproxy.com/distroless/java-debian10
+docker pull gcr.dockerproxy.com/distroless/java-debian11
+docker pull gcr.dockerproxy.com/distroless/java-debian9
+docker pull gcr.dockerproxy.com/distroless/nodejs
+docker pull gcr.dockerproxy.com/distroless/nodejs-debian10
+docker pull gcr.dockerproxy.com/distroless/nodejs-debian11
+docker pull gcr.dockerproxy.com/distroless/nodejs-debian9
+docker pull gcr.dockerproxy.com/distroless/python2.7
+docker pull gcr.dockerproxy.com/distroless/python2.7-debian10
+docker pull gcr.dockerproxy.com/distroless/python2.7-debian9
+docker pull gcr.dockerproxy.com/distroless/python3
+docker pull gcr.dockerproxy.com/distroless/python3-debian10
+docker pull gcr.dockerproxy.com/distroless/python3-debian11
+docker pull gcr.dockerproxy.com/distroless/python3-debian9
+docker pull gcr.dockerproxy.com/distroless/static
+docker pull gcr.dockerproxy.com/distroless/static-debian10
+docker pull gcr.dockerproxy.com/distroless/static-debian11
+docker pull gcr.dockerproxy.com/distroless/static-debian9</code></pre></div><h2 id="50清除未使用容器">50、清除未使用容器</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker system prune</code></pre></div><h2 id="51dockermoby-官方工具">51、docker/moby 官方工具</h2>
+<p><a href="https://github.com/moby/moby/tree/master/contrib" rel="external" target="_blank">https://github.com/moby/moby/tree/master/contrib</a></p>
+<ul>
+<li>
+<p>check-config.sh 检查内核是否支持容器相关功能</p>
+</li>
+<li>
+<p>download-frozen-image-v2.sh 通过sh拉取镜像</p>
+</li>
+</ul>
+<h2 id="52拉取arm镜像">52、拉取arm镜像</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker pull arm64v8/alpine:3.18</code></pre></div><h2 id="53daemonjson-常用配置">53、daemon.json 常用配置</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>{
+  &#34;insecure-registries&#34;: [&#34;192.168.0.10:3000&#34;],
+  &#34;registry-mirrors&#34;: [&#34;http://192.168.0.10:3000&#34;,&#34;http://hub-mirror.c.163.com&#34;,&#34;https://registry.docker-cn.com&#34;,&#34;https://docker.mirrors.ustc.edu.cn&#34;]
+}</code></pre></div><h2 id="54dozzle-日志查看器">54、Dozzle 日志查看器</h2>
+<p><a href="https://github.com/amir20/dozzle" rel="external" target="_blank">https://github.com/amir20/dozzle</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker run --name dozzle -d --volume=/var/run/docker.sock:/var/run/docker.sock:ro -p 8888:8080 amir20/dozzle:latest</code></pre></div><h1 id="二linux实现docker资源隔离">二、linux实现docker资源隔离</h1>
+<p>Linux 提供的主要的 NameSpace</p>
+<ul>
+<li>Mount NameSpace- 用于隔离文件系统的挂载点</li>
+<li>UTS NameSpace- 用于隔离 HostName 和 DomianName</li>
+<li>IPC NameSpace- 用于隔离进程间通信</li>
+<li>PID NameSpace- 用于隔离进程 ID</li>
+<li>Network NameSpace- 用于隔离网络</li>
+<li>User NameSpace- 用于隔离用户和用户组 UID/GID</li>
+</ul>
+<h1 id="三理解docker容器和镜像">三、理解Docker容器和镜像</h1>
+<p><a href="#R-image-2245a57940c6b2989102025dce210f86" class="lightbox-link"><img alt="理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_layer.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-2245a57940c6b2989102025dce210f86"><img alt="理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_layer.jpg"></a></p>
+<h5 id="image-definition">Image Definition</h5>
+<blockquote>
+<p>镜像（Image）就是一堆只读层（read-only layer）的统一视角，也许这个定义有些难以理解，下面的这张图能够帮助理解镜像的定义。</p>
+</blockquote>
+<p><a href="#R-image-a5718689f562e6f2785547156ec6c365" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/image_definition.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a5718689f562e6f2785547156ec6c365"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/image_definition.jpg"></a></p>
+<blockquote>
+<p>从左边看到了多个只读层，它们重叠在一起。除了最下面一层，其它层都会有一个指针指向下一层。这些层是Docker内部的实现细节，并且能够在主机（运行Docker的机器）的文件系统上访问到。统一文件系统（union file system）技术能够将不同的层整合成一个文件系统，为这些层提供了一个统一的视角，这样就隐藏了多层的存在，在用户的角度看来，只存在一个文件系统。就可以在图片的右边看到这个视角的形式。可以在主机文件系统上找到有关这些层的文件。需要注意的是，在一个运行中的容器内部，这些层是不可见的。在我的主机上，我发现它们存在于/var/lib/docker/aufs目录下。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sudo tree -L 1 /var/lib/docker//var/lib/docker/├── aufs├── containers├── graph├── init├── linkgraph.db├── repositories-aufs├── tmp├── trust└── volumes7 directories, 2 files</code></pre></div><h5 id="container-definition">Container Definition</h5>
+<blockquote>
+<p>容器（container）的定义和镜像（image）几乎一模一样，也是一堆层的统一视角，唯一区别在于容器的最上面那一层是可读可写的。</p>
+</blockquote>
+<p><a href="#R-image-aa51a2cbdf3c3bf20ebaa1386a6a9d57" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/container_definition.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-aa51a2cbdf3c3bf20ebaa1386a6a9d57"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/container_definition.jpg"></a></p>
+<blockquote>
+<p>可能会发现，容器的定义并没有提及容器是否在运行，没错，这是故意的。要点：容器 = 镜像 + 读写层。并且容器的定义并没有提及是否要运行容器。</p>
+</blockquote>
+<h5 id="running-container-definition">Running Container Definition</h5>
+<blockquote>
+<p>一个运行态容器（running container）被定义为一个可读写的统一文件系统加上隔离的进程空间和包含其中的进程。下面这张图片展示了一个运行中的容器。</p>
+</blockquote>
+<p><a href="#R-image-09293ed81ab705e64e4925416358ff16" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/runing_container.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-09293ed81ab705e64e4925416358ff16"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/runing_container.jpg"></a></p>
+<blockquote>
+<p>正是文件系统隔离技术使得Docker成为了一个前途无量的技术。一个容器中的进程可能会对文件进行修改、删除、创建，这些改变都将作用于可读写层（read-write layer）。下面这张图展示了这个行为。</p>
+</blockquote>
+<p><a href="#R-image-62c9d5cc83f649dbb60a7b6241c31130" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/change_container_layer.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-62c9d5cc83f649dbb60a7b6241c31130"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/change_container_layer.jpg"></a></p>
+<blockquote>
+<p>可以通过运行以下命令来验证上面所说的：</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker run ubuntu touch happiness.txt</code></pre></div><blockquote>
+<p>即便是这个ubuntu容器不再运行，依旧能够在主机的文件系统上找到这个新文件。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>find / -name happiness.txt/var/lib/docker/aufs/diff/860a7b...889/happiness.txt</code></pre></div><h5 id="image-layer-definition">Image Layer Definition</h5>
+<blockquote>
+<p>为了将零星的数据整合起来，提出了镜像层（image layer）这个概念。下面的这张图描述了一个镜像层，通过图片能够发现一个层并不仅仅包含文件系统的改变，它还能包含了其他重要信息。</p>
+</blockquote>
+<p><a href="#R-image-3e4a740ce9d4bb1f84b3d11d1a761a2d" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/image_layer_definition.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3e4a740ce9d4bb1f84b3d11d1a761a2d"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/image_layer_definition.jpg"></a></p>
+<blockquote>
+<p>元数据（metadata）就是关于这个层的额外信息，它不仅能够让Docker获取运行和构建时的信息，还包括父层的层次信息。需要注意，只读层和读写层都包含元数据。</p>
+</blockquote>
+<p><a href="#R-image-d60bee97b9be486b2600bed1e77bdbff" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/rw_md.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d60bee97b9be486b2600bed1e77bdbff"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/rw_md.jpg"></a></p>
+<blockquote>
+<p>除此之外，每一层都包括了一个指向父层的指针。如果一个层没有这个指针，说明它处于最底层。</p>
+</blockquote>
+<p><a href="#R-image-b4e0bd634e5a36d5275e514b4ecbc72a" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/layer_point.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b4e0bd634e5a36d5275e514b4ecbc72a"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/layer_point.jpg"></a></p>
+<h5 id="metadata-location">Metadata Location</h5>
+<blockquote>
+<p>我发现在我自己的主机上，镜像层（image layer）的元数据被保存在名为”json”的文件中，比如说：</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>/var/lib/docker/graph/e809f156dc985.../json</code></pre></div><blockquote>
+<p>e809f156dc985&hellip;就是这层的id</p>
+</blockquote>
+<blockquote>
+<p>一个容器的元数据好像是被分成了很多文件，但或多或少能够在/var/lib/docker/containers/<!-- raw HTML omitted -->目录下找到，<!-- raw HTML omitted -->就是一个可读层的id。这个目录下的文件大多是运行时的数据，比如说网络，日志等等。</p>
+</blockquote>
+<h4 id="全局理解tying-it-all-together">全局理解（Tying It All Together)</h4>
+<blockquote>
+<p>现在，让结合上面提到的实现细节来理解Docker的命令。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker create &lt;image-id&gt;</code></pre></div><p><a href="#R-image-d1c62de6e1022525b7cf6275d250e345" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/create_image.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-d1c62de6e1022525b7cf6275d250e345"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/create_image.jpg"></a></p>
+<blockquote>
+<p>docker create 命令为指定的镜像（image）添加了一个可读写层，构成了一个新的容器。注意，这个容器并没有运行。</p>
+</blockquote>
+<p><a href="#R-image-a49c7989bac68c247c789d7fa61c8c36" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/new_rw_layer.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a49c7989bac68c247c789d7fa61c8c36"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/new_rw_layer.jpg"></a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker start &lt;container-id&gt;</code></pre></div><p><a href="#R-image-3a2206c10408750825034384bcad15bf" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_start.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3a2206c10408750825034384bcad15bf"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_start.jpg"></a></p>
+<blockquote>
+<p>Docker start命令为容器文件系统创建了一个进程隔离空间。注意，每一个容器只能够有一个进程隔离空间。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker run &lt;image-id&gt;</code></pre></div><p><a href="#R-image-dfd09b9484dcb1f15d64236c56c68276" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_run.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-dfd09b9484dcb1f15d64236c56c68276"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_run.jpg"></a></p>
+<blockquote>
+<p>看到这个命令，通常会有一个疑问：docker start 和 docker run命令有什么区别。</p>
+</blockquote>
+<p><a href="#R-image-a5e62ef7cb0e077fd518e1dc8825816e" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/diff_run_and_create.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-a5e62ef7cb0e077fd518e1dc8825816e"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/diff_run_and_create.jpg"></a></p>
+<blockquote>
+<p>从图片可以看出，docker run 命令先是利用镜像创建了一个容器，然后运行这个容器。这个命令非常的方便，并且隐藏了两个命令的细节，但从另一方面来看，这容易让用户产生误解。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker ps</code></pre></div><p><a href="#R-image-6d0b060074a54fb6098db3400ed89b2f" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_ps.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6d0b060074a54fb6098db3400ed89b2f"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_ps.jpg"></a></p>
+<blockquote>
+<p>docker ps 命令会列出所有运行中的容器。这隐藏了非运行态容器的存在，如果想要找出这些容器，我们需要使用下面这个命令。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker ps –a</code></pre></div><p><a href="#R-image-11995886fef9ed0135373aa257fb8eb4" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_ps_a.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-11995886fef9ed0135373aa257fb8eb4"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_ps_a.jpg"></a></p>
+<blockquote>
+<p>docker ps –a命令会列出所有的容器，不管是运行的，还是停止的。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker images</code></pre></div><p><a href="#R-image-97b9a5dd66565f6d21718d9c8375eb6d" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_image.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-97b9a5dd66565f6d21718d9c8375eb6d"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_image.jpg"></a></p>
+<blockquote>
+<p>docker images命令会列出了所有顶层（top-level）镜像。实际上，在这里我们没有办法区分一个镜像和一个只读层，所以我们提出了top-level镜像。只有创建容器时使用的镜像或者是直接pull下来的镜像能被称为顶层（top-level）镜像，并且每一个顶层镜像下面都隐藏了多个镜像层。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker images –a</code></pre></div><p><a href="#R-image-ea4f954c2102da11d33ffa31355b54a5" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_image_a.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-ea4f954c2102da11d33ffa31355b54a5"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_image_a.jpg"></a></p>
+<blockquote>
+<p>docker images –a命令列出了所有的镜像，也可以说是列出了所有的可读层。如果想要查看某一个image-id下的所有层，可以使用docker history来查看。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker stop &lt;container-id&gt;</code></pre></div><p><a href="#R-image-66531fe748c482e2e063af15e88f8554" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_stop.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-66531fe748c482e2e063af15e88f8554"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_stop.jpg"></a></p>
+<blockquote>
+<p>docker stop命令会向运行中的容器发送一个SIGTERM的信号，然后停止所有的进程。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker kill &lt;container-id&gt;</code></pre></div><p><a href="#R-image-015edde36a3efdb3ebf23013048b989b" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_kill.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-015edde36a3efdb3ebf23013048b989b"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_kill.jpg"></a></p>
+<blockquote>
+<p>docker kill 命令向所有运行在容器中的进程发送了一个不友好的SIGKILL信号。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker pause &lt;container-id&gt;</code></pre></div><p><a href="#R-image-b198e223d7d09dfa72d75f50845729f0" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_pause.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-b198e223d7d09dfa72d75f50845729f0"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_pause.jpg"></a></p>
+<blockquote>
+<p>docker stop和docker kill命令会发送UNIX的信号给运行中的进程，docker pause命令则不一样，它利用了cgroups的特性将运行中的进程空间暂停。具体的内部原理可以在这里找到：https://www.kernel.org/doc/Doc &hellip; m.txt，但是这种方式的不足之处在于发送一个SIGTSTP信号对于进程来说不够简单易懂，以至于不能够让所有进程暂停。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker rm &lt;container-id&gt;</code></pre></div><p><a href="#R-image-49d7579480d701a10c4adeb7f954a947" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_rm.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-49d7579480d701a10c4adeb7f954a947"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_rm.jpg"></a></p>
+<blockquote>
+<p>docker rm命令会移除构成容器的可读写层。注意，这个命令只能对非运行态容器执行。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker rmi &lt;image-id&gt;</code></pre></div><p><a href="#R-image-3d72c959deb06ad2d3b57f89a067c1f1" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_rmi.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3d72c959deb06ad2d3b57f89a067c1f1"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_rmi.jpg"></a></p>
+<blockquote>
+<p>docker rmi 命令会移除构成镜像的一个只读层。只能够使用docker rmi来移除最顶层（top level layer）（也可以说是镜像），也可以使用-f参数来强制删除中间的只读层。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker commit &lt;container-id&gt;</code></pre></div><p><a href="#R-image-8f5127a03ed9acbff9ef5e517d5e98cc" class="lightbox-link"><img alt="commit" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_commit1.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-8f5127a03ed9acbff9ef5e517d5e98cc"><img alt="commit" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_commit1.jpg"></a></p>
+<p><a href="#R-image-9c3358bbd570d4fc4cbb6a7b71dd90b0" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_commit.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-9c3358bbd570d4fc4cbb6a7b71dd90b0"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_commit.jpg"></a></p>
+<blockquote>
+<p>docker commit命令将容器的可读写层转换为一个只读层，这样就把一个容器转换成了不可变的镜像。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker build</code></pre></div><p><a href="#R-image-f19fdfc2611614bd259b3f45a5358a48" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_build.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-f19fdfc2611614bd259b3f45a5358a48"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_build.jpg"></a></p>
+<blockquote>
+<p>docker build命令非常有趣，它会反复的执行多个命令。</p>
+</blockquote>
+<p><a href="#R-image-62db7d478330f1305465ce800a8a94ca" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_build1.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-62db7d478330f1305465ce800a8a94ca"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_build1.jpg"></a></p>
+<blockquote>
+<p>从上图可以看到，build命令根据Dockerfile文件中的FROM指令获取到镜像，然后重复地1）run（create和start）、2）修改、3）commit。在循环中的每一步都会生成一个新的层，因此许多新的层会被创建。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker exec &lt;running-container-id&gt;</code></pre></div><p><a href="#R-image-e15303818542ddee31da1b1abc8cffc7" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_exec.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e15303818542ddee31da1b1abc8cffc7"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_exec.jpg"></a></p>
+<blockquote>
+<p>docker exec 命令会在运行中的容器执行一个新进程。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker inspect &lt;container-id&gt; or &lt;image-id&gt;</code></pre></div><p><a href="#R-image-bf3de83cdf005481451f86d07b90965b" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_inspect.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-bf3de83cdf005481451f86d07b90965b"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_inspect.jpg"></a></p>
+<blockquote>
+<p>docker inspect命令会提取出容器或者镜像最顶层的元数据。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker save &lt;image-id&gt;</code></pre></div><p><a href="#R-image-55728ac4adff55b179ac380e710bd8cc" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_save.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-55728ac4adff55b179ac380e710bd8cc"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_save.jpg"></a></p>
+<blockquote>
+<p>docker save命令会创建一个镜像的压缩文件，这个文件能够在另外一个主机的Docker上使用。和export命令不同，这个命令为每一个层都保存了它们的元数据。这个命令只能对镜像生效。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker export &lt;container-id&gt;</code></pre></div><p><a href="#R-image-3abd1c025e192239ae1629fe49abc0dd" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_export.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3abd1c025e192239ae1629fe49abc0dd"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_export.jpg"></a></p>
+<blockquote>
+<p>docker export命令创建一个tar文件，并且移除了元数据和不必要的层，将多个层整合成了一个层，只保存了当前统一视角看到的内容（译者注：expoxt后的容器再import到Docker中，通过docker images –tree命令只能看到一个镜像；而save后的镜像则不同，它能够看到这个镜像的历史镜像）。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker history &lt;image-id&gt;</code></pre></div><p><a href="#R-image-7c4bd68bb127b0e45effdd7493b15e70" class="lightbox-link"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/docker_history.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7c4bd68bb127b0e45effdd7493b15e70"><img alt="深入理解Docker容器和镜像" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/docker_history.jpg"></a></p>
+<blockquote>
+<p>docker history命令递归地输出指定镜像的历史镜像。</p>
+</blockquote>
+<h1 id="四编写dockerfile的最佳实践">四、编写dockerfile的最佳实践</h1>
+<h5 id="1创建短暂的容器">1、创建短暂的容器</h5>
+<blockquote>
+<p>你定义的图像Dockerfile应该生成尽可能短暂的容器。通过“短暂”，我们的意思是容器可以被停止和销毁，然后重建并用绝对最小的设置和配置替换。</p>
+</blockquote>
+<h5 id="2了解构建上下文">2、了解构建上下文</h5>
+<blockquote>
+<p>发出docker build命令时，当前工作目录称为<em>构建上下文</em>。默认情况下，假定Dockerfile位于此处，但您可以使用文件flag（-f）指定其他位置。无论Dockerfile实际存在的位置如何，当前目录中的所有文件和目录的递归内容都将作为构建上下文发送到Docker守护程序。</p>
+</blockquote>
+<h5 id="3通过stdin管道dockerfile">3、通过stdin管道Dockerfile</h5>
+<blockquote>
+<p>Docker能够通过stdin与本地或远程构建上下文管道Dockerfile来构建映像。 通过stdin管道Dockerfile对于执行一次性构建非常有用，无需将Dockerfile写入磁盘，或者在生成Dockerfile的情况下，并且之后不应该持久化。</p>
+</blockquote>
+<h5 id="4排除dockerignore">4、排除.dockerignore</h5>
+<blockquote>
+<p>要排除与构建无关的文件（不重构源存储库），请使用.dockerignore文件。此文件支持与.gitignore文件类似的排除模式。</p>
+</blockquote>
+<h5 id="5使用多阶段构建">5、使用多阶段构建</h5>
+<blockquote>
+<p>多阶段构建允许您大幅减小最终image的大小，而无需减少中间层和文件的数量。</p>
+</blockquote>
+<blockquote>
+<p>由于image是在构建过程的最后阶段构建的，因此可以通过利用构建缓存来最小化image层。</p>
+</blockquote>
+<h5 id="6避免安装不必要的包">6、避免安装不必要的包</h5>
+<blockquote>
+<p>为了降低复杂性，依赖性，文件大小和构建时间，请避免安装额外的或不必要的软件包，只是因为它们可能“很好”。</p>
+</blockquote>
+<h5 id="7解耦应用程序">7、解耦应用程序</h5>
+<blockquote>
+<p>每个容器应该只关注一个问题。将应用程序分离到多个容器中可以更容易地水平扩展和重用容器。</p>
+</blockquote>
+<h5 id="8最小化层数">8、最小化层数</h5>
+<blockquote>
+<p>只有说明RUN，COPY，ADD创建图层。其他指令创建临时中间图像，并不增加构建的大小。</p>
+</blockquote>
+<blockquote>
+<p>在可能的情况下，使用多阶段构建，并仅将所需的工件复制到最终图像中。这允许您在中间构建阶段中包含工具和调试信息，而不会增加最终图像的大小。</p>
+</blockquote>
+<h5 id="9对多行参数进行排序">9、对多行参数进行排序</h5>
+<blockquote>
+<p>只要有可能，通过按字母顺序排序多行参数来缓解以后的更改。这有助于避免重复包并使列表更容易更新。这也使PR更容易阅读和审查。</p>
+</blockquote>
+<h5 id="10利用构建缓存">10、利用构建缓存</h5>
+<blockquote>
+<p>构建映像时，Docker会逐步Dockerfile执行您的指令， 按指定的顺序执行每个指令。在检查每条指令时，Docker会在其缓存中查找可以重用的现有image，而不是创建新的（重复）image。</p>
+</blockquote>
+<h1 id="五在docker中运行windows">五、在docker中运行windows</h1>
+<p><a href="https://github.com/dockur/windows" rel="external" target="_blank">dockur/windows</a></p>
+<p><a href="https://hub.docker.com/r/dockurr/windows" rel="external" target="_blank">dockerhub_dockurr/windows</a></p>
+<h2 id="1提前准备windows-ios">1、提前准备windows ios</h2>
+<blockquote>
+<p>必须使用custom.iso</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>mkdir /storage
+cp *.ios /storage/custom.iso</code></pre></div><h2 id="2启动容器">2、启动容器</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker run -itd \
+    -p 8006:8006 \
+    -p 3389:3389 \
+    --device=/dev/kvm \
+    --cap-add NET_ADMIN \
+    --stop-timeout 120 \
+    -e VERSION=&#34;custom.iso&#34; \
+    -e RAM_SIZE=&#34;10G&#34; \
+    -e CPU_CORES=&#34;10&#34; \
+    -e DISK_SIZE=&#34;100G&#34; \
+    -v /storage:/storage \
+    --name win11 \
+    dockurr/windows</code></pre></div><h2 id="3通过浏览器安装">3、通过浏览器安装</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>http://{IP}:8006</code></pre></div><h1 id="六在docker中运行macos">六、在docker中运行macos</h1>
+<blockquote>
+<p>macOS Containers 是一个可以在 macOS 中运行 macOS 的 Docker 容器</p>
+</blockquote>
+<p><a href="https://meta.appinn.net/t/topic/47790" rel="external" target="_blank">https://meta.appinn.net/t/topic/47790</a></p>
+<p><a href="https://github.com/macOScontainers/homebrew-formula" rel="external" target="_blank">https://github.com/macOScontainers/homebrew-formula</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code># Install packages
+brew install --cask macfuse
+brew install docker docker-buildx macOScontainers/formula/bindfs macOScontainers/formula/containerd macOScontainers/formula/dockerd macOScontainers/formula/rund 
+
+# Start services 
+sudo brew services start containerd 
+sudo brew services start dockerd 
+
+# Set up BuildKit 
+mkdir -p ~/.docker/cli-plugins 
+ln -sfn /opt/homebrew/opt/docker-buildx/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>echo &lt;YOUR_ACCESS_TOKEN&gt; | docker login ghcr.io -u &lt;GITHUB_USERNAME&gt; --password-stdin</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>docker run --rm -it ghcr.io/macoscontainers/macos-jail/ventura:latest echo &#34;Hello from macOS container ^_^&#34;</code></pre></div>
+            <footer class="footline">
+            </footer>
+          </article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <style>
+            #R-logo svg,
+            #R-logo svg * {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              fill: #282828 !important;
+              fill: var(--MENU-SECTIONS-BG-color) !important;
+              opacity: .945;
+            }
+            a#R-logo {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+              font-size: 1.875rem;
+              font-weight: 300;
+              margin-top: -.8125rem;
+              max-width: 60%;
+              text-transform: uppercase;
+              width: 14.125rem;
+              white-space: nowrap;
+            }
+            a#R-logo:hover {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+            }
+            #R-logo svg {
+              margin-bottom: -1.25rem;
+              margin-inline-start: -1.47rem;
+              margin-inline-end: .5rem;
+              width: 40.5%;
+            }
+            @media only all and (max-width: 59.999rem) {
+              a#R-logo {
+                font-size: 1.5625rem;
+                margin-top: -.1875rem;
+              }
+              #R-logo svg {
+                margin-bottom: -.75rem;
+                margin-inline-start: -1.47rem;
+                margin-inline-end: .5rem;
+              }
+            }
+            @media all and (-ms-high-contrast:none) {
+              /* IE11s understanding of positioning is weird at best */
+              a#R-logo {
+                margin-top: -3.625rem;
+              }
+              #R-logo svg {
+                margin-bottom: -3.875rem;
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+            @media only all and (-ms-high-contrast:none) and (max-width: 59.999rem) {
+              #R-logo svg {
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+          </style>
+          <a id="R-logo" href="/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.044 64.044">
+              <path d="M46.103 136.34c-.642-.394-1.222-2.242-1.98-2.358-.76-.117-1.353.506-1.618 1.519-.266 1.012-.446 4.188.173 5.538.213.435.482.787 1.03.845.547.057.967-.504 1.45-1.027.482-.523.437-.9 1.142-.612.705.289 1.051.4 1.586 1.229.535.828 1.085 4.043.868 5.598-.241 1.458-.531 2.8-.59 4.088.26.075.517.148.772.217 2.68.724 5.373 1.037 7.873.02.001-.028.01-.105.008-.11-.048-.165-.18-.41-.36-.698-.18-.29-.414-.645-.586-1.114a3.212 3.212 0 0 1-.125-1.735c.056-.21.153-.342.249-.475 1.237-1.193 2.932-1.373 4.244-1.384.557-.004 1.389.016 2.198.255.809.239 1.706.724 2.068 1.843.187.578.114 1.17-.043 1.623-.153.438-.369.783-.545 1.091-.178.31-.329.6-.401.821-.007.02-.003.071-.005.094 2.256 1.008 4.716.91 7.189.398.55-.114 1.11-.247 1.673-.377.344-1.085.678-2.145.852-3.208.124-.752.158-2.311-.078-3.538-.118-.613-.306-1.15-.52-1.489-.221-.349-.413-.501-.747-.538-.243-.027-.51.013-.796.098-.67.223-1.33.606-1.966.76l-.008.002-.109.032c-.556.152-1.233.158-1.797-.36-.556-.51-.89-1.367-1.117-2.596-.283-1.528-.075-3.279.89-4.518l.071-.09h.07c.65-.71 1.485-.802 2.16-.599.706.213 1.333.629 1.772.84.736.354 1.185.319 1.475.171.291-.148.5-.439.668-.955.332-1.017.301-2.819.022-4.106-.148-.684-.13-1.292-.13-1.883-1.558-.463-3.067-.982-4.574-1.208-1.128-.169-2.263-.173-3.298.164-.13.046-.256.095-.38.15-.373.164-.633.342-.805.52-.077.098-.081.105-.087.21-.004.068.031.289.13.571.1.282.256.634.467 1.03.279.524.448 1.063.431 1.618a2.12 2.12 0 0 1-.499 1.309 1.757 1.757 0 0 1-.62.51h-.002c-.515.291-1.107.404-1.723.464-.86.083-1.787.026-2.598-.097-.806-.123-1.47-.28-1.948-.555-.444-.256-.79-.547-1.037-.925a2.273 2.273 0 0 1-.356-1.301c.029-.837.403-1.437.625-1.897.111-.23.191-.433.236-.583.045-.15.044-.25.046-.24-.005-.029-.127-.355-1.015-.741-1.138-.495-2.322-.673-3.533-.668h-.015a9.711 9.711 0 0 0-.521.016h-.002c-1.163.057-2.35.308-3.541.569.383 1.531.79 2.753.818 4.502-.096 1.297.158 2.114-1.03 2.935-.85.588-1.508.729-2.15.335" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:1.03763;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M61.472 101.34v.002c-.3-.003-.603.01-.894.04-.544.055-1.39.165-1.778.306-1.238.364.13 2.344.41 2.913.28.569.285 2.03.14 2.134-.144.103-.375.261-.934.345-.56.084.03-.037-1.589.086-1.62.122-5.506.29-8.265.248-.022.26-.036.521-.097.808-.309 1.442-.63 3.163-.494 4.074.071.473.168.65.414.8.23.14.737.235 1.62-.004.834-.227 1.3-.442 1.887-.456.595-.016 1.555.472 1.965.717.411.245-.03-.008.002 0s.128.05.176.102c.049.053-.276-.523.104.199.379.721.72 3.256.002 4.68-.46.913-1.01 1.49-1.64 1.711-.63.22-1.229.067-1.734-.135-.881-.353-1.584-.7-2.205-.647-1.199 1.94-1.186 4.17-.6 6.602.097.397.212.814.327 1.23 2.68-.556 5.542-1.016 8.337.132 1.064.437 1.73 1.015 1.902 1.857.169.831-.193 1.508-.438 1.986-.122.238-.23.46-.307.642-.07.164-.096.28-.104.324.069.429.309.723.686.945.385.227.89.355 1.35.423.723.104 1.567.152 2.287.086.693-.064 1.032-.338 1.241-.544a2.447 2.447 0 0 0 .303-.437.175.175 0 0 0 .013-.035c-.004-.066-.037-.246-.195-.527-.46-.816-.87-1.595-.817-2.51.028-.476.218-.938.529-1.288.304-.343.698-.586 1.186-.79 1.442-.606 2.96-.609 4.372-.409 1.525.216 2.963.679 4.378 1.083.226-2.09.784-3.9.592-5.77-.058-.565-.287-1.333-.598-1.827-.32-.508-.59-.717-1.036-.642-.648.11-1.472.935-2.707 1.078-.791.092-1.494-.267-1.95-.86-.45-.583-.678-1.335-.78-2.101-.202-1.525.031-3.229.89-4.27.615-.747 1.45-.887 2.15-.74.687.145 1.307.492 1.857.745v-.002c.546.252 1.033.388 1.281.344a.547.547 0 0 0 .353-.188c.113-.124.242-.35.384-.75.604-1.712.206-3.68-.303-5.654-.667.145-1.336.293-2.018.413-1.341.236-2.73.392-4.136.273-.656-.055-1.695-.085-2.58-.476-.442-.195-.903-.514-1.157-1.093-.259-.591-.205-1.313.08-2.014.223-.64 1.082-2.178.692-2.585-.391-.407-1.651-.56-2.554-.571z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.992837;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M83.128 98.116c-.484 1.875-1.057 3.757-2.486 5.033-.638.57-1.13.666-1.483.548-.401-.134-.715-.506-1.058-.973-.338-.461-.655-.97-1.076-1.332-.192-.165-.404-.315-.683-.38-.279-.066-.599-.02-.9.102-.489.196-.89.58-1.28 1.047a6.1 6.1 0 0 0-.985 1.632c-.234.591-.356 1.174-.277 1.713.072.487.392.977.905 1.185.463.187.926.156 1.36.154.433 0 .843.01 1.242.147.55.189.79.736.822 1.368.034.66-.145 1.412-.393 1.988l-.008.021c-.74 1.705-1.946 2.893-3.004 4.349l-.664.915.979.099c.924.092 1.788.26 2.468.675.46.281 1.806 1.205 2.794 2.222.497.513.888 1.031 1.047 1.502.078.231.095.422.05.6a.93.93 0 0 1-.345.474c-.301.223-.606.395-.864.532l-.354.186c-.107.058-.189.087-.345.228a.637.637 0 0 1 .062-.045l-.064.041-.209.236-.103.343s.003.126.007.152c.003.017.003.007.004.015v.002c.016.195.061.307.133.476a4.1 4.1 0 0 0 .32.596 5.7 5.7 0 0 0 2.8 2.258c.284.108.908.321 1.548.36.33.02.59.015.912-.13h.002c.08-.037.228-.095.382-.281.153-.186.19-.355.212-.445l.019-.075.003-.078c.023-.585-.037-1.296.072-1.899.153-.657.435-.956 1.009-.909 2.771.239 4.74 1.955 6.693 3.83l.742.714.279-1.155c.55-2.29 1.093-4.464 2.928-5.977.692-.57 1.184-.642 1.527-.509.39.151.676.536.996.995.319.458.605.926 1.07 1.212.194.119.464.232.784.209.32-.024.638-.163.988-.384 1.022-.645 1.778-1.756 2.086-2.942.136-.522.102-.991-.046-1.301-.158-.334-.433-.553-.754-.707-.653-.314-1.468-.373-2.094-.486-.825-.15-1.22-.475-1.345-.878-.13-.417 0-.953.335-1.61.6-1.173 1.887-2.602 3.13-3.911l.498-.526-.449-.432c-1.545-1.49-3.163-3.01-5.252-3.715h-.002c-.473-.16-1.097-.413-1.73-.424h-.003c-.311-.004-.596.04-.883.24v.002c-.22.155-.483.537-.583.937l-.008.036-.006.038c-.116.773-.06 1.467-.217 1.995-.063.212-.198.418-.359.507-.202.111-.492.153-.976.072-.582-.097-1.978-.69-3.021-1.503-.523-.407-.934-.85-1.117-1.3a1.153 1.153 0 0 1-.083-.63c.03-.184.1-.477.308-.593.21-.116.941-.32 1.377-.642h.002c.192-.141.403-.367.518-.64.114-.275.127-.526.123-.774-.006-.142-.036-.192-.08-.3a8.417 8.417 0 0 0-3-3.027c-1.226-.725-2.585-1.135-3.927-1.539-.434-.12-.844-.111-1.02.466zm.912.947c1.186.364 2.357.718 3.345 1.303 1.035.612 1.864 1.488 2.507 2.528-.514.263-1.095.5-1.44.79-.345.29-.729.914-.815 1.434-.084.509 0 .968.155 1.347.301.74.85 1.276 1.44 1.735 1.18.92 2.554 1.545 3.47 1.698.604.1 1.186.088 1.739-.216.594-.327.935-.911 1.088-1.427.264-.884.193-1.664.262-2.17h.1c.3.006.926.206 1.417.371 1.646.554 3.044 1.773 4.431 3.089-1.102 1.174-2.222 2.423-2.888 3.73-.42.823-.73 1.789-.453 2.687.283.913 1.1 1.415 2.138 1.603.691.126 1.472.226 1.84.403.19.091.258.182.278.223.03.064.058.075-.023.387-.21.804-.761 1.598-1.413 2.01-.247.155-.365.183-.407.187-.042.003-.061.002-.172-.066-.144-.088-.455-.473-.772-.929-.317-.454-.714-1.07-1.452-1.356-.783-.304-1.776-.022-2.713.75-1.942 1.6-2.626 3.764-3.146 5.8-1.802-1.676-3.772-3.138-6.589-3.517h-.002c-.346-.095-1.013-.031-1.293.143-.735.501-1.005 1.132-1.168 2.007-.125.69-.082 1.216-.074 1.659-.055.006-.046.01-.104.006-.42-.026-1.035-.215-1.244-.295-.947-.361-1.774-1.006-2.314-1.857-.054-.085-.072-.132-.109-.2l.027-.016c.284-.15.656-.36 1.045-.648.44-.327.789-.798.93-1.35a2.4 2.4 0 0 0-.068-1.379c-.254-.751-.753-1.353-1.295-1.911-1.09-1.124-2.452-2.049-2.99-2.378-.609-.372-1.303-.44-1.981-.56.875-1.094 1.878-2.251 2.596-3.921.294-.823.543-1.907.513-2.658-.049-.97-.489-2.013-1.52-2.367-.579-.2-1.131-.204-1.58-.203-.45.002-.786-.006-.97-.08h-.002c-.264-.107-.236-.108-.268-.33-.025-.17.021-.553.183-.962a4.67 4.67 0 0 1 .725-1.192c.29-.348.617-.59.705-.626.142-.057.176-.05.22-.04.045.011.127.052.263.17.235.201.56.671.92 1.161.354.484.791 1.08 1.543 1.33.8.267 1.784-.052 2.671-.846 1.594-1.424 2.235-3.317 2.714-5.051zm11.705 7.023c-.02.014.042-.002.042 0l-.008.035c.05-.2-.028-.04-.034-.035zM79.472 122.45a.198.198 0 0 1 .005.023v.014c-.002-.01-.003-.03-.005-.037zm-.29.732-.006.01-.044.027c.016-.01.033-.024.05-.036z" style="color:#000;fill:#282828;stroke-width:1.02352;-inkscape-stroke:none" transform="translate(-40.698 -95.175)"/>
+              <path d="M76.694 128.845c-.85-.012-1.668.253-2.434.67-.01.592-.015 1.17.109 1.772.323 1.573.422 3.553-.07 5.147-.247.804-.684 1.535-1.347 1.891-.663.356-1.467.296-2.362-.159-.522-.266-1.059-.62-1.487-.757-.223-.072-.392-.096-.522-.069-.13.027-.232.094-.362.27-.53.719-.681 1.823-.497 2.876.177 1.012.418 1.438.543 1.56.143.137.26.154.604.055.548-.158 1.523-.857 2.573-.972l.02-.002.5.058c.686.081 1.247.562 1.622 1.19.372.62.591 1.37.73 2.136.279 1.532.25 3.16.083 4.232-.14.91-.394 1.72-.632 2.53 1.719-.385 3.485-.692 5.307-.36 1.174.214 2.749.574 3.762 1.977l.088.122.046.159c.162.551.16 1.114.024 1.578-.13.45-.348.772-.533 1.023-.181.246-.336.444-.437.606-.102.16-.141.275-.145.336-.01.17 0 .197.07.315.057.1.186.242.39.366.408.246 1.106.414 1.843.45a7.842 7.842 0 0 0 2.174-.21 4.28 4.28 0 0 0 .822-.296c.218-.106.385-.242.377-.233l.029-.031c.025-.035.05-.072.05-.068 0-.004 0-.017-.003-.05a2.733 2.733 0 0 0-.21-.579c-.26-.548-.839-1.333-.822-2.46.01-.657.27-1.21.598-1.576.32-.357.696-.575 1.074-.736.759-.323 1.57-.418 2.054-.458 1.653-.136 3.252.296 4.755.765.457.142.905.29 1.352.434.325-2.258.902-4.247.598-6.217-.071-.46-.25-1.169-.486-1.684-.238-.518-.495-.762-.675-.779-.351-.032-.716.14-1.174.418-.457.277-1.005.665-1.695.742-.745.082-1.406-.291-1.84-.908-.428-.608-.653-1.394-.754-2.196-.203-1.596.016-3.377.794-4.493.568-.813 1.358-.984 2.024-.835.65.146 1.243.51 1.769.779.524.267.99.413 1.237.365a.527.527 0 0 0 .346-.2c.11-.132.235-.373.37-.798.612-1.918.27-3.894-.246-6.054-2.815-.851-5.49-1.534-8.089-.267a.727.727 0 0 0-.223.148c-.024.028-.018.021-.026.056.001-.003-.01.178.07.44.162.522.611 1.29.911 1.978l.004.009.029.063.024.084V133c.162.635.016 1.297-.274 1.727-.272.404-.618.636-.952.81-.675.353-1.399.484-1.724.533a5.888 5.888 0 0 1-3.973-.795c-.512-.311-.876-.594-1.133-1.02-.282-.466-.318-1.084-.172-1.557.252-.814.715-1.266.971-1.89a.663.663 0 0 0 .047-.14c.001-.013 0-.006-.007-.037a.761.761 0 0 0-.184-.268c-.264-.267-.865-.595-1.54-.826-1.356-.462-3.07-.659-3.583-.686-.062-.002-.121-.006-.178-.006z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.991342;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+            </svg>Relearn
+          </a>
+        </div>
+
+        <search>
+          <div class="searchbox default-animation">
+            <i class="fas fa-search" title="Search (CTRL+ALT+f)"></i>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1716876877" defer></script>
+        <script src="/js/lunr/lunr.min.js?1716876877" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1716876877" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1716876877" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1716876877" defer></script>
+        <script src="/js/search.js?1716876877" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-topics">
+          <ul class="enlarge morespace collapsible-menu">
+          <li data-nav-id="/ceph/index.html" class=""><a class="padding" href="/ceph/index.html">Cephs</a><ul id="R-subsections-fd10f71351f87e0d2cf3e598548366c8" class="morespace collapsible-menu">
+          <li data-nav-id="/ceph/first/index.html" class=""><a class="padding" href="/ceph/first/index.html">First</a></li>
+          <li data-nav-id="/ceph/ceph_dashboard-hl/index.html" class=""><a class="padding" href="/ceph/ceph_dashboard-hl/index.html">Ceph 启用 Dashboard</a></li>
+          <li data-nav-id="/ceph/ceph_deploy-hl/index.html" class=""><a class="padding" href="/ceph/ceph_deploy-hl/index.html">Ceph 相关</a></li>
+          <li data-nav-id="/ceph/ceph_optimize-hl/index.html" class=""><a class="padding" href="/ceph/ceph_optimize-hl/index.html">Ceph 调优参考</a></li>
+          <li data-nav-id="/ceph/cephconf-hl/index.html" class=""><a class="padding" href="/ceph/cephconf-hl/index.html">ceph.conf</a></li>
+          <li data-nav-id="/ceph/crushmap-hl/index.html" class=""><a class="padding" href="/ceph/crushmap-hl/index.html">crushmap</a></li></ul></li>
+          <li data-nav-id="/python/index.html" class=""><a class="padding" href="/python/index.html">Pythons</a><ul id="R-subsections-36a3ed262b315ff04085d7b53a448994" class="morespace collapsible-menu">
+          <li data-nav-id="/python/first/index.html" class=""><a class="padding" href="/python/first/index.html">First</a></li>
+          <li data-nav-id="/python/django-hl/index.html" class=""><a class="padding" href="/python/django-hl/index.html">Django 相关</a></li>
+          <li data-nav-id="/python/flask-hl/index.html" class=""><a class="padding" href="/python/flask-hl/index.html">Flask 相关</a></li>
+          <li data-nav-id="/python/jinja2-hl/index.html" class=""><a class="padding" href="/python/jinja2-hl/index.html">Jinja2 相关</a></li>
+          <li data-nav-id="/python/python_logging-hl/index.html" class=""><a class="padding" href="/python/python_logging-hl/index.html">Python logging模块</a></li>
+          <li data-nav-id="/python/sqlalchemy-hl/index.html" class=""><a class="padding" href="/python/sqlalchemy-hl/index.html">Python Sqlalchemy</a></li>
+          <li data-nav-id="/python/python_obfuscated_code-hl/index.html" class=""><a class="padding" href="/python/python_obfuscated_code-hl/index.html">Python 代码混淆</a></li>
+          <li data-nav-id="/python/python_code_standards-hl/index.html" class=""><a class="padding" href="/python/python_code_standards-hl/index.html">Python 代码规范</a></li>
+          <li data-nav-id="/python/python_file-hl/index.html" class=""><a class="padding" href="/python/python_file-hl/index.html">Python 文件操作</a></li>
+          <li data-nav-id="/python/python-hl/index.html" class=""><a class="padding" href="/python/python-hl/index.html">Python 相关</a></li>
+          <li data-nav-id="/python/python_decorators-hl/index.html" class=""><a class="padding" href="/python/python_decorators-hl/index.html">Python 装饰器</a></li>
+          <li data-nav-id="/python/scrapy-hl/index.html" class=""><a class="padding" href="/python/scrapy-hl/index.html">scrapy 爬虫</a></li>
+          <li data-nav-id="/python/urllib2-hl/index.html" class=""><a class="padding" href="/python/urllib2-hl/index.html">urllib2 爬虫</a></li>
+          <li data-nav-id="/python/xpath-hl/index.html" class=""><a class="padding" href="/python/xpath-hl/index.html">xpath 相关</a></li>
+          <li data-nav-id="/python/yield-hl/index.html" class=""><a class="padding" href="/python/yield-hl/index.html">yield</a></li>
+          <li data-nav-id="/python/regular_expression-hl/index.html" class=""><a class="padding" href="/python/regular_expression-hl/index.html">正则表达式相关</a></li></ul></li>
+          <li data-nav-id="/proxy/index.html" class=""><a class="padding" href="/proxy/index.html">Proxy</a><ul id="R-subsections-7af45055f134bf4d7ad1ff39a99c084b" class="morespace collapsible-menu">
+          <li data-nav-id="/proxy/proxy/index.html" class=""><a class="padding" href="/proxy/proxy/index.html">Proxy相关</a></li></ul></li>
+          <li data-nav-id="/other/index.html" class=""><a class="padding" href="/other/index.html">Other</a><ul id="R-subsections-dd17f32865650128ca32bc9ce5ee4fdf" class="morespace collapsible-menu">
+          <li data-nav-id="/other/anaconda-hl/index.html" class=""><a class="padding" href="/other/anaconda-hl/index.html">anaconda 相关</a></li>
+          <li data-nav-id="/other/apidoc-hl/index.html" class=""><a class="padding" href="/other/apidoc-hl/index.html">apidoc 相关</a></li>
+          <li data-nav-id="/other/build_atlas-hl/index.html" class=""><a class="padding" href="/other/build_atlas-hl/index.html">Atlas 驱动构建</a></li>
+          <li data-nav-id="/other/cloudfoundry-hl/index.html" class=""><a class="padding" href="/other/cloudfoundry-hl/index.html">cloudfoundry 相关</a></li>
+          <li data-nav-id="/other/github_pages-hl/index.html" class=""><a class="padding" href="/other/github_pages-hl/index.html">github pages</a></li>
+          <li data-nav-id="/other/ionic_cordova-hl/index.html" class=""><a class="padding" href="/other/ionic_cordova-hl/index.html">ionic 、cordova 编译 andriod</a></li>
+          <li data-nav-id="/other/java-hl/index.html" class=""><a class="padding" href="/other/java-hl/index.html">Java 相关</a></li>
+          <li data-nav-id="/other/jupyter-hl/index.html" class=""><a class="padding" href="/other/jupyter-hl/index.html">jupyter 相关</a></li>
+          <li data-nav-id="/other/kafka-hl/index.html" class=""><a class="padding" href="/other/kafka-hl/index.html">Kafka 相关</a></li>
+          <li data-nav-id="/other/keepalived-hl/index.html" class=""><a class="padding" href="/other/keepalived-hl/index.html">keepalived 相关</a></li>
+          <li data-nav-id="/other/linux_desktop_rdp-hl/index.html" class=""><a class="padding" href="/other/linux_desktop_rdp-hl/index.html">Linux Desktop rdp 相关</a></li>
+          <li data-nav-id="/other/mqtt-hl/index.html" class=""><a class="padding" href="/other/mqtt-hl/index.html">MQTT 相关</a></li>
+          <li data-nav-id="/other/nativefier-hl/index.html" class=""><a class="padding" href="/other/nativefier-hl/index.html">Nativefier 相关</a></li>
+          <li data-nav-id="/other/ovirt-hl/index.html" class=""><a class="padding" href="/other/ovirt-hl/index.html">Ovirt 相关</a></li>
+          <li data-nav-id="/other/ptp-hl/index.html" class=""><a class="padding" href="/other/ptp-hl/index.html">ptp 相关</a></li>
+          <li data-nav-id="/other/pyqt5-hl/index.html" class=""><a class="padding" href="/other/pyqt5-hl/index.html">PyQt5 相关</a></li>
+          <li data-nav-id="/other/stratos_ui-hl/index.html" class=""><a class="padding" href="/other/stratos_ui-hl/index.html">stratos-ui 相关</a></li>
+          <li data-nav-id="/other/svn-hl/index.html" class=""><a class="padding" href="/other/svn-hl/index.html">svn 相关</a></li>
+          <li data-nav-id="/other/web-hl/index.html" class=""><a class="padding" href="/other/web-hl/index.html">Web 相关</a></li>
+          <li data-nav-id="/other/webdriver-hl/index.html" class=""><a class="padding" href="/other/webdriver-hl/index.html">webdriver 相关</a></li>
+          <li data-nav-id="/other/websocket-hl/index.html" class=""><a class="padding" href="/other/websocket-hl/index.html">websocket 相关</a></li>
+          <li data-nav-id="/other/xenserver-hl/index.html" class=""><a class="padding" href="/other/xenserver-hl/index.html">xenserver 相关</a></li>
+          <li data-nav-id="/other/gitbook-hl/index.html" class=""><a class="padding" href="/other/gitbook-hl/index.html">一、gitbook 相关</a></li>
+          <li data-nav-id="/other/computer_network_foundation-hl/index.html" class=""><a class="padding" href="/other/computer_network_foundation-hl/index.html">计算机网络基础</a></li>
+          <li data-nav-id="/other/be_mined-hl/index.html" class=""><a class="padding" href="/other/be_mined-hl/index.html">记一次被挖矿</a></li></ul></li>
+          <li data-nav-id="/question/index.html" class=""><a class="padding" href="/question/index.html">Question</a></li>
+          <li data-nav-id="/database/index.html" class=""><a class="padding" href="/database/index.html">Database</a></li>
+          <li data-nav-id="/istio/index.html" class=""><a class="padding" href="/istio/index.html">Istio</a></li>
+          <li data-nav-id="/k8s/index.html" class=""><a class="padding" href="/k8s/index.html">K8s</a></li>
+          <li data-nav-id="/openstack/index.html" class=""><a class="padding" href="/openstack/index.html">Openstack</a><ul id="R-subsections-9bba764a9f110e94af4bc7a89f9db759" class="morespace collapsible-menu">
+          <li data-nav-id="/openstack/devstack-hl/index.html" class=""><a class="padding" href="/openstack/devstack-hl/index.html">devstack相关</a></li>
+          <li data-nav-id="/openstack/heat-hl/index.html" class=""><a class="padding" href="/openstack/heat-hl/index.html">heat相关</a></li>
+          <li data-nav-id="/openstack/kolla_network-hl/index.html" class=""><a class="padding" href="/openstack/kolla_network-hl/index.html">kolla网络规划</a></li>
+          <li data-nav-id="/openstack/kolla_deploy-hl/index.html" class=""><a class="padding" href="/openstack/kolla_deploy-hl/index.html">kolla部署相关</a></li>
+          <li data-nav-id="/openstack/kolla_image_build-hl/index.html" class=""><a class="padding" href="/openstack/kolla_image_build-hl/index.html">kolla镜像构建</a></li>
+          <li data-nav-id="/openstack/lsf_install_openstack-hl/index.html" class=""><a class="padding" href="/openstack/lsf_install_openstack-hl/index.html">Lfs上安装OpenStack</a></li>
+          <li data-nav-id="/openstack/openstack_win_vm_diaplay-hl/index.html" class=""><a class="padding" href="/openstack/openstack_win_vm_diaplay-hl/index.html">openstack windows虚拟机分辨率问题</a></li>
+          <li data-nav-id="/openstack/openstack-hl/index.html" class=""><a class="padding" href="/openstack/openstack-hl/index.html">OpenStack 相关</a></li>
+          <li data-nav-id="/openstack/openstack_faq-hl/index.html" class=""><a class="padding" href="/openstack/openstack_faq-hl/index.html">openstack中遇到的问题</a></li>
+          <li data-nav-id="/openstack/openstack_hygon_patch-hl/index.html" class=""><a class="padding" href="/openstack/openstack_hygon_patch-hl/index.html">OpenStack对hygon的兼容</a></li>
+          <li data-nav-id="/openstack/ovs-hl/index.html" class=""><a class="padding" href="/openstack/ovs-hl/index.html">OVS 相关</a></li>
+          <li data-nav-id="/openstack/qemu_make-hl/index.html" class=""><a class="padding" href="/openstack/qemu_make-hl/index.html">QEMU 源码编译</a></li>
+          <li data-nav-id="/openstack/qga-hl/index.html" class=""><a class="padding" href="/openstack/qga-hl/index.html">qemu-guest-agent 相关</a></li>
+          <li data-nav-id="/openstack/delete_cinder_volume-hl/index.html" class=""><a class="padding" href="/openstack/delete_cinder_volume-hl/index.html">删除cinder僵尸实例</a></li>
+          <li data-nav-id="/openstack/make_openstack_image-hl/index.html" class=""><a class="padding" href="/openstack/make_openstack_image-hl/index.html">制作openstack镜像</a></li>
+          <li data-nav-id="/openstack/add_nic_to_vm-hl/index.html" class=""><a class="padding" href="/openstack/add_nic_to_vm-hl/index.html">给虚拟机添加网卡</a></li>
+          <li data-nav-id="/openstack/migrate_to_other_platform-hl/index.html" class=""><a class="padding" href="/openstack/migrate_to_other_platform-hl/index.html">迁移虚拟机到其他平台</a></li></ul></li>
+          <li data-nav-id="/golang/index.html" class=""><a class="padding" href="/golang/index.html">Golang</a><ul id="R-subsections-9846d6388830934b21e07a0f7d630c6c" class="morespace collapsible-menu">
+          <li data-nav-id="/golang/go_athens-hl/index.html" class=""><a class="padding" href="/golang/go_athens-hl/index.html">Go Authens</a></li>
+          <li data-nav-id="/golang/go-hl/index.html" class=""><a class="padding" href="/golang/go-hl/index.html">Go 语言相关</a></li></ul></li>
+          <li data-nav-id="/docker/index.html" class="parent "><a class="padding" href="/docker/index.html">Docker</a><ul id="R-subsections-37ef7d0ce1cc039dbba9ad71298a0daf" class="morespace collapsible-menu">
+          <li data-nav-id="/docker/buildah-hl/index.html" class=""><a class="padding" href="/docker/buildah-hl/index.html">Buildah</a></li>
+          <li data-nav-id="/docker/chartmuseum-hl/index.html" class=""><a class="padding" href="/docker/chartmuseum-hl/index.html">chartmuseum 相关</a></li>
+          <li data-nav-id="/docker/containerd-hl/index.html" class=""><a class="padding" href="/docker/containerd-hl/index.html">Containerd</a></li>
+          <li data-nav-id="/docker/docker_compose-hl/index.html" class=""><a class="padding" href="/docker/docker_compose-hl/index.html">docker compose 相关</a></li>
+          <li data-nav-id="/docker/docker_registry-hl/index.html" class=""><a class="padding" href="/docker/docker_registry-hl/index.html">docker registry 相关</a></li>
+          <li data-nav-id="/docker/docker_swarm-hl/index.html" class=""><a class="padding" href="/docker/docker_swarm-hl/index.html">docker swarm 相关</a></li>
+          <li data-nav-id="/docker/docker-hl/index.html" class="active"><a class="padding" href="/docker/docker-hl/index.html">docker 相关</a></li>
+          <li data-nav-id="/docker/docker_net-hl/index.html" class=""><a class="padding" href="/docker/docker_net-hl/index.html">docker 网络相关</a></li>
+          <li data-nav-id="/docker/harbor-hl/index.html" class=""><a class="padding" href="/docker/harbor-hl/index.html">harbor 相关</a></li>
+          <li data-nav-id="/docker/helm-hl/index.html" class=""><a class="padding" href="/docker/helm-hl/index.html">helm 相关</a></li>
+          <li data-nav-id="/docker/k3s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k3s_deploy-hl/index.html">k3s 安装与使用</a></li>
+          <li data-nav-id="/docker/k3s_make-hl/index.html" class=""><a class="padding" href="/docker/k3s_make-hl/index.html">k3s 源码编译</a></li>
+          <li data-nav-id="/docker/k8s_use-hl/index.html" class=""><a class="padding" href="/docker/k8s_use-hl/index.html">k8s 使用</a></li>
+          <li data-nav-id="/docker/k8s_ceph-hl/index.html" class=""><a class="padding" href="/docker/k8s_ceph-hl/index.html">k8s 使用 ceph 储存</a></li>
+          <li data-nav-id="/docker/k8s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k8s_deploy-hl/index.html">k8s 安装部署</a></li>
+          <li data-nav-id="/docker/k8s-hl/index.html" class=""><a class="padding" href="/docker/k8s-hl/index.html">k8s 相关</a></li>
+          <li data-nav-id="/docker/kubebuilder-hl/index.html" class=""><a class="padding" href="/docker/kubebuilder-hl/index.html">kubebuilder</a></li>
+          <li data-nav-id="/docker/kubeedge-hl/index.html" class=""><a class="padding" href="/docker/kubeedge-hl/index.html">kubeedge</a></li>
+          <li data-nav-id="/docker/openshift-hl/index.html" class=""><a class="padding" href="/docker/openshift-hl/index.html">openshift 相关</a></li>
+          <li data-nav-id="/docker/overlay2-hl/index.html" class=""><a class="padding" href="/docker/overlay2-hl/index.html">overlay2</a></li>
+          <li data-nav-id="/docker/rancher-hl/index.html" class=""><a class="padding" href="/docker/rancher-hl/index.html">rancher 相关</a></li>
+          <li data-nav-id="/docker/multiarch-hl/index.html" class=""><a class="padding" href="/docker/multiarch-hl/index.html">容器交叉编译</a></li>
+          <li data-nav-id="/docker/debootstrap-hl/index.html" class=""><a class="padding" href="/docker/debootstrap-hl/index.html">容器基础镜像构建</a></li>
+          <li data-nav-id="/docker/convert_iso_to_docker_img-hl/index.html" class=""><a class="padding" href="/docker/convert_iso_to_docker_img-hl/index.html">将ISO镜像转换为docker镜像</a></li>
+          <li data-nav-id="/docker/usual_software-hl/index.html" class=""><a class="padding" href="/docker/usual_software-hl/index.html">常用软件安装</a></li>
+          <li data-nav-id="/docker/mount_usb_to_docker-hl/index.html" class=""><a class="padding" href="/docker/mount_usb_to_docker-hl/index.html">挂载USB到docker容器</a></li></ul></li>
+          <li data-nav-id="/linux/index.html" class=""><a class="padding" href="/linux/index.html">Linux</a><ul id="R-subsections-9e5aaccdf48687824ccd3b3097af8e41" class="morespace collapsible-menu">
+          <li data-nav-id="/linux/libvirt-hl/index.html" class=""><a class="padding" href="/linux/libvirt-hl/index.html">[libvirt 相关](/etc/sysconfig/libvirtd )</a></li>
+          <li data-nav-id="/linux/abd-hl/index.html" class=""><a class="padding" href="/linux/abd-hl/index.html">abd</a></li>
+          <li data-nav-id="/linux/ansible-hl/index.html" class=""><a class="padding" href="/linux/ansible-hl/index.html">ansible 相关</a></li>
+          <li data-nav-id="/linux/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/linux/apache_multi_ports-hl/index.html">apache 多端口</a></li>
+          <li data-nav-id="/linux/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/linux/diy_centos_iso-hl/index.html">CentOS iso 镜像定制</a></li>
+          <li data-nav-id="/linux/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/linux/change_centos_boot_kernel-hl/index.html">CentOS 修改默认启动内核</a></li>
+          <li data-nav-id="/linux/cobbler-hl/index.html" class=""><a class="padding" href="/linux/cobbler-hl/index.html">cobbler 相关</a></li>
+          <li data-nav-id="/linux/crontabs-hl/index.html" class=""><a class="padding" href="/linux/crontabs-hl/index.html">crontabs 计划任务相关</a></li>
+          <li data-nav-id="/linux/dd-hl/index.html" class=""><a class="padding" href="/linux/dd-hl/index.html">dd 相关</a></li>
+          <li data-nav-id="/linux/etcd-hl/index.html" class=""><a class="padding" href="/linux/etcd-hl/index.html">ETCD 相关</a></li>
+          <li data-nav-id="/linux/frp-hl/index.html" class=""><a class="padding" href="/linux/frp-hl/index.html">frp 相关</a></li>
+          <li data-nav-id="/linux/ftp-hl/index.html" class=""><a class="padding" href="/linux/ftp-hl/index.html">ftp 相关</a></li>
+          <li data-nav-id="/linux/gitlab-hl/index.html" class=""><a class="padding" href="/linux/gitlab-hl/index.html">GitLab</a></li>
+          <li data-nav-id="/linux/guestfish-hl/index.html" class=""><a class="padding" href="/linux/guestfish-hl/index.html">guestfish 相关</a></li>
+          <li data-nav-id="/linux/haproxy-hl/index.html" class=""><a class="padding" href="/linux/haproxy-hl/index.html">haproxy 相关</a></li>
+          <li data-nav-id="/linux/iscsi-hl/index.html" class=""><a class="padding" href="/linux/iscsi-hl/index.html">iscsi 相关</a></li>
+          <li data-nav-id="/linux/kernel_make-hl/index.html" class=""><a class="padding" href="/linux/kernel_make-hl/index.html">kernel 内核编译</a></li>
+          <li data-nav-id="/linux/linux_u-hl/index.html" class=""><a class="padding" href="/linux/linux_u-hl/index.html">Linux U盘占用</a></li>
+          <li data-nav-id="/linux/linux_source-hl/index.html" class=""><a class="padding" href="/linux/linux_source-hl/index.html">Linux 源制作</a></li>
+          <li data-nav-id="/linux/linux-hl/index.html" class=""><a class="padding" href="/linux/linux-hl/index.html">Linux 相关</a></li>
+          <li data-nav-id="/linux/linux_network-hl/index.html" class=""><a class="padding" href="/linux/linux_network-hl/index.html">linux 网络配置</a></li>
+          <li data-nav-id="/linux/lvm-hl/index.html" class=""><a class="padding" href="/linux/lvm-hl/index.html">LVM 逻辑卷相关</a></li>
+          <li data-nav-id="/linux/mysql-hl/index.html" class=""><a class="padding" href="/linux/mysql-hl/index.html">mysql 相关</a></li>
+          <li data-nav-id="/linux/nginx-hl/index.html" class=""><a class="padding" href="/linux/nginx-hl/index.html">nginx 相关</a></li>
+          <li data-nav-id="/linux/pypi_local_source-hl/index.html" class=""><a class="padding" href="/linux/pypi_local_source-hl/index.html">pip 本地源</a></li>
+          <li data-nav-id="/linux/proxychains_ng-hl/index.html" class=""><a class="padding" href="/linux/proxychains_ng-hl/index.html">proxychains-ng 代理工具</a></li>
+          <li data-nav-id="/linux/rpm_build-hl/index.html" class=""><a class="padding" href="/linux/rpm_build-hl/index.html">Python rpm编译</a></li>
+          <li data-nav-id="/linux/qemu_img-hl/index.html" class=""><a class="padding" href="/linux/qemu_img-hl/index.html">qemu-img</a></li>
+          <li data-nav-id="/linux/samba-hl/index.html" class=""><a class="padding" href="/linux/samba-hl/index.html">Samba 相关</a></li>
+          <li data-nav-id="/linux/ssh-hl/index.html" class=""><a class="padding" href="/linux/ssh-hl/index.html">ssh 相关</a></li>
+          <li data-nav-id="/linux/ssh_interval-hl/index.html" class=""><a class="padding" href="/linux/ssh_interval-hl/index.html">ssh 自动断开</a></li>
+          <li data-nav-id="/linux/ssh_forwading-hl/index.html" class=""><a class="padding" href="/linux/ssh_forwading-hl/index.html">ssh 转发</a></li>
+          <li data-nav-id="/linux/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/linux/ssr_privoxy-hl/index.html">ssr privoxy 相关</a></li>
+          <li data-nav-id="/linux/synology-hl/index.html" class=""><a class="padding" href="/linux/synology-hl/index.html">Synology</a></li>
+          <li data-nav-id="/linux/systemd-hl/index.html" class=""><a class="padding" href="/linux/systemd-hl/index.html">systemd</a></li>
+          <li data-nav-id="/linux/tcpdump-hl/index.html" class=""><a class="padding" href="/linux/tcpdump-hl/index.html">tcpdump 相关</a></li>
+          <li data-nav-id="/linux/uboot-hl/index.html" class=""><a class="padding" href="/linux/uboot-hl/index.html">uboot</a></li>
+          <li data-nav-id="/linux/vim-hl/index.html" class=""><a class="padding" href="/linux/vim-hl/index.html">Vim 常用命令</a></li>
+          <li data-nav-id="/linux/virt_manager-hl/index.html" class=""><a class="padding" href="/linux/virt_manager-hl/index.html">virt-manager 相关</a></li>
+          <li data-nav-id="/linux/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/linux/yum_install_conf_conflict-hl/index.html">yum 安装时文件冲突</a></li>
+          <li data-nav-id="/linux/net_bridge-hl/index.html" class=""><a class="padding" href="/linux/net_bridge-hl/index.html">创建网桥</a></li>
+          <li data-nav-id="/linux/build_pypi-hl/index.html" class=""><a class="padding" href="/linux/build_pypi-hl/index.html">发布pypi软件包</a></li>
+          <li data-nav-id="/linux/root_extend-hl/index.html" class=""><a class="padding" href="/linux/root_extend-hl/index.html">将 home 目录空间扩容到根目录</a></li>
+          <li data-nav-id="/linux/vm_to_router-hl/index.html" class=""><a class="padding" href="/linux/vm_to_router-hl/index.html">将虚拟机作为router</a></li>
+          <li data-nav-id="/linux/nested-hl/index.html" class=""><a class="padding" href="/linux/nested-hl/index.html">嵌套虚拟化</a></li>
+          <li data-nav-id="/linux/dns-hl/index.html" class=""><a class="padding" href="/linux/dns-hl/index.html">搭建本地 dns 服务器</a></li>
+          <li data-nav-id="/linux/nic_bond-hl/index.html" class=""><a class="padding" href="/linux/nic_bond-hl/index.html">网络端口聚合绑定</a></li>
+          <li data-nav-id="/linux/ramdisk-hl/index.html" class=""><a class="padding" href="/linux/ramdisk-hl/index.html">虚拟内存盘</a></li>
+          <li data-nav-id="/linux/mdadm-hl/index.html" class=""><a class="padding" href="/linux/mdadm-hl/index.html">软 raid</a></li></ul></li>
+          </ul>
+        </div>
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/docker/docker-hl/index.html" lang="zh_CN" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.variants && variants.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.variants && variants.markSelectedVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+	    <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1716876878" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1716876878" defer></script>
+    <script src="/js/theme.js?1716876878" defer></script>
+  </body>
+</html>

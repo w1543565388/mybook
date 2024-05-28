@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh_CN" dir="ltr">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.124.1">
+    <meta name="generator" content="Relearn 5.27.0+tip">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Build :: My New Hugo Site">
+    <meta name="twitter:description" content="Linux 源制作 一、apt 下载软件做离线源 1、拷贝所需安装软件包 通过apt-get安装的软件都在/var/cache/apt/archives目录下 cp /var/cache/apt/archives/* /home/package2、生成软件包信息（含有重要的包的依赖关系） apt-get install dpkg-dev dpkg-scanpackages package /dev/null | gzip &gt; packs/Packages.gz dpkg-scanpackages pools override &gt; dists/trusty/main/binary-i386/Packages dpkg-scanpackages pools override &gt; dists/trusty/main/binary-amd64/Packages 注：/dev/null位置的参数是指定一个文件，文件名不限，该文件的作用是用来重写覆盖deb软件包中控制文件的某些定义，它的第一行的格式，一行对应一个软件包： package priority section package指定你所要修改的软件包 priority 有low,medium,high三个值 section 用来指定软件包属于哪个section 如果不需要对deb软件包做任何修改你就可以像例子中那样直接指定一个/dev/null文件。3、添加本地源 apt命令每次都会读取/etc/apt/sources.list源列表(这个源列表可以添加好多源,每次都选中开头的有效源)，因此我们编辑该文件，在第一行添加我们自己的本地源，如： deb http://172.18.20.161/ packs/ # deb file:///home packs/ 要注意中间的空格4、打包本地源 将/etc/apt/sources.list文件拷贝到packages目录下，将packages文件夹打包、备份，以便使用。5、如何使用本地源 将packages压缩包放到/目录(该目录只要和添加的本地源路径一致即可，以便apt能找到源）下解压，备份本机的sources.list，将packages目录下的sources.list拷贝到/etc/apt/目录下。修改/etc/apt/sources.list 之后一般会运行下面两个命令进行更新升级： sudo apt-get update sudo apt-get dist-upgrade 其中 ： update - 取回更新的软件包列表信息 dist-upgrade - 发布版升级 然后就可以离线安装了：apt-get install xxxx ## deb file:///opt/chuandge /packs/二、使用 apt-mirror 建立本地 ubuntu 源 1、安装apt-mirror apt-get install apt-mirror2、创建放镜像的文件夹 例如将镜像等文件放在 /service/Ubuntu文件夹下： 并新建以下文件夹（mirror.">
+    <meta property="og:url" content="http://ip:1313/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html">
+    <meta property="og:site_name" content="My New Hugo Site">
+    <meta property="og:title" content="Build :: My New Hugo Site">
+    <meta property="og:description" content="Linux 源制作 一、apt 下载软件做离线源 1、拷贝所需安装软件包 通过apt-get安装的软件都在/var/cache/apt/archives目录下 cp /var/cache/apt/archives/* /home/package2、生成软件包信息（含有重要的包的依赖关系） apt-get install dpkg-dev dpkg-scanpackages package /dev/null | gzip &amp;gt; packs/Packages.gz dpkg-scanpackages pools override &amp;gt; dists/trusty/main/binary-i386/Packages dpkg-scanpackages pools override &amp;gt; dists/trusty/main/binary-amd64/Packages 注：/dev/null位置的参数是指定一个文件，文件名不限，该文件的作用是用来重写覆盖deb软件包中控制文件的某些定义，它的第一行的格式，一行对应一个软件包： package priority section package指定你所要修改的软件包 priority 有low,medium,high三个值 section 用来指定软件包属于哪个section 如果不需要对deb软件包做任何修改你就可以像例子中那样直接指定一个/dev/null文件。3、添加本地源 apt命令每次都会读取/etc/apt/sources.list源列表(这个源列表可以添加好多源,每次都选中开头的有效源)，因此我们编辑该文件，在第一行添加我们自己的本地源，如： deb http://172.18.20.161/ packs/ # deb file:///home packs/ 要注意中间的空格4、打包本地源 将/etc/apt/sources.list文件拷贝到packages目录下，将packages文件夹打包、备份，以便使用。5、如何使用本地源 将packages压缩包放到/目录(该目录只要和添加的本地源路径一致即可，以便apt能找到源）下解压，备份本机的sources.list，将packages目录下的sources.list拷贝到/etc/apt/目录下。修改/etc/apt/sources.list 之后一般会运行下面两个命令进行更新升级： sudo apt-get update sudo apt-get dist-upgrade 其中 ： update - 取回更新的软件包列表信息 dist-upgrade - 发布版升级 然后就可以离线安装了：apt-get install xxxx ## deb file:///opt/chuandge /packs/二、使用 apt-mirror 建立本地 ubuntu 源 1、安装apt-mirror apt-get install apt-mirror2、创建放镜像的文件夹 例如将镜像等文件放在 /service/Ubuntu文件夹下： 并新建以下文件夹（mirror.">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="容器 :: My New Hugo Site">
+    <meta property="article:published_time" content="2024-04-12T09:39:39+00:00">
+    <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
+    <title>Build :: My New Hugo Site</title>
+    <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
+    <link href="/css/fontawesome-all.min.css?1712919601" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1712919601" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1712919601" rel="stylesheet">
+    <link href="/css/auto-complete.css?1712919601" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1712919601" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1712919601" rel="stylesheet">
+    <link href="/css/fonts.css?1712919601" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1712919601" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1712919601" rel="stylesheet">
+    <link href="/css/theme-auto.css?1712919601" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1712919601" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1712919601" rel="stylesheet">
+    <link href="/css/print.css?1712919601" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1712919601" rel="stylesheet">
+    <script src="/js/url.js?1712919601"></script>
+    <script src="/js/variant.js?1712919601"></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/ip:1313';
+      // variant stuff
+      window.relearn.themeVariantModifier='';
+      window.variants && variants.init( [ 'auto' ] );
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"><nav class="TableOfContents">
+  <ul>
+    <li><a href="#一apt-下载软件做离线源">一、apt 下载软件做离线源</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#二使用-apt-mirror-建立本地-ubuntu-源">二、使用 apt-mirror 建立本地 ubuntu 源</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/%E5%AE%B9%E5%99%A8/index.html"><span itemprop="name">容器</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><span itemprop="name">Build</span><meta itemprop="position" content="2"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/%E5%AE%B9%E5%99%A8/linux_network-hl/index.html" title="Build (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/%E5%AE%B9%E5%99%A8/linux_u-hl/index.html" title="Build (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable default" tabindex="-1">
+        <div class="flex-block-wrapper">
+          <article class="default">
+            <header class="headline">
+            </header>
+
+<h1 id="build">Build</h1>
+
+<h1 id="linux-源制作">Linux 源制作</h1>
+<h2 id="一apt-下载软件做离线源">一、apt 下载软件做离线源</h2>
+<h5 id="1拷贝所需安装软件包">1、拷贝所需安装软件包</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>通过apt-get安装的软件都在/var/cache/apt/archives目录下
+cp /var/cache/apt/archives/* /home/package</code></pre></div><h5 id="2生成软件包信息含有重要的包的依赖关系">2、生成软件包信息（含有重要的包的依赖关系）</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get install dpkg-dev
+dpkg-scanpackages package  /dev/null  | gzip &gt; packs/Packages.gz
+dpkg-scanpackages pools override &gt; dists/trusty/main/binary-i386/Packages
+dpkg-scanpackages pools override &gt; dists/trusty/main/binary-amd64/Packages  
+注：/dev/null位置的参数是指定一个文件，文件名不限，该文件的作用是用来重写覆盖deb软件包中控制文件的某些定义，它的第一行的格式，一行对应一个软件包：
+package priority section
+package指定你所要修改的软件包
+priority 有low,medium,high三个值
+section 用来指定软件包属于哪个section
+如果不需要对deb软件包做任何修改你就可以像例子中那样直接指定一个/dev/null文件。</code></pre></div><h5 id="3添加本地源">3、添加本地源</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt命令每次都会读取/etc/apt/sources.list源列表(这个源列表可以添加好多源,每次都选中开头的有效源)，因此我们编辑该文件，在第一行添加我们自己的本地源，如：
+deb http://172.18.20.161/ packs/
+# deb file:///home packs/
+要注意中间的空格</code></pre></div><h5 id="4打包本地源">4、打包本地源</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>将/etc/apt/sources.list文件拷贝到packages目录下，将packages文件夹打包、备份，以便使用。</code></pre></div><h5 id="5如何使用本地源">5、如何使用本地源</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>将packages压缩包放到/目录(该目录只要和添加的本地源路径一致即可，以便apt能找到源）下解压，备份本机的sources.list，将packages目录下的sources.list拷贝到/etc/apt/目录下。修改/etc/apt/sources.list 之后一般会运行下面两个命令进行更新升级：
+sudo apt-get update
+sudo apt-get dist-upgrade
+其中 ：
+update - 取回更新的软件包列表信息
+dist-upgrade - 发布版升级
+然后就可以离线安装了：apt-get install xxxx
+## deb file:///opt/chuandge /packs/</code></pre></div><h2 id="二使用-apt-mirror-建立本地-ubuntu-源">二、使用 apt-mirror 建立本地 ubuntu 源</h2>
+<h5 id="1安装apt-mirror">1、安装apt-mirror</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get install apt-mirror</code></pre></div><h5 id="2创建放镜像的文件夹">2、创建放镜像的文件夹</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>例如将镜像等文件放在 /service/Ubuntu文件夹下：
+并新建以下文件夹（mirror.list里面提示要事先新建以下文件夹的）：
+/service/ubuntu
+/service/ubuntu/mirror
+/service/ubuntu/skel
+/service/ubuntu/var</code></pre></div><h5 id="3配置apt-mirror">3、配置apt-mirror：</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/apt/mirror.list
+############# config ##################
+#
+# set base_path /var/spool/apt-mirror
+#
+# if you change the base path you must create the directories below with write privlages
+#
+# set mirror_path  $base_path/mirror
+# set skel_path $base_path/skel
+# set var_path    $base_path/var
+# set cleanscript $var_path/clean.sh
+# set defaultarch  &lt;running host architecture&gt;
+#我们添加或更改如下内容：
+set base_path /service/ubuntu
+set mirror_path  $base_path/mirror
+set skel_path $base_path/skel
+set var_path    $base_path/var
+set cleanscript $var_path/clean.sh
+set nthreads    20
+set _tilde 0
+#
+############# end config ##############
+#我们把常用的软件同步过来就够用了
+deb-i386 http://archive.Ubuntu.com/ubuntu hardy main restricted universe multiverse
+deb-i386 http://archive.ubuntu.com/ubuntu hardy-updates main restricted universe multiverse
+deb-i386 http://archive.ubuntu.com/ubuntu hardy-backports main restricted universe multiverse
+deb-i386 http://archive.ubuntu.com/ubuntu hardy-security main restricted universe multiverse
+deb-i386 http://archive.ubuntu.com/ubuntu hardy-proposed main restricted universe multiverse
+#当某些软件包在服务器端进行了升级，或者服务器端不再需要这些软件包时，我们使用了 apt-mirror与服务器同步后，会在本地的$var_path/下生成一个clean.sh的脚本，列出了遗留在本地的旧版本和无用的软件包，你可 以手动运行这个脚本来删除遗留在本地的且不需要用的软件包
+clean http://archive.ubuntu.com/ubuntu</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>如果用amd64位架构下的包，可以加上deb-amd64的标记
+如果什么都不加，直接使用deb http.....这种格式，则在同步时，只同步当前系统所使用的架构下的软件包。比如一个64位系统，直接debhttp....只同步64位的软件 包。如果还嫌麻烦，直接去改set defaultarch  &lt;running hostarchitecture&gt; 这个参数就好，比如改成set defaultarch i386，这样就使用debhttp.....这种格式，则在同步时，只同步i386的软件包了。
+如果你还想要源码，可以把源码也加到mirror.list里面同步过来，比如加上deb-src这样的标记。想要其他的东西也可以追加相应的标记来完成。</code></pre></div><h5 id="4配置好后指定的镜像进行同步">4、配置好后指定的镜像进行同步</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-mirror</code></pre></div><blockquote>
+<p>如果是第一次同步，官方镜像可能需要几天时间才能同步完整，如果与国内源进行同步，只同步常用软件，平均1秒钟网速1MB（Byte）要同步30G左右的数据，大概需要5-8小时的时间才能同步完整。</p>
+</blockquote>
+<h5 id="5清理无用软件包同步完成后我们可以利用cleansh清理无用软件包本文档以set-base_path-serverubuntu为例">5、清理无用软件包，同步完成后，我们可以利用clean.sh清理无用软件包（本文档以set base_path /server/ubuntu为例）：</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>bash /service/ubuntu/var/clean.sh</code></pre></div><h5 id="6更新完毕后使用apache发布源镜像了">6、更新完毕后，使用apache发布源镜像了。</h5>
+<h6 id="1配置apache2">1.配置apache2</h6>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim httpd.conf
+#&lt;Directory /&gt;
+#    AllowOverride none
+#    Require all denied
+#&lt;/Directory&gt;
+#改成
+&lt;Directory /&gt;
+Options FollowSymLinks
+AllowOverride None
+Order deny,allow
+allow from all
+&lt;/Directory&gt;
+#在&lt;IfModule alias_module&gt; 节点中增加虚拟目录
+&lt;IfModule alias_module&gt;
+Alias /ubuntu /workspace/ubuntu/mirror/mirrors.163.com/ubuntu
+&lt;/IfModule&gt;
+#添加虚拟目录的权限
+&lt;Directory /workspace/ubuntu/mirror/mirrors.163.com/ubuntu&gt;
+Options Indexes FollowSymLinks
+AllowOverride None
+Require all granted
+&lt;/Directory&gt;
+#由于有opengrok 做了个tomcat的端口转发
+ProxyPass /source http://localhost:8081/source
+ProxyPassReverse /source http://localhost:8081/source</code></pre></div><h6 id="2重启apache">2.重启apache</h6>
+<div class="highlight wrap-code"><pre tabindex="0"><code>service apache2 restart</code></pre></div><h6 id="3客户端配置sourcelist">3.客户端配置source.list</h6>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/source.list
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty main restricted
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty-updates main restricted
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty universe
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty-updates universe
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty multiverse
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty-updates multiverse
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty-backports main restricted universe multiverse
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty-security main restricted
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty-security universe
+deb [arch=amd64] http://192.168.19.184/ubuntu/ trusty-security multiverse</code></pre></div><h6 id="4更新源">4.更新源</h6>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get update</code></pre></div>
+            <footer class="footline">
+            </footer>
+          </article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <style>
+            #R-logo svg,
+            #R-logo svg * {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              fill: #282828 !important;
+              fill: var(--MENU-SECTIONS-BG-color) !important;
+              opacity: .945;
+            }
+            a#R-logo {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+              font-size: 1.875rem;
+              font-weight: 300;
+              margin-top: -.8125rem;
+              max-width: 60%;
+              text-transform: uppercase;
+              width: 14.125rem;
+              white-space: nowrap;
+            }
+            a#R-logo:hover {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+            }
+            #R-logo svg {
+              margin-bottom: -1.25rem;
+              margin-inline-start: -1.47rem;
+              margin-inline-end: .5rem;
+              width: 40.5%;
+            }
+            @media only all and (max-width: 59.999rem) {
+              a#R-logo {
+                font-size: 1.5625rem;
+                margin-top: -.1875rem;
+              }
+              #R-logo svg {
+                margin-bottom: -.75rem;
+                margin-inline-start: -1.47rem;
+                margin-inline-end: .5rem;
+              }
+            }
+            @media all and (-ms-high-contrast:none) {
+              /* IE11s understanding of positioning is weird at best */
+              a#R-logo {
+                margin-top: -3.625rem;
+              }
+              #R-logo svg {
+                margin-bottom: -3.875rem;
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+            @media only all and (-ms-high-contrast:none) and (max-width: 59.999rem) {
+              #R-logo svg {
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+          </style>
+          <a id="R-logo" href="/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.044 64.044">
+              <path d="M46.103 136.34c-.642-.394-1.222-2.242-1.98-2.358-.76-.117-1.353.506-1.618 1.519-.266 1.012-.446 4.188.173 5.538.213.435.482.787 1.03.845.547.057.967-.504 1.45-1.027.482-.523.437-.9 1.142-.612.705.289 1.051.4 1.586 1.229.535.828 1.085 4.043.868 5.598-.241 1.458-.531 2.8-.59 4.088.26.075.517.148.772.217 2.68.724 5.373 1.037 7.873.02.001-.028.01-.105.008-.11-.048-.165-.18-.41-.36-.698-.18-.29-.414-.645-.586-1.114a3.212 3.212 0 0 1-.125-1.735c.056-.21.153-.342.249-.475 1.237-1.193 2.932-1.373 4.244-1.384.557-.004 1.389.016 2.198.255.809.239 1.706.724 2.068 1.843.187.578.114 1.17-.043 1.623-.153.438-.369.783-.545 1.091-.178.31-.329.6-.401.821-.007.02-.003.071-.005.094 2.256 1.008 4.716.91 7.189.398.55-.114 1.11-.247 1.673-.377.344-1.085.678-2.145.852-3.208.124-.752.158-2.311-.078-3.538-.118-.613-.306-1.15-.52-1.489-.221-.349-.413-.501-.747-.538-.243-.027-.51.013-.796.098-.67.223-1.33.606-1.966.76l-.008.002-.109.032c-.556.152-1.233.158-1.797-.36-.556-.51-.89-1.367-1.117-2.596-.283-1.528-.075-3.279.89-4.518l.071-.09h.07c.65-.71 1.485-.802 2.16-.599.706.213 1.333.629 1.772.84.736.354 1.185.319 1.475.171.291-.148.5-.439.668-.955.332-1.017.301-2.819.022-4.106-.148-.684-.13-1.292-.13-1.883-1.558-.463-3.067-.982-4.574-1.208-1.128-.169-2.263-.173-3.298.164-.13.046-.256.095-.38.15-.373.164-.633.342-.805.52-.077.098-.081.105-.087.21-.004.068.031.289.13.571.1.282.256.634.467 1.03.279.524.448 1.063.431 1.618a2.12 2.12 0 0 1-.499 1.309 1.757 1.757 0 0 1-.62.51h-.002c-.515.291-1.107.404-1.723.464-.86.083-1.787.026-2.598-.097-.806-.123-1.47-.28-1.948-.555-.444-.256-.79-.547-1.037-.925a2.273 2.273 0 0 1-.356-1.301c.029-.837.403-1.437.625-1.897.111-.23.191-.433.236-.583.045-.15.044-.25.046-.24-.005-.029-.127-.355-1.015-.741-1.138-.495-2.322-.673-3.533-.668h-.015a9.711 9.711 0 0 0-.521.016h-.002c-1.163.057-2.35.308-3.541.569.383 1.531.79 2.753.818 4.502-.096 1.297.158 2.114-1.03 2.935-.85.588-1.508.729-2.15.335" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:1.03763;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M61.472 101.34v.002c-.3-.003-.603.01-.894.04-.544.055-1.39.165-1.778.306-1.238.364.13 2.344.41 2.913.28.569.285 2.03.14 2.134-.144.103-.375.261-.934.345-.56.084.03-.037-1.589.086-1.62.122-5.506.29-8.265.248-.022.26-.036.521-.097.808-.309 1.442-.63 3.163-.494 4.074.071.473.168.65.414.8.23.14.737.235 1.62-.004.834-.227 1.3-.442 1.887-.456.595-.016 1.555.472 1.965.717.411.245-.03-.008.002 0s.128.05.176.102c.049.053-.276-.523.104.199.379.721.72 3.256.002 4.68-.46.913-1.01 1.49-1.64 1.711-.63.22-1.229.067-1.734-.135-.881-.353-1.584-.7-2.205-.647-1.199 1.94-1.186 4.17-.6 6.602.097.397.212.814.327 1.23 2.68-.556 5.542-1.016 8.337.132 1.064.437 1.73 1.015 1.902 1.857.169.831-.193 1.508-.438 1.986-.122.238-.23.46-.307.642-.07.164-.096.28-.104.324.069.429.309.723.686.945.385.227.89.355 1.35.423.723.104 1.567.152 2.287.086.693-.064 1.032-.338 1.241-.544a2.447 2.447 0 0 0 .303-.437.175.175 0 0 0 .013-.035c-.004-.066-.037-.246-.195-.527-.46-.816-.87-1.595-.817-2.51.028-.476.218-.938.529-1.288.304-.343.698-.586 1.186-.79 1.442-.606 2.96-.609 4.372-.409 1.525.216 2.963.679 4.378 1.083.226-2.09.784-3.9.592-5.77-.058-.565-.287-1.333-.598-1.827-.32-.508-.59-.717-1.036-.642-.648.11-1.472.935-2.707 1.078-.791.092-1.494-.267-1.95-.86-.45-.583-.678-1.335-.78-2.101-.202-1.525.031-3.229.89-4.27.615-.747 1.45-.887 2.15-.74.687.145 1.307.492 1.857.745v-.002c.546.252 1.033.388 1.281.344a.547.547 0 0 0 .353-.188c.113-.124.242-.35.384-.75.604-1.712.206-3.68-.303-5.654-.667.145-1.336.293-2.018.413-1.341.236-2.73.392-4.136.273-.656-.055-1.695-.085-2.58-.476-.442-.195-.903-.514-1.157-1.093-.259-.591-.205-1.313.08-2.014.223-.64 1.082-2.178.692-2.585-.391-.407-1.651-.56-2.554-.571z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.992837;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M83.128 98.116c-.484 1.875-1.057 3.757-2.486 5.033-.638.57-1.13.666-1.483.548-.401-.134-.715-.506-1.058-.973-.338-.461-.655-.97-1.076-1.332-.192-.165-.404-.315-.683-.38-.279-.066-.599-.02-.9.102-.489.196-.89.58-1.28 1.047a6.1 6.1 0 0 0-.985 1.632c-.234.591-.356 1.174-.277 1.713.072.487.392.977.905 1.185.463.187.926.156 1.36.154.433 0 .843.01 1.242.147.55.189.79.736.822 1.368.034.66-.145 1.412-.393 1.988l-.008.021c-.74 1.705-1.946 2.893-3.004 4.349l-.664.915.979.099c.924.092 1.788.26 2.468.675.46.281 1.806 1.205 2.794 2.222.497.513.888 1.031 1.047 1.502.078.231.095.422.05.6a.93.93 0 0 1-.345.474c-.301.223-.606.395-.864.532l-.354.186c-.107.058-.189.087-.345.228a.637.637 0 0 1 .062-.045l-.064.041-.209.236-.103.343s.003.126.007.152c.003.017.003.007.004.015v.002c.016.195.061.307.133.476a4.1 4.1 0 0 0 .32.596 5.7 5.7 0 0 0 2.8 2.258c.284.108.908.321 1.548.36.33.02.59.015.912-.13h.002c.08-.037.228-.095.382-.281.153-.186.19-.355.212-.445l.019-.075.003-.078c.023-.585-.037-1.296.072-1.899.153-.657.435-.956 1.009-.909 2.771.239 4.74 1.955 6.693 3.83l.742.714.279-1.155c.55-2.29 1.093-4.464 2.928-5.977.692-.57 1.184-.642 1.527-.509.39.151.676.536.996.995.319.458.605.926 1.07 1.212.194.119.464.232.784.209.32-.024.638-.163.988-.384 1.022-.645 1.778-1.756 2.086-2.942.136-.522.102-.991-.046-1.301-.158-.334-.433-.553-.754-.707-.653-.314-1.468-.373-2.094-.486-.825-.15-1.22-.475-1.345-.878-.13-.417 0-.953.335-1.61.6-1.173 1.887-2.602 3.13-3.911l.498-.526-.449-.432c-1.545-1.49-3.163-3.01-5.252-3.715h-.002c-.473-.16-1.097-.413-1.73-.424h-.003c-.311-.004-.596.04-.883.24v.002c-.22.155-.483.537-.583.937l-.008.036-.006.038c-.116.773-.06 1.467-.217 1.995-.063.212-.198.418-.359.507-.202.111-.492.153-.976.072-.582-.097-1.978-.69-3.021-1.503-.523-.407-.934-.85-1.117-1.3a1.153 1.153 0 0 1-.083-.63c.03-.184.1-.477.308-.593.21-.116.941-.32 1.377-.642h.002c.192-.141.403-.367.518-.64.114-.275.127-.526.123-.774-.006-.142-.036-.192-.08-.3a8.417 8.417 0 0 0-3-3.027c-1.226-.725-2.585-1.135-3.927-1.539-.434-.12-.844-.111-1.02.466zm.912.947c1.186.364 2.357.718 3.345 1.303 1.035.612 1.864 1.488 2.507 2.528-.514.263-1.095.5-1.44.79-.345.29-.729.914-.815 1.434-.084.509 0 .968.155 1.347.301.74.85 1.276 1.44 1.735 1.18.92 2.554 1.545 3.47 1.698.604.1 1.186.088 1.739-.216.594-.327.935-.911 1.088-1.427.264-.884.193-1.664.262-2.17h.1c.3.006.926.206 1.417.371 1.646.554 3.044 1.773 4.431 3.089-1.102 1.174-2.222 2.423-2.888 3.73-.42.823-.73 1.789-.453 2.687.283.913 1.1 1.415 2.138 1.603.691.126 1.472.226 1.84.403.19.091.258.182.278.223.03.064.058.075-.023.387-.21.804-.761 1.598-1.413 2.01-.247.155-.365.183-.407.187-.042.003-.061.002-.172-.066-.144-.088-.455-.473-.772-.929-.317-.454-.714-1.07-1.452-1.356-.783-.304-1.776-.022-2.713.75-1.942 1.6-2.626 3.764-3.146 5.8-1.802-1.676-3.772-3.138-6.589-3.517h-.002c-.346-.095-1.013-.031-1.293.143-.735.501-1.005 1.132-1.168 2.007-.125.69-.082 1.216-.074 1.659-.055.006-.046.01-.104.006-.42-.026-1.035-.215-1.244-.295-.947-.361-1.774-1.006-2.314-1.857-.054-.085-.072-.132-.109-.2l.027-.016c.284-.15.656-.36 1.045-.648.44-.327.789-.798.93-1.35a2.4 2.4 0 0 0-.068-1.379c-.254-.751-.753-1.353-1.295-1.911-1.09-1.124-2.452-2.049-2.99-2.378-.609-.372-1.303-.44-1.981-.56.875-1.094 1.878-2.251 2.596-3.921.294-.823.543-1.907.513-2.658-.049-.97-.489-2.013-1.52-2.367-.579-.2-1.131-.204-1.58-.203-.45.002-.786-.006-.97-.08h-.002c-.264-.107-.236-.108-.268-.33-.025-.17.021-.553.183-.962a4.67 4.67 0 0 1 .725-1.192c.29-.348.617-.59.705-.626.142-.057.176-.05.22-.04.045.011.127.052.263.17.235.201.56.671.92 1.161.354.484.791 1.08 1.543 1.33.8.267 1.784-.052 2.671-.846 1.594-1.424 2.235-3.317 2.714-5.051zm11.705 7.023c-.02.014.042-.002.042 0l-.008.035c.05-.2-.028-.04-.034-.035zM79.472 122.45a.198.198 0 0 1 .005.023v.014c-.002-.01-.003-.03-.005-.037zm-.29.732-.006.01-.044.027c.016-.01.033-.024.05-.036z" style="color:#000;fill:#282828;stroke-width:1.02352;-inkscape-stroke:none" transform="translate(-40.698 -95.175)"/>
+              <path d="M76.694 128.845c-.85-.012-1.668.253-2.434.67-.01.592-.015 1.17.109 1.772.323 1.573.422 3.553-.07 5.147-.247.804-.684 1.535-1.347 1.891-.663.356-1.467.296-2.362-.159-.522-.266-1.059-.62-1.487-.757-.223-.072-.392-.096-.522-.069-.13.027-.232.094-.362.27-.53.719-.681 1.823-.497 2.876.177 1.012.418 1.438.543 1.56.143.137.26.154.604.055.548-.158 1.523-.857 2.573-.972l.02-.002.5.058c.686.081 1.247.562 1.622 1.19.372.62.591 1.37.73 2.136.279 1.532.25 3.16.083 4.232-.14.91-.394 1.72-.632 2.53 1.719-.385 3.485-.692 5.307-.36 1.174.214 2.749.574 3.762 1.977l.088.122.046.159c.162.551.16 1.114.024 1.578-.13.45-.348.772-.533 1.023-.181.246-.336.444-.437.606-.102.16-.141.275-.145.336-.01.17 0 .197.07.315.057.1.186.242.39.366.408.246 1.106.414 1.843.45a7.842 7.842 0 0 0 2.174-.21 4.28 4.28 0 0 0 .822-.296c.218-.106.385-.242.377-.233l.029-.031c.025-.035.05-.072.05-.068 0-.004 0-.017-.003-.05a2.733 2.733 0 0 0-.21-.579c-.26-.548-.839-1.333-.822-2.46.01-.657.27-1.21.598-1.576.32-.357.696-.575 1.074-.736.759-.323 1.57-.418 2.054-.458 1.653-.136 3.252.296 4.755.765.457.142.905.29 1.352.434.325-2.258.902-4.247.598-6.217-.071-.46-.25-1.169-.486-1.684-.238-.518-.495-.762-.675-.779-.351-.032-.716.14-1.174.418-.457.277-1.005.665-1.695.742-.745.082-1.406-.291-1.84-.908-.428-.608-.653-1.394-.754-2.196-.203-1.596.016-3.377.794-4.493.568-.813 1.358-.984 2.024-.835.65.146 1.243.51 1.769.779.524.267.99.413 1.237.365a.527.527 0 0 0 .346-.2c.11-.132.235-.373.37-.798.612-1.918.27-3.894-.246-6.054-2.815-.851-5.49-1.534-8.089-.267a.727.727 0 0 0-.223.148c-.024.028-.018.021-.026.056.001-.003-.01.178.07.44.162.522.611 1.29.911 1.978l.004.009.029.063.024.084V133c.162.635.016 1.297-.274 1.727-.272.404-.618.636-.952.81-.675.353-1.399.484-1.724.533a5.888 5.888 0 0 1-3.973-.795c-.512-.311-.876-.594-1.133-1.02-.282-.466-.318-1.084-.172-1.557.252-.814.715-1.266.971-1.89a.663.663 0 0 0 .047-.14c.001-.013 0-.006-.007-.037a.761.761 0 0 0-.184-.268c-.264-.267-.865-.595-1.54-.826-1.356-.462-3.07-.659-3.583-.686-.062-.002-.121-.006-.178-.006z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.991342;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+            </svg>Relearn
+          </a>
+        </div>
+
+        <search>
+          <div class="searchbox default-animation">
+            <i class="fas fa-search" title="Search (CTRL+ALT+f)"></i>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1712919601" defer></script>
+        <script src="/js/lunr/lunr.min.js?1712919601" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1712919601" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1712919601" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1712919601" defer></script>
+        <script src="/js/search.js?1712919601" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-topics">
+          <ul class="enlarge morespace collapsible-menu">
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/index.html" class="parent "><a class="padding" href="/%E5%AE%B9%E5%99%A8/index.html">容器</a><ul id="R-subsections-aa16404bf92ba8ac9012a8ae97ecece8" class="morespace collapsible-menu">
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/abd-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/abd-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ansible-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ansible-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/apache_multi_ports-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/build/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/build/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/build_pypi-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/build_pypi-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/change_centos_boot_kernel-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/cobbler-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/cobbler-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/crontabs-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/crontabs-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/crushmap-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/crushmap-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/dd-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/dd-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/diy_centos_iso-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/dns-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/dns-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/etcd-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/etcd-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/frp-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/frp-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ftp-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ftp-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/gitlab-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/gitlab-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/guestfish-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/guestfish-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/haproxy-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/haproxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/iscsi-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/iscsi-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/kernel_make-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/kernel_make-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/libvirt-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/libvirt-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/linux-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/linux-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/linux_network-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/linux_network-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html" class="active"><a class="padding" href="/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/linux_u-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/linux_u-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/lvm-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/lvm-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/mdadm-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/mdadm-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/mysql-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/mysql-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/nested-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/nested-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/net_bridge-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/net_bridge-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/nginx-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/nginx-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/nic_bond-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/nic_bond-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/proxychains_ng-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/proxychains_ng-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/pypi_local_source-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/pypi_local_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/qemu_img-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/qemu_img-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ramdisk-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ramdisk-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/root_extend-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/root_extend-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/rpm_build-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/rpm_build-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/samba-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/samba-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ssh-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ssh-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ssh_forwading-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ssh_forwading-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ssh_interval-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ssh_interval-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ssr_privoxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/synology-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/synology-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/systemd-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/systemd-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/tcpdump-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/tcpdump-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/uboot-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/uboot-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/unixbench-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/unixbench-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/vim-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/vim-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/virt_manager-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/virt_manager-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/vm_to_router-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/vm_to_router-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/yum_install_conf_conflict-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/docker/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/docker/index.html">Docker</a></li></ul></li>
+          <li data-nav-id="/basics/index.html" class=""><a class="padding" href="/basics/index.html">Basics</a><ul id="R-subsections-a6deabe447afe1b2e1405bfc57ca61ff" class="morespace collapsible-menu">
+          <li data-nav-id="/basics/second-content/index.html" class=""><a class="padding" href="/basics/second-content/index.html">Second Content</a></li>
+          <li data-nav-id="/basics/first-content/index.html" class=""><a class="padding" href="/basics/first-content/index.html">First Content</a></li></ul></li>
+          <li data-nav-id="/linux/index.html" class=""><a class="padding" href="/linux/index.html">Linuxes</a><ul id="R-subsections-9e5aaccdf48687824ccd3b3097af8e41" class="morespace collapsible-menu">
+          <li data-nav-id="/linux/abd-hl/index.html" class=""><a class="padding" href="/linux/abd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ansible-hl/index.html" class=""><a class="padding" href="/linux/ansible-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/linux/apache_multi_ports-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/build_pypi-hl/index.html" class=""><a class="padding" href="/linux/build_pypi-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/linux/change_centos_boot_kernel-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/cobbler-hl/index.html" class=""><a class="padding" href="/linux/cobbler-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/crontabs-hl/index.html" class=""><a class="padding" href="/linux/crontabs-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/dd-hl/index.html" class=""><a class="padding" href="/linux/dd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/linux/diy_centos_iso-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/dns-hl/index.html" class=""><a class="padding" href="/linux/dns-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/etcd-hl/index.html" class=""><a class="padding" href="/linux/etcd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/frp-hl/index.html" class=""><a class="padding" href="/linux/frp-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ftp-hl/index.html" class=""><a class="padding" href="/linux/ftp-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/gitlab-hl/index.html" class=""><a class="padding" href="/linux/gitlab-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/guestfish-hl/index.html" class=""><a class="padding" href="/linux/guestfish-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/haproxy-hl/index.html" class=""><a class="padding" href="/linux/haproxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/iscsi-hl/index.html" class=""><a class="padding" href="/linux/iscsi-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/kernel_make-hl/index.html" class=""><a class="padding" href="/linux/kernel_make-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/libvirt-hl/index.html" class=""><a class="padding" href="/linux/libvirt-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux-hl/index.html" class=""><a class="padding" href="/linux/linux-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_network-hl/index.html" class=""><a class="padding" href="/linux/linux_network-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_source-hl/index.html" class=""><a class="padding" href="/linux/linux_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_u-hl/index.html" class=""><a class="padding" href="/linux/linux_u-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/lvm-hl/index.html" class=""><a class="padding" href="/linux/lvm-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/mdadm-hl/index.html" class=""><a class="padding" href="/linux/mdadm-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/mysql-hl/index.html" class=""><a class="padding" href="/linux/mysql-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nested-hl/index.html" class=""><a class="padding" href="/linux/nested-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/net_bridge-hl/index.html" class=""><a class="padding" href="/linux/net_bridge-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nginx-hl/index.html" class=""><a class="padding" href="/linux/nginx-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nic_bond-hl/index.html" class=""><a class="padding" href="/linux/nic_bond-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/proxychains_ng-hl/index.html" class=""><a class="padding" href="/linux/proxychains_ng-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/pypi_local_source-hl/index.html" class=""><a class="padding" href="/linux/pypi_local_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/qemu_img-hl/index.html" class=""><a class="padding" href="/linux/qemu_img-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ramdisk-hl/index.html" class=""><a class="padding" href="/linux/ramdisk-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/root_extend-hl/index.html" class=""><a class="padding" href="/linux/root_extend-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/rpm_build-hl/index.html" class=""><a class="padding" href="/linux/rpm_build-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/samba-hl/index.html" class=""><a class="padding" href="/linux/samba-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh-hl/index.html" class=""><a class="padding" href="/linux/ssh-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh_forwading-hl/index.html" class=""><a class="padding" href="/linux/ssh_forwading-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh_interval-hl/index.html" class=""><a class="padding" href="/linux/ssh_interval-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/linux/ssr_privoxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/synology-hl/index.html" class=""><a class="padding" href="/linux/synology-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/systemd-hl/index.html" class=""><a class="padding" href="/linux/systemd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/tcpdump-hl/index.html" class=""><a class="padding" href="/linux/tcpdump-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/uboot-hl/index.html" class=""><a class="padding" href="/linux/uboot-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/unixbench-hl/index.html" class=""><a class="padding" href="/linux/unixbench-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/vim-hl/index.html" class=""><a class="padding" href="/linux/vim-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/virt_manager-hl/index.html" class=""><a class="padding" href="/linux/virt_manager-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/vm_to_router-hl/index.html" class=""><a class="padding" href="/linux/vm_to_router-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/linux/yum_install_conf_conflict-hl/index.html">Build</a></li></ul></li>
+          <li data-nav-id="/posts/index.html" class=""><a class="padding" href="/posts/index.html">Posts</a><ul id="R-subsections-6c8465a20210a85121ce7f08ddd74896" class="morespace collapsible-menu">
+          <li data-nav-id="/posts/fisrt-blog/index.html" class=""><a class="padding" href="/posts/fisrt-blog/index.html">Fisrt Blog</a></li></ul></li>
+          <li data-nav-id="/golang/index.html" class=""><a class="padding" href="/golang/index.html">Golangs</a></li>
+          </ul>
+        </div>
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html" lang="zh_CN" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.variants && variants.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.variants && variants.markSelectedVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+	    <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1712919602" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1712919602" defer></script>
+    <script src="/js/theme.js?1712919602" defer></script>
+  </body>
+</html>

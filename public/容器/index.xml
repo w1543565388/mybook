@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>容器 on My New Hugo Site</title>
+    <link>http://ip:1313/%E5%AE%B9%E5%99%A8/index.html</link>
+    <description>Recent content in 容器 on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <lastBuildDate>Fri, 12 Apr 2024 09:39:39 +0000</lastBuildDate>
+    <atom:link href="http://ip:1313/%E5%AE%B9%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/abd-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/abd-hl/index.html</guid>
+      <description>abd https://adbdownload.com/&#xA;1、连接、安装 设备进入adb模式&#xA;adb connet 192.168.1.27 adb install *.apk2、查看 adb devices3、服务管理 adb kill-server adb start-server4、卸载 adb shell pm list packages adb shell pm uninstall --user 0 APP_NAME</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/ansible-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/ansible-hl/index.html</guid>
+      <description>ansible 相关 1、配置文件 ansible 应用程序的 主配置文件：/etc/ansible/ansible.cfg Host Inventory 定义管控主机 ：/etc/ansible/hosts [both] master node1 node2 [node] node1 node2遵循 INI风格；中括号中的字符是组名；一个主机可同时属于多个组；&#xA;2、ansible-doc命令：获取模块列表，及模块使用格式； ansible-doc -l ：获取列表 ansible-doc -s module_name ：获取指定模块的使用信息3、模块 command 默认模块，可省略 shell 以shell解释器执行脚本 raw script 将本地脚本传送到远端节点上执行 4、变量使用示例： Tasks 任务、 Variables 变量、 Templates 模板、 Handlers 处理器、 Roles 角色&#xA;[root@localhost~]# vim useradd.yml -hosts: websrvs remote_user: root vars: username: testuser password: xuding tasks: -name: add user user: name={{ username }} state=present -name: set password shell: /bin/echo {{ password }} |/usr/bin/passwd --stdin {{ username }} 调用变量{{ }} ansible-playbook /PATH/TO/SOME_YAML_FILE { -eVARS|&amp;ndash;extra-vars=VARS} 变量的重新赋值调用方法 [root@localhost ~]# ansible-playbook useradd.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/apache_multi_ports-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/apache_multi_ports-hl/index.html</guid>
+      <description>apache 多端口 1、新建配置文件 touch /etc/apache2/sites-available/packages.conf2、编辑配置文件(/etc/apache2/sites-available/packages.conf) Listen 81 &amp;lt;VirtualHost *:81&amp;gt; ServerAdmin webmaster@localhost DocumentRoot /mnt/ramdisk &amp;lt;Directory /&amp;gt; Options FollowSymLinks AllowOverride None &amp;lt;/Directory&amp;gt; ErrorLog /var/log/apache2/error.log # Possible values include: debug, info, notice, warn, error, crit, # alert, emerg. LogLevel warn CustomLog /var/log/apache2/access.log combined &amp;lt;/VirtualHost&amp;gt;3、链接 ln -s /etc/apache2/sites-available/packages.conf /etc/apache2/sites-enabled4、在apache配置文件中（/etc/apache2/apache2.conf），添加如下内容： &amp;lt;Directory /mnt&amp;gt; Options Indexes FollowSymLinks AllowOverride None Require all granted &amp;lt;/Directory&amp;gt;4、重启apache服务 service apache2 restart</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/build/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/build/index.html</guid>
+      <description>buildkit 相关 一、部署 1、下载 curl -LO https://github.com/moby/buildkit/releases/download/v0.11.6/buildkit-v0.11.6.linux-amd64.tar.gz2、安装 tar -zxvf buildkit-v0.11.6.linux-amd64.tar.gz cp bin/* /usr/bin/3、启动 a、用参数启动 buildkitd &amp;amp; buildkitd --oci-worker=false --containerd-worker=true &amp;amp; 使用 &amp;ndash;oci-worker=false &amp;ndash;containerd-worker=true 参数,可以让buildkitd服务使用containerd后端&#xA;b、使用配置文件启动 buildkitd.toml&#xA;mkdir /etc/buildkit/cat &amp;gt; /etc/buildkit/buildkitd.toml &amp;lt;&amp;lt; EOF [worker.oci] enabled = false [worker.containerd] enabled = true # namespace should be k8s.io for Kubernetes (including Rancher Desktop) namespace = default platforms = [ linux/amd64, linux/arm64 ] gc = true # gckeepstorage sets storage limit for default gc profile, in MB.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/build_pypi-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/build_pypi-hl/index.html</guid>
+      <description>发布pypi软件包 发布pypi python包，打包软件包时，主要依赖setuptools。&#xA;pip install setuptools一、注册pypi账号 pypi register&#xA;1、点击register 2、填写名字，密码，邮件 记住自己的用户名和密码，后面上传的时候需要输入&#xA;二、准备自己的python源码 略 三、准备setup文件（全部放在源码根目录） 1、准备setup.cfg [bdist_wheel] universal = 12、准备README.rst，具体语法可以参考http://rest-sphinx-memo.readthedocs.io/en/latest/ReST.html ======== autopep8 ======== .. image:: https://img.shields.io/pypi/v/autopep8.svg :target: https://pypi.org/project/autopep8/ :alt: PyPI Version .. image:: https://travis-ci.org/hhatto/autopep8.svg?branch=master :target: https://travis-ci.org/hhatto/autopep8 :alt: Build status .. contents:: Installation ============ From pip:: $ pip install --upgrade autopep8 Consider using the ``--user`` option_. .. _option: https://pip.pypa.io/en/latest/user_guide/#user-installs Requirements ============ autopep8 requires pycodestyle_. .. _pycodestyle: https://github.com/PyCQA/pycodestyle3、准备setup.py version：包版本，更新包时更新版本号 name：包名称 long_description：必须是rst（reStructuredText）格式，这个内容会显示在pypi包首页，具体语法可以参考http://rest-sphinx-memo.readthedocs.io/en/latest/ReST.html install_requires：申明依赖包。安装包是pip会自动安装 packages = find_packages()，这个参数是导入目录下的所有__init__.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/change_centos_boot_kernel-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/change_centos_boot_kernel-hl/index.html</guid>
+      <description>CentOS 修改默认启动内核 1、查看当前内核 uname -r2、显示已经安装的内核 rpm -qa | grep kernel3、安装指定内核 rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force4、卸载内核 yum remove kernel-3.10.0-229.1.2.el7.x86_64.rpm5、启动内核修改 1.查看启动项 cat /boot/grub2/grub.cfg /查看启动项 cat /boot/grub2/grubenv 2. 设置默认启动项 grub2-set-default CentOS Linux (3.10.0-693.17.1.el7.x86_64) 7 (Core) 3.10.0-693.17.1.el7.x86_64 3. 查看默认启动项 grub2-editenv list 4. 生成配置 grub2-mkconfig -o /boot/grub2/grub.cfg #备注： 在生成grub.cfg之前，最好先备份原始的grub.cfg文件6、重新安装内核即可 yum -y update</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/cobbler-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/cobbler-hl/index.html</guid>
+      <description>cobbler 相关 一、关闭selinux 1、修改配置 vim /etc/selinux/config #SELINUX=enforcing #SELINUXTYPE=targeted SELINUX=disabled2、配置生效 setenforce 0二、关闭防火墙 systemctl stop firewalld systemctl disable firewalld三、安装Cobbler 1.安装最新的epel库 #rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm rpm -ivh http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm2.安装Cobbler以及相关的包 #yum install cobbler cobbler-web pykickstart xinetd dhcp dnsmasq syslinux -y yum install cobbler cobbler-web pykickstart xinetd dhcp httpd tftp -y3.启动Cobbler及其他服务 systemctl enable cobblerd systemctl start cobblerd systemctl enable httpd systemctl start httpd systemctl enable xinetd systemctl start xinetd Cobbler-Web提供了一个网站管理服务，默认用户名和密码都是cobbler,Web浏览地址可以通过以下链接： https://172.18.50.30/cobbler_web //注意是https ##四、配置Cobbler&#xA;1、设置文件里的default_password_crypted控制在kickstart过程中的新系统的超级用户口令 openssl passwd -1 生成系统的root用户密码 $1$Ve0a/FjX$GmL.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/crontabs-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/crontabs-hl/index.html</guid>
+      <description>crontabs 计划任务相关 1、安装 yum install crontabs systemctl enable crond systemctl start crond2、配置 vim /etc/crontab 分钟(0-59) 小时(0-23) 日(1-31) 月(11-12) 星期(0-6,0表示周日) 用户名 要执行的命令 例如: 每天早上5点定时重启系统 0 5 * * * root reboot 每一小时重启smb * */1 * * * /etc/init.d/smb restart 每天早上6点 0 6 * * * echo Good morning. &amp;gt;&amp;gt; /tmp/test.txt //注意单纯echo，从屏幕上看不到任何输出，因为cron把任何输出都email到root的信箱了。 每两个小时 0 */2 * * * echo Have a break now. &amp;gt;&amp;gt; /tmp/test.txt 晚上11点到早上8点之间每两个小时和早上八点 0 23-7/2，8 * * * echo Have a good dream &amp;gt;&amp;gt; /tmp/test.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/crushmap-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/crushmap-hl/index.html</guid>
+      <description>crushmap 一、获取与使用 crushmap 1、获得 crush map，获得默认 crushmap (加密) ceph osd getcrushmap -o crushmap.dump2、转换 crushmap 格式 (加密 -&amp;gt; 明文格式) crushtool -d crushmap.dump -o crushmap.txt3、转换 crushmap 格式(明文 -&amp;gt; 加密格式) crushtool -c crushmap.txt -o crushmap.done4、重新使用新 crushmap ceph osd setcrushmap -i crushmap.done二、crushmap # begin crush map tunable choose_local_tries 0 tunable choose_local_fallback_tries 0 tunable choose_total_tries 50 tunable chooseleaf_descend_once 1 tunable chooseleaf_vary_r 1 tunable straw_calc_version 1 # devices device 0 osd.0 device 1 osd.1 device 2 osd.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/dd-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/dd-hl/index.html</guid>
+      <description>dd 相关 一、参数 dd：用指定大小的块拷贝一个文件，并在拷贝的同时进行指定的转换&#xA;if=文件名，input file of=文件名，output file ibs=bytes，一次读入bytes个字节，即指定一个块大小为bytes个字节 obs=bytes，一次输出bytes个字节，即指定一个块大小为bytes个字节 bs=bytes，同时设置读入、输出的块大小为bytes个字节 cbs=bytes，一次转换bytes个字节，即指定转换缓冲区大小 skip=blocks，从输入文件开头跳过blocks个块后再开始复制 seek=blocks，从输出文件开头跳出blocks个块后再开始复制 count=blocks，仅拷贝blocks个块，块大小等于lbs指定的字节数 conv=conversion，用指定的参数转换文件 ascii，转换ebcdic为ascii ebcdic，转换ascii为 ebcdic ibm，转换ascii为alternate ebcdic block，把每一行转换为长度为cbs，不足部分为空格填充 unblock，使每一行的长度都为cbs，不足部分用空格填充 lcase，把大写字符转换为小写字符 ucase，把小写字符转换为大写字符 swab，交换输入的每对字符 noerror，出错时不停止 notrunc，不截短输出文件 sync，将每个输入块填充到ibs个字节，不足部分用空（NUL）字符补齐 /dev/null，无底洞，可以向它输入任何数据。是一个空设备，也成为位桶（bit bucket），任何写入它的输出都会被抛弃，如果不想让消息以标准输出显示或写入文件，可以将消息重定向到位桶。 /dev/zero，是一个输入设备，可以用来初始化文件。该设备无穷尽的提供0。&#xA;二、示例 1、将本地/dev/sda整盘备份到/dev/sdb dd if=/dev/sda of=/dev/sdb2、将/dev/sda全盘数据备份到指定路径的image文件 dd if=/dev/sda of=/root/image dd if=/dev/sda of=/root/image bs=2M status=progress3、将备份文件恢复到指定盘 dd if=/root/image of=/dev/sda4、备份/dev/sda全盘数据，并利用gzip工具进行压缩，保存到指定路径 dd if=/dev/sda | gzip &amp;gt; /root/image.gz5、将压缩的备份文件恢复到指定盘 gzip -dc /root/image.gz | dd of=/dev/sda6、拷贝内存内容到硬盘 dd if=/dev/mem of=/root/mem.bin bs=1024(指定块大小为1K)7、拷贝光盘内容到指定文件夹，并保存为cd.iso文件 dd if=/dev/cdrom(hdc) of=/root/cd.iso8、增加swap分区文件大小 第一步：创建一个大小为256M的文件 dd if=/dev/zero of=/swapfile bs=1024 count=262144 第二步：把这个文件变成swap文件 mkswap /swapfile 第三步：启用这个swap文件 swapon /swapfile 第四步：编辑/etc/fstab文件 /swapfile swap swap default 0 09、销毁磁盘数据 dd if=/dev/urandom of=/dev/sda10、测试磁盘的读写速度 dd if=/dev/zero bs=1024 count=1000000 of=/root/1GB.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/diy_centos_iso-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/diy_centos_iso-hl/index.html</guid>
+      <description>CentOS iso 镜像定制 内核 kernel=images/pxeboot/vmlinuz&#xA;根文件系统 initrd=images/pxeboot/initrd.img 开机引导系统安装的内核（vmlinuz）及RAM镜像(initrd.img)，在引导系统时会载入内存，给系统的安装提供一个Linux安装引导平台，文件夹中还有在不同模式下显示信息的boot.msg文件 Anaconda是RedHat、CentOS、Fedora等Linux的安装管理程序，使用Python编写。可以提供文本、图形等安装管理方式，并支持Kickstart等脚本提供自动安装的功能。&#xA;mksquashfs /mnt /root/install.img –all-root -noF usr/bin/anaconda 安装程序的主执行文件 usr/lib/anaconda/iw/ 图形安装模式的模块 usr/lib/anaconda/textw/ 文本安装模式的模块。 usr/share/anaconda/pixmaps/ 图形安装过程的图片 usr/share/anaconda/ui/ 安装过程中显示的文字 usr/lib/anaconda/dispatch.py 来控制整个安装的流程，当一个Next或Back按钮被单击时的跳转 usr/lib/anaconda/vnc.py 用于控制对VNC进行设置（当在安装过程中请求了VNC时）1、下载并上传CentOS-7-x86_64-Minimal-1810.iso到虚拟机。 centos下载地址&#xA;2、创建目录media，并挂载iso。 mkdir /media mount CentOS-7-x86_64-Minimal-1810.iso /media3、创建镜像目录，并拷贝/media下的所有文件。 mkdir /root/TMPOS cp -pRf /media/* /root/TMPOS/ cp /media/.discinfo /root/TMPOS/ cp /media/.treeinfo /root/TMPOS/4、修改centos-release（可选）。 iso 系统定制&#xA;%define product_family CentOS http://rpm.pbone.net/index.php3/stat/3/srodzaj/2/search/centos-release-7-3.1611.el7.centos.src.rpm5、修改centos-logos（可选）。 tar -xf centos-logos-70.0.6.tar.xz tar -cvf centos-logos-70.0.6.tar.xz centos-logos-70.0.6/ cd centos-logos-70.0.6/pixmaps6、修改isolinux（可选）。 mkdir tmp cp initrd.img tmp/ xz -dc initrd.img |cpio -id vim .</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/dns-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/dns-hl/index.html</guid>
+      <description>搭建本地 dns 服务器 1、安装 yum方式安装，如下： yum -y install dnsmasq dnsmasq -v apt-get方式安装，如下： apt-get -y install dnsmasq dnsmasq -v2、编辑配置文件 vim /etc/dnsmasq.conf resolv-file=/etc/resolv.dnsmasq.conf strict-order echo resolv-file=/etc/dnsmasq.d/resolv.dnsmasq.conf &amp;gt;&amp;gt; /etc/dnsmasq.conf echo addn-hosts=/etc/dnsmasq.d/dnsmasq.hosts &amp;gt;&amp;gt; /etc/dnsmasq.conf3、添加开机启动 /etc/init.d/dnsmasq restart4、检查是否启动 netstat -tunlp|grep 535、使用DNS加快解析速度。打开/etc/dnsmasq.conf文件，server=后面可以添加指定的DNS，例如不同的网站使用不同的DNS。 国内指定DNS server=/cn/114.114.114.114 server=/taobao.com/114.114.114.114 server=/taobaocdn.com/114.114.114.114 指定DNS server=/google.com/223.5.5.5 屏蔽网站/广告 vim /etc/dnsmasq.conf address=/ad.youku.com/127.0.0.1 address=/ad.iqiyi.com/127.0.0.1 指定域名解析到特定的IP上。这个功能可以让你控制一些网站的访问，非法的DNS就经常把一些正规的网站解析到不正确IP上。 address=/olinux.org.cn/123.123.123.123 内网DNS(DNS劫持)。首先将局域网中的所有的设备的本地DNS设置为已经安装Dnsmasq的服务器IP地址。然后修改已经安装Dnsmasq的服务器Hosts文件：/etc/hosts，指定域名到特定的IP中。&#xA;6、其他电脑配置dns，检查测试缓存 dig www.baidu.com7、Dnsmasq小结 1、Dnsmasq作为本地DNS服务器安装方便，操作简单，改动的地方也不是很多，如果用VPS来搭建本地DNS，响应的速度会更快，也更稳定。 2、Dnsmasq的功能强大，反DNS劫持、加快解析速度、屏蔽广告、控制内网DNS、强制域名跳转到特定IP上等这些功能在我们的实际的生活中都是很有用的。</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/etcd-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/etcd-hl/index.html</guid>
+      <description>ETCD 相关 一、搭建 1、创建单独的网络 docker network create etcd --subnet 172.19.0.0/162、运行etcd0 docker run -d --name etcd0 --network etcd --ip 172.19.1.10 quay.io/coreos/etcd etcd -name etcd0 -advertise-client-urls http://172.19.1.10:2379,http://172.19.1.10:4001 -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 -initial-advertise-peer-urls http://172.19.1.10:2380 -listen-peer-urls http://0.0.0.0:2380 -initial-cluster-token etcd-cluster-1 -initial-cluster etcd0=http://172.19.1.10:2380,etcd1=http://172.19.1.11:2380,etcd2=http://172.19.1.12:2380 -initial-cluster-state new3、运行etcd1 docker run -d --name etcd1 --network etcd --ip 172.19.1.11 quay.io/coreos/etcd etcd -name etcd1 -advertise-client-urls http://172.19.1.11:2379,http://172.19.1.11:4001 -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 -initial-advertise-peer-urls http://172.19.1.11:2380 -listen-peer-urls http://0.0.0.0:2380 -initial-cluster-token etcd-cluster-1 -initial-cluster etcd0=http://172.19.1.10:2380,etcd1=http://172.19.1.11:2380,etcd2=http://172.19.1.12:2380 -initial-cluster-state new4、运行etcd2 docker run -d --name etcd2 --network etcd --ip 172.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/frp-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/frp-hl/index.html</guid>
+      <description>frp 相关 1、容器镜像 docker pull docker.io/snowdreamtech/frps:latest2、服务端 cat &amp;gt; ./frps.toml &amp;lt;&amp;lt; EOF [common] bind_port = 7000 bind_udp_port = 7001 token = xxx dashboard_user = admin dashboard_pwd = xxx dashboard_port = 7500 heartbeat_timeout = 90 max_pool_count = 50 EOFdocker run --restart=always --network host -d -v $PWD/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps3、客户端 cat &amp;gt; /etc/frp/frpc.toml &amp;lt;&amp;lt; EOF [common] server_addr=xxx.xxx.xxx.xxx server_port=7000 server_udp_port=7001 token=xxx [ssh] type=tcp local_ip=127.0.0.1 local_port=22 remote_port=22 [nas] type=tcp local_ip=127.0.0.1 local_port=5000 remote_port=5000 [smb] type=tcp local_ip=127.0.0.1 local_port=445 remote_port=4445 EOFdocker run --restart=always --network host -d -v $PWD/frpc.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/ftp-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/ftp-hl/index.html</guid>
+      <description>ftp 相关 1、安装ftp apt-get update apt-get install vsftpd service vsftpd restart2、新建/home/uftp目录作为用户主目录 mkdir /home/uftp3、新建用户uftp并设置密码 useradd -d /home/uftp -s /bin/bash uftp passwd uftp4、编辑配置文件（/etc/vsftpd.conf） 添加: userlist_deny=NO //指定一个userlist，放允许ftp登陆的本地用户 userlist_enable=YES userlist_file=/etc/allowed_users //记录允许本地登陆用户名的文件 eccomp_sandbox=NO 改： local_enable=YES write_enable=YES5、编辑其他文件 vim /etc/allowed_users 加入：uftp vim /etc/ftpusers //记录不能访问FTP服务器的用户清单 删uftp6、重启服务 service vsftpd restart7、其他问题 * 用户名：uftp 密码： 端口21 * 553 Could not create file. setsebool -P ftpd_disable_trans 1 service vsftpd restart</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/gitlab-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/gitlab-hl/index.html</guid>
+      <description>GitLab https://docs.gitlab.com/ee/&#xA;一、安装 1、通过docker安装 mkdir -p config logs datadocker run --detach --hostname 192.168.0.10 --env GITLAB_OMNIBUS_CONFIG=external_url &amp;#39;http://192.168.0.10:30&amp;#39;; gitlab_rails[&amp;#39;lfs_enabled&amp;#39;] = true; gitlab_rails[&amp;#39;gitlab_shell_ssh_port&amp;#39;] = 22 --publish 16443:443 --publish 30:30 --publish 1622:22 --name gitlab --restart always --volume ${PWD}/config:/etc/gitlab:Z --volume ${PWD}/logs:/var/log/gitlab:Z --volume ${PWD}/data:/var/opt/gitlab:Z --shm-size 256m gitlab/gitlab-ce:16.6.2-ce.02、获取root密码 docker exec -it gitlab grep Password: /etc/gitlab/initial_root_password3、其他 docker exec -it gitlab editor /etc/gitlab/gitlab.rb docker exec gitlab gitlab-ctl reconfigure docker exec gitlab update-permissions二、配置runner 1、通过虚拟机 安装 gitlab-runner&#xA;curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/guestfish-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/guestfish-hl/index.html</guid>
+      <description>guestfish 相关 1、安装相关软件 yum install -y libguestfs-tools 注意：默认安装是不安装windows系统支持的，如果需要修改windows系统镜像，需要再运行如下命令。&#xA;yum install libguestfs-winsupport2、查看镜像中的文件 virt-cat tmp-CentOS7.4_x86_64-20171128.img /etc/hosts3、镜像磁盘空间使用查看 virt-df4、列出指定目录内文件 virt-ls5、显示指定文件内容 virt-cat6、编辑指定文件 virt-edit7、将文件拷贝到虚拟机内部 virt-copy-in8、将虚拟机内部文件拷贝出来 virt-copy-out9、tar压缩文件拷贝进虚拟机并解压 virt-tar-in10、镜像内指定目录文件拷贝并压缩 virt-tar-out11、解压或者上传文件到虚拟机 virt-tar12、交互的shell guestfish --rw -a CentOS-6-x86_64-GenericCloud.qcow2 &amp;gt;&amp;lt;fs&amp;gt; run &amp;gt;&amp;lt;fs&amp;gt; list-filesystems &amp;gt;/dev/sda1: ext4 &amp;gt;&amp;lt;fs&amp;gt; mount /dev/sda1 / &amp;gt;&amp;lt;fs&amp;gt; edit /etc/fstab &amp;gt;&amp;lt;fs&amp;gt; umount / &amp;gt;&amp;lt;fs&amp;gt; exit13、guestfish修改镜像格式和大小，修改镜像格式和大小主要使用以下命令 virt-convert - convert virtual machines between formats14、转化虚拟机镜像格式 virt-resize - Resize a virtual machine disk15、修改虚拟机镜像磁盘 raw转qcow2格式 需要先用qemu-img命令创建一个一样大小的空qcow2格式镜像文件，然后使用virt-convert命令，原始镜像可以是 vmware镜像vmx，kvm进行，ovf的镜像。 virt-convert -i raw -o qcow2 old.img new.qcow2 将指定的分区扩大5G，创建一个新的镜像，比原来大5G，然后扩展 virt-resize --expand /dev/sda2 olddisk newdisk 将boot增加200M，剩下的空间扩充给/dev/sda2 virt-resize --resize /dev/sda1=+200M --expand /dev/sda2 olddisk newdisk lv扩展 virt-resize --expand /dev/sda2 --LV-expand /dev/vg_guest/lv_root olddisk newdisk 扩展分区，并将raw格式转化成qcow2格式 qemu-img create -f qcow2 newdisk.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/haproxy-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/haproxy-hl/index.html</guid>
+      <description>haproxy 相关 1、检查配置文件语法 haproxy -c -f /etc/haproxy/haproxy.cfg2、以daemon模式启动，以systemd管理的daemon模式启动 haproxy -D -f /etc/haproxy/haproxy.cfg [-p /var/run/haproxy.pid] haproxy -Ds -f /etc/haproxy/haproxy.cfg [-p /var/run/haproxy.pid]3、启动调试功能，将显示所有连接和处理信息在屏幕 haproxy -d -f /etc/haproxy/haproxy.cfg4、restart，需要使用st选项指定pid列表 haproxy -f /etc/haproxy.cfg [-p /var/run/haproxy.pid] -st `cat /var/run/haproxy.pid5、graceful restart，即reload。需要使用sf选项指定pid列表 haproxy -f /etc/haproxy.cfg [-p /var/run/haproxy.pid] -sf `cat /var/run/haproxy.pid6、显示haproxy编译和启动信息 haproxy -vv7、配置实例 yum install haproxy -y # 然后启动Haproxy haproxy -f /usr/local/haproxy/etc/haproxy.cfg # 停止Haproxy killall haproxy vim /etc/haproxy/haproxy.cfg global chroot /var/lib/haproxy user haproxy group haproxy daemon log 127.0.0.1 local0 info maxconn 4000 stats socket /var/lib/haproxy/haproxy.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/iscsi-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/iscsi-hl/index.html</guid>
+      <description>iscsi 相关 一、服务端 1、安装 yum -y install targetcli systemctl start target systemctl enable target2、Create a Backstore targetcli /backstores/fileio create file1 /tmp/disk1.img 200M write_back=false /backstores/block create name=block_backend dev=/dev/sdb /backstores/pscsi/ create name=pscsi_backend dev=/dev/sr0 /backstores/ramdisk/ create name=rd_backend size=1GB3、Create an iSCSI Target targetcli iscsi/ create //create iqn.2006-04.com.example:4444、Configure an iSCSI Portal iqn.2006-04.example:444/tpg1/ portals/ create portals/ create 192.168.122.1375、 Configure ACLs /iscsi/iqn.20...mple:444/tpg1&amp;gt; acls/ create iqn.2006-04.com.example.foo:8886、Configure LUNs luns/ create /backstores/ramdisk/rd_backend /iscsi/iqn.2016-02.local.itzgeek.server:disk1/tpg1/ set attribute generate_node_acls=1 set attribute authentication=0 clearconfig confirm=True二、客户端 1、安装客户端（在需要连接iscsi的主机中操作） yum -y install iscsi-initiator-utils2、设置授权客户端的iqn，编辑/etc/iscsi/initiatorname.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/kernel_make-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/kernel_make-hl/index.html</guid>
+      <description>kernel 内核编译 一、构建交叉编译容器 x86_64_aarch64 Dockerfile&#xA;From ubuntu:22.04 ARG http_proxy=http://192.168.0.55:1080 ARG https_proxy=$http_proxy ARG no_proxy=$no_proxy ENV http_proxy=$http_proxy ENV https_proxy=$https_proxy ENV no_proxy=$no_proxy ENV PATH=$PATH:/opt/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/lib WORKDIR /opt RUN sed -i s@/archive.ubuntu.com/@/mirrors.ustc.edu.cn/@g /etc/apt/sources.list &amp;amp;&amp;amp; apt update &amp;amp;&amp;amp; DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --no-install-suggests -y dracut git make libncurses-dev libelf-dev bison flex libssl-dev bc u-boot-tools vim wget xz-utils &amp;amp;&amp;amp; rm -rf /var/lib/apt/lists/* &amp;amp;&amp;amp; ln -s /usr/bin/python3 /usr/bin/python &amp;amp;&amp;amp; wget --no-check-certificate https://releases.linaro.org/components/toolchain/binaries/latest-7/aarch64-linux-gnu/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz &amp;amp;&amp;amp; tar -xf gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz &amp;amp;&amp;amp; rm -rf gcc-linaro-7.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/libvirt-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/libvirt-hl/index.html</guid>
+      <description>libvirt 相关 一、安装相关 1、安装libvrit-python yum install -y libvirt-devel gcc-c++ qemu-kvm pip install libvirt-python # 测试 python -c import libvirt2、安装libvirt客户端 yum install -y libvirt-client # 测试 virsh list二、libvirt python api连接 libvirt connections&#xA;1、本地连接 import sys import libvirt conn = libvirt.open(qemu:///system) if conn == None: print(Failed to open connection to qemu:///system, file=sys.stderr) exit(1) conn.close() exit(0)2、远程tcp免密连接 1、修改 /etc/libvirt/libvirtd.conf&#xA;listen_tls = 0 listen_tcp = 1 listen_addr = 0.0.0.0 auth_tcp = none 2、修改/etc/sysconfig/libvirtd，注释掉LIBVIRTD_ARGS=&amp;ndash;listen&#xA;#LIBVIRTD_ARGS=--listen 3、重启libvirtd</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/linux-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/linux-hl/index.html</guid>
+      <description>Linux 相关 一、pigz 1、安装 apt-get -y install pigz2、压缩 tar cvf - 目录名 | pigz -9 -p 24 &amp;gt; file.tgz #pigz：用法-9是压缩比率比较大，-p是指定cpu的核数。 tar cvf - /opt/hadoop-2.7.3.tar.gz | pigz -9 -p 4 &amp;gt;hadoop-2.7.3.tgz3、解压 pigz -d file.tgz tar -xf file #tar -xf --format=posix file二 、sed 1、ip地址匹配替换 sed -i s/presenter_server_ip=[0-9.]*/presenter_server_ip=${presenter_connect_ip}/g ${cur_path}/presenterserver/${app_name}/config/config.conf2、多段替换 sed -i -e s#apk -U#sed -i &amp;#39;s+https://dl-cdn.alpinelinux.org+${NGINX}/alpine+g&amp;#39; /etc/apk/repositories \&amp;amp;\&amp;amp; apk -U#g -e s#https://github.com/aquasecurity/trivy/releases/download#${NGINX}/kymoc_build/trivy#g Dockerfile.dapper3、匹配行前插入 sed -i /# Usage:/i\\\cp -rf kymoc /usr/local/bin/kymoc test4、匹配行后追加 sed -i /# Usage:/a\INSTALL_KYMOC_SKIP_DOWNLOAD=true test5、最后一行后添加 sed $ahello 1.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/linux_network-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/linux_network-hl/index.html</guid>
+      <description>linux 网络配置 一、netplan vim /etc/netplan/01-netcfg.yaml network: ethernets: enp1s0: dhcp4: no addresses: [192.168.0.84/24] nameservers: addresses: [8.8.8.8] routes: - to: default via: 192.168.0.1netplan try netplan apply netplan --debug apply netplan -d apply networkctl statusnetwork: version: 2 renderer: networkd # renderer: NetworkManager ethernets: enp0s3: dhcp4: no # dhcp6: no enp4s0: dhcp4: truebonds: bond0: dhcp4: yes interfaces: - enp3s0 - enp4s0 parameters: mode: active-backup primary: enp3s0bridges: br0: dhcp4: yes interfaces: - enp3s0 vlans: vdev: id: 101 link: net1 addresses: - 10.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html</guid>
+      <description>Linux 源制作 一、apt 下载软件做离线源 1、拷贝所需安装软件包 通过apt-get安装的软件都在/var/cache/apt/archives目录下 cp /var/cache/apt/archives/* /home/package2、生成软件包信息（含有重要的包的依赖关系） apt-get install dpkg-dev dpkg-scanpackages package /dev/null | gzip &amp;gt; packs/Packages.gz dpkg-scanpackages pools override &amp;gt; dists/trusty/main/binary-i386/Packages dpkg-scanpackages pools override &amp;gt; dists/trusty/main/binary-amd64/Packages 注：/dev/null位置的参数是指定一个文件，文件名不限，该文件的作用是用来重写覆盖deb软件包中控制文件的某些定义，它的第一行的格式，一行对应一个软件包： package priority section package指定你所要修改的软件包 priority 有low,medium,high三个值 section 用来指定软件包属于哪个section 如果不需要对deb软件包做任何修改你就可以像例子中那样直接指定一个/dev/null文件。3、添加本地源 apt命令每次都会读取/etc/apt/sources.list源列表(这个源列表可以添加好多源,每次都选中开头的有效源)，因此我们编辑该文件，在第一行添加我们自己的本地源，如： deb http://172.18.20.161/ packs/ # deb file:///home packs/ 要注意中间的空格4、打包本地源 将/etc/apt/sources.list文件拷贝到packages目录下，将packages文件夹打包、备份，以便使用。5、如何使用本地源 将packages压缩包放到/目录(该目录只要和添加的本地源路径一致即可，以便apt能找到源）下解压，备份本机的sources.list，将packages目录下的sources.list拷贝到/etc/apt/目录下。修改/etc/apt/sources.list 之后一般会运行下面两个命令进行更新升级： sudo apt-get update sudo apt-get dist-upgrade 其中 ： update - 取回更新的软件包列表信息 dist-upgrade - 发布版升级 然后就可以离线安装了：apt-get install xxxx ## deb file:///opt/chuandge /packs/二、使用 apt-mirror 建立本地 ubuntu 源 1、安装apt-mirror apt-get install apt-mirror2、创建放镜像的文件夹 例如将镜像等文件放在 /service/Ubuntu文件夹下： 并新建以下文件夹（mirror.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/linux_u-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/linux_u-hl/index.html</guid>
+      <description>Linux U盘占用 强制解除U盘占用 multipath -ll /etc/multipath.conf blacklist { devnode ^sd[a-z] } systemctl restart multipathd.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/lvm-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/lvm-hl/index.html</guid>
+      <description>LVM 逻辑卷相关 一、常用命令 1、查看 pvdisplay vgdisplay lvdisplay pvscan/pvs vgscan/vgs lvscan/lvs 2、创建 pvcreate /dev/xvdb4 vgcreate myVG /dev/xvdb4 lvcreate -l 100%FREE -n myLV myVG lvcreate -l 100%free -n myLV myVG lvcreate -L +120G -n myLV myVG 3、删除 lvremove /dev/myVG/myLV vgremove /dev/myVG pvremove /dev/xvdb4 4、增加 vg 大小 vgextend myVG /dev/xvdb5 5、减小 vg 大小 vgreduce myVG /dev/xvdb5 6、增加逻辑卷的大小 lvextend -l 100%FREE /dev/myVG/myLV lvextend -L +120G /dev/mapper/centos-root 7、减小逻辑卷的大小 lvreduce -L 1G /dev/myVG/myLV lvreduce -l -256 /dev/myVG/myLV 8、调整卷大小，可增可减 lvresize -L 40G /dev/myVG/myLV 9、刷新挂载点 resize2fs /dev/myVG/myLV 10、链接目录 ln -sf /dev/myVG/myLV /home/hl 11、查看逻辑卷 id blkid /dev/myVG/myLV 12、格式化逻辑卷 mkfs -t ext4 /dev/myVG/myLV 13、扩展根目录卷 pvcreate /dev/sdb vgextend cenots /dev/sdb lvextend -l +100%FREE /dev/centos/root xfs_growfs /dev/centos/root 14、将 home 目录空间扩展到根目录 umount /home/ lvremove /dev/mapper/centos-home lvextend -L +120G /dev/mapper/centos-root # lvextend -l 100%FREE /dev/mapper/centos-root xfs_growfs /dev/mapper/centos-root lvcreate -L 47G -n home centos mkfs.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/mdadm-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/mdadm-hl/index.html</guid>
+      <description>软 raid 由于EFI并不能安装在RAID中，以上的操作只能确保系统从第一块硬盘启动，而不能从第二块硬盘启动。如果第一块硬盘出现问题，则系统将不能启动。以下过程，将使能从第二块硬盘启动。当第一块硬盘异常的时候，系统可以从第二块硬盘正常启动。&#xA;将/sda1的内容，克隆到/sdb1中，如下所示： dd if=/dev/sda1 of=/dev/sdb1 最后，将/sdb1加入到启动目录中，如下： efibootmgr -c -g -d /dev/sdb -p 1 -L Ubuntu #2 -l \EFI\Ubuntu\grubx64.efi 至此，安装的系统将可以分别从/sda和/sdb硬盘上启动。 mkfs.ext4 /dev/sda mkfs.ext4 /dev/sdb mdadm -C /dev/md0 -a yes -n 2 -l 1 /dev/sda /dev/sdc mdadm -Ds &amp;gt;/etc/mdadm.conf mdadm -Ds &amp;gt;/etc/mdadm/mdadm.conf update-initramfs -u mkfs.ext4 -F /dev/md0mdadm --detail --scan mdadm -Ds mdadm -Ds &amp;gt;&amp;gt; /etc/mdadm/mdadm.conf软RAID管理命令mdadm详解 一、创建模式 选项：-C 专用选项： -l 级别 -n 设备个数 -a {yes|no} 自动为其创建设备文件 -c 指定数据块大小（chunk） -x 指定空闲盘（热备磁盘）个数，空闲盘（热备磁盘）能在工作盘损坏后自动顶替 注意：创建阵列时，阵列所需磁盘数为-n参数和-x参数的个数和</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/mysql-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/mysql-hl/index.html</guid>
+      <description>mysql 相关 1、允许远程访问 use mysql; update db set host = % where user = root; flush privileges; grant all privileges on *.* to root@% identified by 123456 with grant option; #修改ip vim /etc/mysql/my.cnf #重启服务 service mysql restart2、修改密码 1、连接数据库 2、use mysql: 3、update user set password=password(0127) where user=root; 4、flush privileges; 忘记roo密码 1、关闭正在运行的MySQL服务。 2、打开DOS窗口，转到mysqlbin目录。 3、 输入mysqld --skip-grant-tables 回车。--skip-grant-tables 的意思是启动MySQL服务的时候跳过权限表认证。 4、再开一个DOS窗口（因为刚才那个DOS窗口已经不能动了），输入mysql回车，如果成功，将出现MySQL提示符 &amp;gt;。 6、连接权限数据库： use mysql; 。 7、改密码：update user set password=password(root) where user=root;（别忘了最后加分号） 。 8、刷新权限（必须步骤）：flush privileges;　。 9、退出 quit。3、使用docker创建mysql服务 docker run -itd --name mariadb --restart=always -v /opt/mysql:/etc/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mariadb GRANT ALL PRIVILEGES ON *.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/nested-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/nested-hl/index.html</guid>
+      <description>嵌套虚拟化 1、查看内核版本 [root@kvm ~]# uname -r 3.10.0-327.el7.x86_642、查看netsted引导参数，默认不开启，需要重新加载模块，并修改它的引导参数 [root@kvm ~]# cat /sys/module/kvm_intel/parameters/nested N3、移除kvm_intel模块，移除前先关闭所有虚拟机，不然会报错 [root@kvm ~]# rmmod kvm_intel 或 modprobe -r kvm_intel4、重新加载并开启nested功能 [root@kvm ~]# modprobe kvm_intel nested=1&#xA;5、再次查看netsted引导参数 [root@kvm ~]# cat /sys/module/kvm_intel/parameters/nested Y6、以上开启nested的方式在重启的时候失效，如果需要永久生效可以通过如下方式： [root@kvm ~]# echo options kvm-intel nested=1 &amp;gt;&amp;gt; /etc/modprobe.d/kvm_intel.conf </description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/net_bridge-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/net_bridge-hl/index.html</guid>
+      <description>创建网桥 一、CentOS 1、安装网桥相关依赖 yum -y install tunctl bridge-utils2、创建网桥配置文件 cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysconfig/network-scripts/ifcfg-br0 TYPE=Bridge DEVICE=br0 ONBOOT=yes BOOTPROTO=static IPADDR=192.168.0.10 NETMASK=255.255.255.0 GATEWAY=192.168.0.1 DNS1=114.114.114.114 EOF3、修改原有网卡配置文件 cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysconfig/network-scripts/ifcfg-eth0 TYPE=Ethernet DEVICE=eth0 ONBOOT=yes BRIDGE=br0 EOF4、重启网络 systemctl restart network5、网桥显示 brctl show二、Ubuntu 1、安装依赖 apt -y install tunctl bridge-utils2、配置 vim /etc/netplan/00-installer-config.yaml # This is the network config written by subiquity network: ethernets: eno1: dhcp4: no dhcp6: no # addresses: # - 192.168.0.241/24 # gateway4: 192.168.0.1 # nameservers: # addresses: # - 114.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/nginx-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/nginx-hl/index.html</guid>
+      <description>nginx 相关 一、介绍 正向代理 反向代理 由于不能直接访问google，那么可以借助NPV来实现，这就是一个简单的正向代理的例子。可以发现，正向代理“代理”的是客户端，而且客户端是知道目标的，而目标是不知道客户端是通过NPV访问的。 当我们在外网访问百度的时候，其实会进行一个转发，代理到内网去，这就是所谓的反向代理，即反向代理“代理”的是服务器端，而且这一个过程对于客户端而言是透明的。&#xA;1、启动ngnx docker run -d -p 192.168.21.32:80:80 --name nginx nginx2、下面四种情况分别用http://192.168.1.4/proxy/test.html 进行访问。 第一种： location /proxy/ { proxy_pass http://127.0.0.1:81/; } 会被代理到http://127.0.0.1:81/test.html 这个url 第二种(相对于第一种，最后少一个 /) location /proxy/ { proxy_pass http://127.0.0.1:81; } 会被代理到http://127.0.0.1:81/proxy/test.html 这个url 第三种： location /proxy/ { proxy_pass http://127.0.0.1:81/ftlynx/; } 会被代理到http://127.0.0.1:81/ftlynx/test.html 这个url。 第四种情况(相对于第三种，最后少一个 / )： location /proxy/ { proxy_pass http://127.0.0.1:81/ftlynx; } 会被代理到http://127.0.0.1:81/ftlynxtest.html 这个url3、配置实例nginx server { listen 80; server_name 192.168.21.33; #access_log logs/quancha.access.log main; #error_log logs/quancha.error.log; #root html; #index index.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/nic_bond-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/nic_bond-hl/index.html</guid>
+      <description>网络端口聚合绑定 mode=0 (balance-rr) mode=1 (active-backup) mode=2 (balance-xor) mode=3 (broadcast) mode=4 (802.3ad) lacp mode=5 (balance-tlb) mode=6 (balance-alb)&#xA;一、bind 配置 1、netplan 网卡 bind 配置 cat /etc/netplan/00-installer-config.yaml network: ethernets: enp65s0f0: addresses: [] enp65s0f1: addresses: [] bonds: eth0: addresses: [192.168.0.61/24] gateway4: 192.168.0.1 nameservers: addresses: [114.114.114.114] interfaces: - enp65s0f0 - enp65s0f1 parameters: mode: 802.3ad mii-monitor-interval: 100 lacp-rate: fast transmit-hash-policy: layer3+42、交换机配置 sys display current-configuration interface GigabitEthernet 0/0/3 undo port link-type undo port default vlan nterface GigabitEthernet 0/0/4 undo port link-type undo port default vlan interface Eth-Trunk 1 mode lacp port link-type access port default vlan 20 max active-linknumber 2 interface GigabitEthernet 0/0/3 eth-trunk 1 lacp priority 100 nterface GigabitEthernet 0/0/4 eth-trunk 1 lacp priority 100 display trunkmembership eth-trunk 1 display eth-trunk 13、查看 bond 网卡 cat /proc/net/bonding/eth0三、其他 1、centos网卡绑定 /etc/sysconfig/network-scripts/ifcfg-eth0 TYPE=Ethernet BOOTPROTO=none NAME=eth0 DEVICE=eth0 ONBOOT=yes MASTER=bond0 SLAVE=yes /etc/sysconfig/network-scripts/ifcfg-eth1 TYPE=Ethernet BOOTPROTO=none NAME=eth1 DEVICE=eth1 ONBOOT=yes MASTER=bond0 SLAVE=yes /etc/sysconfig/network-scripts/ifcfg-bond0 TYPE=Bond BOOTPROTO=none NAME=bond0 DEVICE=bond0 ONBOOT=yes BONDING_MASTER=yes BONDING_OPTS=mode=1 miimon=100 IPADDR=10.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/proxychains_ng-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/proxychains_ng-hl/index.html</guid>
+      <description>proxychains-ng 代理工具 1、安装git、gcc yum -y install git gcc2、下载源码 git clone https://github.com/rofl0r/proxychains-ng3、生成配置文件 cd /root/proxychains-ng ./configure --prefix=/usr --sysconfdir=/etc4、编译 make make install make install-config5、修改配置文件 /etc/proxychains.conf 修改 socks4 127.0.0.1 9050 为 socks5 192.168.21.81 10806、使用、测试 proxychains4 curl www.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/pypi_local_source-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/pypi_local_source-hl/index.html</guid>
+      <description>pip 本地源 1、安装 pip2pi 工具 pip install pip2pi2、建立索引，会创建 simple 文件夹 dir2pi path3、更新索引 多个包: pip2acmeco -r requirements.txt 单个包: pip2acmeco package==1.0.04、同步软件包 1、创建目录 mkdir /work/pypi/Packages/ 2、同步单个软件包 pip2tgz /work/pypi/Packages requests 3、批量同步 pip2tgz /work/pypi/Packages -r ./requirements.txt 4、创建索引 dir2pi /work/pypi/Packages/</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/qemu_img-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/qemu_img-hl/index.html</guid>
+      <description>qemu-img 一、常用命令 支持磁盘格式：blkdebug、blklogwrites、blkverify、bochs、cloop、compress、copy-on-read、dmg、file、host_cdrom、host_device、luks、nbd、null-aio、null-co、nvme、qcow、qcow2、qed、quorum、raw、replication、throttle、vdi、vhdx、vmdk、vpc、vvfat -p show progress of command&#xA;1、create qmeu-img 创建的镜像是一个稀疏文件，也就是说刚创建出来的文件并没有10G，它会随着数据的增多慢慢增加，直到10G&#xA;copy-on-write&#xA;qemu-img create -f raw -o /home/image/source.raw size=10G2、convert qemu-img convert -f 源类型 -O 目标类型 源映像 输出映像&#xA;-f: 指定原镜像的格式，会自动检查可以省略 -O: 指定目标镜像格式 qemu-img convert -f raw -O vdi source.raw out.vdi3、check 对磁盘镜像文件进行一致性检查，查找镜像文件中的错误，目前仅支持：qcow2、qed、vdi格式文件的检查&#xA;qemu-img check -f qcow2 test.qcow2 qemu-img check qcow2 test.qcow24、info qemu-img info test.qcow25、snapshot snapshot [-l | -a snapshot | -c snapshot | -d snapshot] filename&#xA;“-l” 选项是查询并列出镜像文件中的所有快照&#xA;“-a snapshot”是让镜像文件使用某个快照&#xA;“-c snapshot”是创建一个快照</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/ramdisk-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/ramdisk-hl/index.html</guid>
+      <description>虚拟内存盘 1、创建文件夹，并将文件夹作为内存盘 mkdir /mnt/ramdisk mount -t tmpfs tmpfs /mnt/ramdisk -o size=2G,defaults,noatime,mode=7772、设置开机挂载 vim /etc/rc.local mount -t tmpfs tmpfs /mnt/ramdisk -o size=2G,defaults,noatime,mode=7773、查看 df -h 凡是标注着tmpfs的都是虚拟硬盘，例如建立的 /mnt/ramdisk</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/root_extend-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/root_extend-hl/index.html</guid>
+      <description>将 home 目录空间扩容到根目录 1、查看 df -h2、取消挂载 [root@localhost ~]# umount /home/3、删除逻辑卷 [root@localhost ~]# lvremove /dev/mapper/centos-home Do you really want to remove active logical volume centos/home? [y/n]: y Logical volume home successfully removed4、扩容 root 的逻辑卷 # lvextend -l 100%FREE /dev/mapper/centos-root [root@localhost ~]# lvextend -L +120G /dev/mapper/centos-root Size of logical volume centos/root changed from 50.00 GiB (12800 extents) to 170.00 GiB (43520 extents). Logical volume centos/root successfully resized.5、对挂载目录在线扩容 [root@localhost ~]# xfs_growfs /dev/mapper/centos-root meta-data=/dev/mapper/centos-root isize=512 agcount=4, agsize=3276800 blks = sectsz=512 attr=2, projid32bit=1 = crc=1 finobt=0 spinodes=0 data = bsize=4096 blocks=13107200, imaxpct=25 = sunit=0 swidth=0 blks naming =version 2 bsize=4096 ascii-ci=0 ftype=1 log =internal bsize=4096 blocks=6400, version=2 = sectsz=512 sunit=0 blks, lazy-count=1 realtime =none extsz=4096 blocks=0, rtextents=0 data blocks changed from 13107200 to 445644806、重新创建 home 的逻辑卷 [root@localhost ~]# lvcreate -L 47G -n home centos Logical volume home created.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/rpm_build-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/rpm_build-hl/index.html</guid>
+      <description>Python rpm编译 1、编写程序，首先将实现python源代码,包括如下目录和文件： Filebackup-1.0.0 ├── Filebackup │ ├── backup.py │ ├── Filebackup.py │ ├── file_remove.py │ ├── file_sync.py │ └── __init__.py ├── MANIFEST.in ├── README.txt ├── requirements.txt └── setup.py2、查看setup.py文件内容 cat setup.py from setuptools import setup, find_packages setup(name=Filebackup, version=1.0, description=File backup for gitlab,redmine and wiki, author=Leon Zhang, author_email=test@123.com, url=http://123.com, packages=find_packages(), entry_points={ console_scripts: [ kyscripts = Filebackup.Filebackup:main, ], },) 3、将文件打包： tar -zcvf Filebackup-1.0.0.tar.gz Filebackup-1.0.04、创建systemd service文件 cat Filebackup.service [Unit] Description=File backup and synchronize application After=network-online.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/samba-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/samba-hl/index.html</guid>
+      <description>Samba 相关 1、安装 yum install -y samba samba-client samba-common2、创建文件作为共享文件夹 mkdir /hl3、编辑配置文件（/etc/samba/smb.conf） [global] workgroup = WORKGROUP server string = %h server (Samba, Ubuntu) dns proxy = no log file = /var/log/samba/log.%m max log size = 1000 syslog = 0 panic action = /usr/share/samba/panic-action %d server role = standalone server passdb backend = tdbsam obey pam restrictions = yes unix password sync = yes passwd program = /usr/bin/passwd %u passwd chat = *Entersnews*spassword:* %nn *Retypesnews*spassword:* %nn *passwordsupdatedssuccessfully* .</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/ssh-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/ssh-hl/index.html</guid>
+      <description>ssh 相关 1、免密登录 ssh-keygen ssh-copy-id root@IP PreferredAuthentications publickey,password #PreferredAuthentications password StrictHostKeyChecking no ServerAliveInterval 15 ServerAliveCountMax 3 Host bosh hostname bosh user ubuntu Host hl hostname hl user centos Host ep hostname 192.168.0.57 user root port 500102、使用pptpd apt-get install pptpd pptpsetup -create pptpd -server 222.209.209.209 -username node2 -password 123456 -encrypt -start 如果断开了在机器上执行pon pptpd3、sshpass yum install -y sshpass # apt install -y sshpass sshpass -p 123456 ssh -p 1000 root@192.168.11.11 sshpass -p 123456 scp -o StrictHostKeyChecking=no -r .</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/ssh_forwading-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/ssh_forwading-hl/index.html</guid>
+      <description>ssh 转发 C表示压缩数据传输 f表示后台用户验证,这个选项很有用,没有shell的不可登陆账号也能使用. N表示不执行脚本或命令 g表示允许远程主机连接转发端口 -L 本地转发 -R 远程转发 -D port </description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/ssh_interval-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/ssh_interval-hl/index.html</guid>
+      <description>ssh 自动断开 ssh 连接长时间不操作自动断开&#xA;修改服务器端参数 /etc/ssh/sshd_config&#xA;1、在其中添加一行内容，意思是向客户端每60秒发一次保持连接的信号 ClientAliveInterval 60&#xA;2、如果仍要设置断开时间,还有一个参数可以添加，意思是如果客户端60次未响应就断开连接,依据你期望的时间来设定 ClientAliveCountMax 60&#xA;修改本地参数 1、在连接前使用 -o 可以设置相应的参数 ssh -o ServerAliveInterval=30 root@192.168.1.1</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/ssr_privoxy-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/ssr_privoxy-hl/index.html</guid>
+      <description>ssr privoxy 相关 一、ssr代理服务 1、下载 git clone https://github.com/SAMZONG/gfwlist2privoxy.git cd gfwlist2privoxy/ cp ssr /usr/local/bin chmod +x /usr/local/bin/ssr2、安装 ssr install ssr config3、 配置文件路径 /usr/local/share/shadowsocksr/config.json { server: 0..0.0.0,&#x9;// ssr服务器ip server_ipv6: ::, server_port: 8080,&#x9;// ssr服务器端口 local_address: 127.0.0.1, local_port: 1080, password: 123456,&#x9;// 对应password method: none,&#x9;// 这里对应SSGlobal配置中的Encryption protocol: auth_chain_a,&#x9;//对应protocl protocol_param: , obfs: http_simple,&#x9;//对应obfs obfs_param: hello.world,&#x9;//对应obfs_param speed_limit_per_con: 0, speed_limit_per_user: 0, additional_ports : {}, // only works under multi-user mode additional_ports_only : false, // only works under multi-user mode timeout: 120, udp_timeout: 60, dns_ipv6: false, connect_verbose_info: 0, redirect: , fast_open: false }4、启动/关闭 ssr start ssr stop5、卸载 ssr uninstall6、这里操作会删除/usr/local/share/shadowsocksr 以上，本地监听服务已经配置完成了，在填写的过程中，要注意你的本地监听地址和监听端口，默认是127.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/synology-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/synology-hl/index.html</guid>
+      <description>Synology 1、安装 教程 教程2 DS918+ 7.2.1-69057 安装镜像 操作系统pat文件 ChipGenius 群晖搜索助手&#xA;1、安装镜像修改 通过Diskgenius修改安装镜像 grub.cfg RPCB1(0)-&amp;gt;boot-&amp;gt;grub-&amp;gt;grub.cfg 修改 vid、pid、sn、mac1、mac2 通过ChipGenius获取U盘vid、pid&#xA;2、制作U盘系统 Rufus imageUSB&#xA;3、安装 进入Bios设置U盘为第一启动 进入启动，等待安装 通过群晖搜索助手 扫描synology IP地址 打开浏览器，IP:5000 安装 DiskStation Manager，选择 DSM_DS918+_69057.pat 根据步骤安装&#xA;4、使用m.2硬盘 winhex 参考&#xA;NVME硬盘群晖无法识别，因为群晖提亲设定了各个机型NVME所在的PCI位置，保存在/lib64/libsynonvme.so.1文件中。&#xA;1、查看nvme信息 ls /dev/nvme*udevadm info /dev/nvme0n1 P: /devices/pci0000:00/0000:00:1c.0/0000:01:00.0/nvme/nvme0/nvme0n1 需要使用上述 0000:00:1c.0，第三个字段是硬盘ID&#xA;2、修改/lib64/libsynonvme.so.1 备份 cp /lib64/libsynonvme.so.1 /lib64/libsynonvme.so.1.bak复制到windows上 使用winhex修改 使用winhex打开libsynonvme.so.1 ctrl+F 搜索 DS918+ 在右侧找到原数据为0000:00:13.0和0000:00:13.1的字段，根据第一步查到的本机NVME所在的PCI位置，修改为0000:00:1d.0，顺便把另外一个nvme插槽也修改为0000:00:1d.1，修改后保存。3、上传到群晖，替换 /lib64/libsynonvme.so.1 chmod 755 /lib64/libsynonvme.so.14、重启群晖。 5、其他 fdisk -l /dev/nvme0n1 cat /proc/mdstat 分区 synopartition --part /dev/nvme0n1 7 mdadm --create /dev/md7 --level=1 --raid-devices=1 --force /dev/nvme0n1p3 格式化 mkfs.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/systemd-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/systemd-hl/index.html</guid>
+      <description>systemd type含义 Type=oneshot 这一选项适用于只执行一项任务、随后立即退出的服务。可能需要同时设置 RemainAfterExit=yes 使得 systemd 在服务进程退出之后仍然认为服务处于激活状态。 Type=notify 与 Type=simple 相同，但约定服务会在就绪后向 systemd 发送一个信号。这一通知的实现由 libsystemd-daemon.so 提供。 Type=dbus 若以此方式启动，当指定的 BusName 出现在DBus系统总线上时，systemd认为服务就绪。 Type=idle systemd 会等待所有任务处理完成后，才开始执行 idle 类型的单元。其他行为与 Type=simple 类似。 Type=forking systemd 认为当该服务进程fork，且父进程退出后服务启动成功。对于常规的守护进程（daemon），除非你确定此启动方式无法满足需求，使用此类型启动即可。使用此启动类型应同时指定 PIDFile=，以便 systemd 能够跟踪服务的主进程 Type=simple （默认值） systemd认为该服务将立即启动。服务进程不会 fork 。如果该服务要启动其他服务，不要使用此类型启动，除非该服务是socket 激活型。</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/tcpdump-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/tcpdump-hl/index.html</guid>
+      <description>tcpdump 相关 一、基础概念 1、类型 host 192.168.201.128 net 128.3 port 20 portrange 6000-6008 2、目标 src dst src or dst src and dst 3、协议 tcp udp icmp 4、操作符 and &amp;amp;&amp;amp; or || not ! 二、示例 tcpdump -i ens33 port 8080 and host node1只抓192.168网段 10个包 tcpdump -i ens33 -c 10 net 192.168tcpdump -c 5 -nn -i eth0 icmp and src 192.168.100.62解析包数据 tcpdump -c 2 -q -XX -vvv -nn -i ens33 tcp dst port 22tcpdump -i eth0 tcp port 80 and host 192.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/uboot-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/uboot-hl/index.html</guid>
+      <description>uboot 一、环境变量配置 setenv console console=ttyAMA1,115200 setenv earlycon earlycon=pl011,0x28001000 setenv rootfs root=/dev/sda3 setenv ramdisk_size ramdisk_size=0x2000000 setenv swapcnt swapaccount=1 setenv cgrp_en cgroup_enable=memory setenv mmap3 memmap=103M$0x90000000 setenv mmap4 memmap=7M$0x96000000 setenv mamp5 memmap=1024M$0xc0000000 setenv boot_fdt booti 80100000 83000000 85000000 setenv load_kernel fatload scsi 0:1 0x80100000 Image setenv load_fdt fatload scsi 0:1 0x85000000 ft2004-devboard-d4-dsk.dtb setenv load_ramdisk fatload scsi 0:1 83000000 initramfs-4.19.115.img.arm64-uboot setenv bootargs ${console} ${earlycon} ${rootfs} rw quiet ${ramdisk_size} ${swapcnt} ${cgrp_en} nohugeiomap ${mmap3} ${mmap4} ${mamp5} setenv distro_bootcmd run load_kernel; run load_fdt; run load_ramdisk; run boot_fdt saveenv boot二、常用命令 scsi nvme usb scsi scan scsi part fatls scsi 0:1 22784512 Image 81836 initramfs-4.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/unixbench-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/unixbench-hl/index.html</guid>
+      <description>UnixBench 虚拟机性能测试工具 unixbench是一个用于测试unix系统性能的工具，也是一个比较通用的benchmark， 此测试的目的是对类Unix 系统提供一个基本的性能指示，很多测试用于系统性能的不同方面，这些测试的结果是一个指数值（index value，如520），这个值是测试系统的测试结果与一个基线系统测试结果比较得到的指数值，这样比原始值更容易得到参考价值，测试集合里面所有的测试得到的指数值结合起来得到整个系统的指数值。&#xA;各项的测试有得分，然后有一个综合的得分，这样可以很方便的通过分数去比较。&#xA;1、下载 wget http://soft.laozuo.org/scripts/UnixBench5.1.3.tgz # wget https://s3.amazonaws.com/cloudbench/software/UnixBench5.1.3.tgz2、解压 tar -zxvf UnixBench5.1.3.tgz3、编译 cd UnixBench/ make4、运行 ./Run5、测试项 测试项目 项目说明 基准线 Dhrystone 2 using register variables 测试 string handling 116700.0lps Double-Precision Whetstone 测试浮点数操作的速度和效率 55.0MWIPS Execl Throughput 此测试考察每秒钟可以执行的 execl 系统调用的次数 43.0lps File Copy 1024 bufsize 2000 maxblocks 测试从一个文件向另外一个文件传输数据的速率 3960.0KBps File Copy 256 bufsize 500 maxblocks 测试从一个文件向另外一个文件传输数据的速率。 1655.0KBps File Read 4096 bufsize 8000 maxblocks 测试从一个文件向另外一个文件传输数据的速率。 5800.0KBps Pipe-based Context Switching 测试两个进程（每秒钟）通过一个管道交换一个不断增长的整数的次数 12440.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/vim-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/vim-hl/index.html</guid>
+      <description>Vim 常用命令 1、set 忽略大小写查找 :set ignorecase :set noignorecase 高亮搜索结果 :set hlsearch :set nohlsearch :e ++enc=utf8 filename, 让vim用utf-8的编码打开这个文件。 :w ++enc=gbk，不管当前文件什么编码，把它转存成gbk编码。 :set fenc或:set fileencoding，查看当前文件的编码。2、快捷键 w 光标移动向后一个单词，单词首，2w向后两个 e 光标移动向后一个单词，单词尾,2e ge 和e相反，向前 b 光标移动向前一个单词，单词首，2b ^ 移动到本行第一个非空白字符上 0、HOME 移动到本行第一个字符上 $ 移动到行尾， 3$ 移动到下面3行的行尾 gg 文件头 G 文件尾 f fx找到下一个为x的字符 :20 相当于 20G ，跳到指定行 Ctrl + e 向下滚动一行 Ctrl + y 向上滚动一行 Ctrl + d 向下滚动半屏 Ctrl + u 向上滚动半屏 Ctrl + f 向下滚动一屏 Ctrl + b 向上滚动一屏 u 撤销（undo） U 撤销对整行的操作 Ctrl + r 重做（redo) 3x 删除当前光标开始向后的三个字符 dd 删除当前行 dj 删除上一行 dk 删除下一行3、执行shell :!</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/virt_manager-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/virt_manager-hl/index.html</guid>
+      <description>virt-manager 相关 一、CentOS 1、安装相关软件 yum install -y virt-manager xorg-x11-xauthyum install -y qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer bridge-utils二、Ubuntu 1、安装软件 apt install -y qemu qemu-kvm qemu-system-arm qemu-efi-aarch64 qemu-utils libvirt-daemon libvirt-clients bridge-utils virt-manager2、重启 libvirt systemctl restart libvirtd3、配置网桥 vim /etc/netplan/00-installer-config.yaml # This is the network config written by subiquity network: ethernets: eno1: dhcp4: no dhcp6: no # addresses: # - 192.168.0.241/24 # gateway4: 192.168.0.1 # nameservers: # addresses: # - 114.114.114.114 eno2: dhcp4: no dhcp6: no version: 2 bridges: br0: interfaces: [eno1] addresses: [192.</description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/vm_to_router-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/vm_to_router-hl/index.html</guid>
+      <description>将虚拟机作为router 1、开启 ipv4 转发 echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward2、配置 iptables iptables -A FORWARD -o tun0 -i eth0 -s 192.168.0.0/24 -m conntrack --ctstate NEW -j ACCEPT iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT iptables -A POSTROUTING -t nat -j MASQUERADE3、将 iptables 保存 iptables-save |tee /etc/iptables.sav4、配置该虚拟机的网关就可以使用 </description>
+    </item>
+    <item>
+      <title>Build</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/yum_install_conf_conflict-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/yum_install_conf_conflict-hl/index.html</guid>
+      <description>yum 安装时文件冲突 1、下载安装包到指定文件夹 mkdir /tmp/packages yum install --downloadonly --downloaddir /tmp/packages2、使用rpm 忽略冲突文件安装 --replacefiles ignore file conflicts between packages cd /tmp/packages rpm -ivh * --replacefiles3、查看 rpm -qa</description>
+    </item>
+    <item>
+      <title>Docker</title>
+      <link>http://ip:1313/%E5%AE%B9%E5%99%A8/docker/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:33:38 +0000</pubDate>
+      <guid>http://ip:1313/%E5%AE%B9%E5%99%A8/docker/index.html</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

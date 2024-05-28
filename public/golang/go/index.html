@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="zh_CN" dir="ltr">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.124.1">
+    <meta name="generator" content="Relearn 5.27.0+tip">
+    <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="">
+    <meta name="twitter:description" content="Go 语言相关 一、并发 1、GMP模型 GMP：机制是实现协程和并发的重要机制。
+GMP机制采用了M:N模型，M个goroutine映射到N个OS thread上执行。
+golang中有一个协程的概念，更轻量级的调度单元。
+占用栈空间小（2KB～2GB） 上下文都在用户态切换，不会涉及到内核态 协程切换速度大约1～2微秒，golang中协程切换速度为0.2微秒左右。 GMP的模型如何设计？ 全局队列：当P中的本地队列中有协程G溢出时，会被放到全局队列中。
+P的本地队列：P内置的G队列，存的数量不超过256个。
+一、当队列P1中的G1在运行过程中新建G2时，G2优先存放在P1的本地队列中，如果队列满了，则会把P1队列中一半的G移动到全局队列。
+二、如果P的本地队列为空，那么他会先到全局队列中获取G，如果全局队列中没有G，则会尝试从其他线程绑定的P中偷取一半的G。
+g 1、g是goroutine，是对协程的抽象，是一种轻量级的线程实现，可以在单个线程中同时运行多个协程，从而实现并发执行。
+2、g有自己的运行栈、状态、以及执行的任务函数（用户通过go func指定）
+3、g需要绑定到p才能执行，在g的视角中，p是它的cpu
+4、G需要调度到M上才能运行，M是真正的执行者，调度器最多可以创建1万个线程。
+5、当一个goroutine阻塞或执行完毕时，对应的m会返回给p，p将m标记为空闲状态，并从队列中取出下一个goroutine映射到该m上执行。
+goroutin有三个状态：
+Waiting：goroutine正在等待systemcall执行完毕，或正在等待锁。 Runable：goroutine想要在M上执行指令。 Executing：goroutine正在M上执行指令当中。 p 1、p是调度器Processor，联系g与m
+2、p的数量决定了g最大并行数量，可由用户通过GOMAXPROCS进行设定（超过CPU核数无意义）
+3、go语言中的中阶层，负责将goroutine映射到m(OS thread)上执行，同时也负责调度和管理m(OS thread)。
+4、p负责协程的调度和管理，维护了一个goroutine队列，用于存储待执行的goroutine，当一个goroutine需要执行时，p会从队列中取出一个goroutine，并将其映射到一个空闲的m上执行。
+5、p的数量由启动时环境变量$GOMAXPROCS或者由runtime的方法GOMAXPROCS()决定，因为M需要和P绑定才能运行G，P的个数取决于设置的GOMAXPROCS，默认被设置为可用的CPU核数。
+m 1、m是machine是go中线程的抽象
+2、m不直接执行g，而是先和p绑定，由其实现代理
+3、借由p的存在，m无需和g绑死，也无需记录g的状态信息，因此g在全生命周期中可实现跨m执行
+4、操作系统中的线程实现，是操作系统调度和管理的最小执行单元，可以执行计算任务和系统调用等操作。
+5、M的数量和P不一定匹配，可以设置很多M，M和P绑定才可运行，多余的M处于休眠状态。
+6、m的数量，go程序启动时，会设置m的最大数量，默认10000，但是内核很难创建出这么多线程，因此默认情况下m的最大数量取决于内核。也可以调用runtime/debug中的SetMaxThreads函数 ，手动设置m的最大数量。
+P和M都是程序运行时就被创建好了的吗？ P和M创建时间不同。
+P：在确定P的最大数量n后，运行时系统会根据这个数量创建n个P。
+M：内核级线程的初始化是由内核管理的，当没有足够的M来关联P并运行其中的可运行的G时会请求创建新的M。比如M在运行G1时被阻塞了，此时需要新的M去绑定P，如果没有在休眠的M则需要新建M。
+G在MP模型中流动过程？ 1、调用go func()创建一个goroutine。
+2、新创建的G优先保存在P的本地队列中，如果P的本地队列已经满了就会保存在全局队列中。
+3、M需要在P的本地队列弹出一个可执行的G，如果P的本地队列为空，则先会去全局队列在中获取G，如果全局队列也为空则去其他P中偷取一半的G放到自己的P中。
+4、G将相关参数传输给M，为M执行G做准备。
+5、当M执行某一个G时，如果发生了系统调用会导致M阻塞，如果当前P队列中有一些G，runtime会将线程M和P分离，然后再获取空闲的线程或创建一个新的内核级线程来服务这个P，阻塞调用完成后G被销毁将值返回。
+6、销毁G，将执行结果返回。
+7、当M系统调用结束后，这个M会尝试获取一个空闲的P执行，如果获取不到P，那么这个线程M变成休眠状态，加入到空闲线程。
+2、并发 并发：相继发生，同一时间间隔发生
+并行：同时进行，同一时刻
+3、sync 1.sync.Mutex互斥锁 保证同一时间只有一个goroutine可以获取锁，从而实现对共享资源的互斥访问。
+Lock 获取锁，会阻塞直到获取锁为止 Unlock释放锁 TryLock尝试获取锁，如果锁已经被占用则不会等待直接返回 var count int var mutex sync.">
+    <meta property="og:url" content="http://ip:1313/golang/go/index.html">
+    <meta property="og:site_name" content="My New Hugo Site">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="Go 语言相关 一、并发 1、GMP模型 GMP：机制是实现协程和并发的重要机制。
+GMP机制采用了M:N模型，M个goroutine映射到N个OS thread上执行。
+golang中有一个协程的概念，更轻量级的调度单元。
+占用栈空间小（2KB～2GB） 上下文都在用户态切换，不会涉及到内核态 协程切换速度大约1～2微秒，golang中协程切换速度为0.2微秒左右。 GMP的模型如何设计？ 全局队列：当P中的本地队列中有协程G溢出时，会被放到全局队列中。
+P的本地队列：P内置的G队列，存的数量不超过256个。
+一、当队列P1中的G1在运行过程中新建G2时，G2优先存放在P1的本地队列中，如果队列满了，则会把P1队列中一半的G移动到全局队列。
+二、如果P的本地队列为空，那么他会先到全局队列中获取G，如果全局队列中没有G，则会尝试从其他线程绑定的P中偷取一半的G。
+g 1、g是goroutine，是对协程的抽象，是一种轻量级的线程实现，可以在单个线程中同时运行多个协程，从而实现并发执行。
+2、g有自己的运行栈、状态、以及执行的任务函数（用户通过go func指定）
+3、g需要绑定到p才能执行，在g的视角中，p是它的cpu
+4、G需要调度到M上才能运行，M是真正的执行者，调度器最多可以创建1万个线程。
+5、当一个goroutine阻塞或执行完毕时，对应的m会返回给p，p将m标记为空闲状态，并从队列中取出下一个goroutine映射到该m上执行。
+goroutin有三个状态：
+Waiting：goroutine正在等待systemcall执行完毕，或正在等待锁。 Runable：goroutine想要在M上执行指令。 Executing：goroutine正在M上执行指令当中。 p 1、p是调度器Processor，联系g与m
+2、p的数量决定了g最大并行数量，可由用户通过GOMAXPROCS进行设定（超过CPU核数无意义）
+3、go语言中的中阶层，负责将goroutine映射到m(OS thread)上执行，同时也负责调度和管理m(OS thread)。
+4、p负责协程的调度和管理，维护了一个goroutine队列，用于存储待执行的goroutine，当一个goroutine需要执行时，p会从队列中取出一个goroutine，并将其映射到一个空闲的m上执行。
+5、p的数量由启动时环境变量$GOMAXPROCS或者由runtime的方法GOMAXPROCS()决定，因为M需要和P绑定才能运行G，P的个数取决于设置的GOMAXPROCS，默认被设置为可用的CPU核数。
+m 1、m是machine是go中线程的抽象
+2、m不直接执行g，而是先和p绑定，由其实现代理
+3、借由p的存在，m无需和g绑死，也无需记录g的状态信息，因此g在全生命周期中可实现跨m执行
+4、操作系统中的线程实现，是操作系统调度和管理的最小执行单元，可以执行计算任务和系统调用等操作。
+5、M的数量和P不一定匹配，可以设置很多M，M和P绑定才可运行，多余的M处于休眠状态。
+6、m的数量，go程序启动时，会设置m的最大数量，默认10000，但是内核很难创建出这么多线程，因此默认情况下m的最大数量取决于内核。也可以调用runtime/debug中的SetMaxThreads函数 ，手动设置m的最大数量。
+P和M都是程序运行时就被创建好了的吗？ P和M创建时间不同。
+P：在确定P的最大数量n后，运行时系统会根据这个数量创建n个P。
+M：内核级线程的初始化是由内核管理的，当没有足够的M来关联P并运行其中的可运行的G时会请求创建新的M。比如M在运行G1时被阻塞了，此时需要新的M去绑定P，如果没有在休眠的M则需要新建M。
+G在MP模型中流动过程？ 1、调用go func()创建一个goroutine。
+2、新创建的G优先保存在P的本地队列中，如果P的本地队列已经满了就会保存在全局队列中。
+3、M需要在P的本地队列弹出一个可执行的G，如果P的本地队列为空，则先会去全局队列在中获取G，如果全局队列也为空则去其他P中偷取一半的G放到自己的P中。
+4、G将相关参数传输给M，为M执行G做准备。
+5、当M执行某一个G时，如果发生了系统调用会导致M阻塞，如果当前P队列中有一些G，runtime会将线程M和P分离，然后再获取空闲的线程或创建一个新的内核级线程来服务这个P，阻塞调用完成后G被销毁将值返回。
+6、销毁G，将执行结果返回。
+7、当M系统调用结束后，这个M会尝试获取一个空闲的P执行，如果获取不到P，那么这个线程M变成休眠状态，加入到空闲线程。
+2、并发 并发：相继发生，同一时间间隔发生
+并行：同时进行，同一时刻
+3、sync 1.sync.Mutex互斥锁 保证同一时间只有一个goroutine可以获取锁，从而实现对共享资源的互斥访问。
+Lock 获取锁，会阻塞直到获取锁为止 Unlock释放锁 TryLock尝试获取锁，如果锁已经被占用则不会等待直接返回 var count int var mutex sync.">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="Golangs :: My New Hugo Site">
+    <title></title>
+    <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
+    <link href="/css/fontawesome-all.min.css?1712923272" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1712923272" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1712923272" rel="stylesheet">
+    <link href="/css/auto-complete.css?1712923272" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1712923272" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1712923272" rel="stylesheet">
+    <link href="/css/fonts.css?1712923272" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1712923272" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1712923272" rel="stylesheet">
+    <link href="/css/theme-auto.css?1712923272" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1712923272" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1712923272" rel="stylesheet">
+    <link href="/css/print.css?1712923272" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1712923272" rel="stylesheet">
+    <script src="/js/url.js?1712923272"></script>
+    <script src="/js/variant.js?1712923272"></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/ip:1313';
+      // variant stuff
+      window.relearn.themeVariantModifier='';
+      window.variants && variants.init( [ 'auto' ] );
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/golang/go/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"><nav class="TableOfContents">
+  <ul>
+    <li><a href="#1gmp模型">1、GMP模型</a>
+      <ul>
+        <li><a href="#gmp的模型如何设计">GMP的模型如何设计？</a></li>
+        <li><a href="#g">g</a></li>
+        <li><a href="#p">p</a></li>
+        <li><a href="#m">m</a></li>
+        <li><a href="#p和m都是程序运行时就被创建好了的吗">P和M都是程序运行时就被创建好了的吗？</a></li>
+        <li><a href="#g在mp模型中流动过程">G在MP模型中流动过程？</a></li>
+      </ul>
+    </li>
+    <li><a href="#2并发">2、并发</a></li>
+    <li><a href="#3sync">3、sync</a>
+      <ul>
+        <li><a href="#1syncmutex互斥锁">1.sync.Mutex互斥锁</a></li>
+        <li><a href="#2syncrwmutex读写互斥锁">2.sync.RWMutex读写互斥锁</a></li>
+        <li><a href="#3syncwaitgroup等待组">3.sync.WaitGroup等待组</a></li>
+        <li><a href="#4synconce一次性初始化">4.sync.Once一次性初始化</a></li>
+        <li><a href="#5syncmap线程安全nao">5.sync.Map线程安全nao</a></li>
+        <li><a href="#6syncpool对象池">6.sync.Pool对象池</a></li>
+        <li><a href="#实现一个阻塞式的消息队列支持多个接受者">实现一个阻塞式的消息队列，支持多个接受者</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#1sync">1、Sync</a></li>
+    <li><a href="#big">big</a></li>
+    <li><a href="#os">os</a></li>
+    <li><a href="#time">time</a></li>
+    <li><a href="#context">Context</a></li>
+    <li><a href="#flag">flag</a></li>
+    <li><a href="#log">log</a></li>
+    <li><a href="#io">IO</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1调试显示代码位置">1、调试显示代码位置</a></li>
+    <li><a href="#2go-mod">2、go mod</a></li>
+    <li><a href="#3清理缓存">3、清理缓存</a></li>
+    <li><a href="#4gomod-replace-本地源">4、go.mod replace 本地源</a></li>
+    <li><a href="#5编译">5、编译</a></li>
+    <li><a href="#6静态编译">6、静态编译</a></li>
+    <li><a href="#7压缩">7、压缩</a></li>
+    <li><a href="#8go-mod">8、go mod</a></li>
+    <li><a href="#9交叉编译">9、交叉编译</a></li>
+    <li><a href="#10调试打印">10、调试打印</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#1安装dlv">1、安装dlv</a></li>
+    <li><a href="#2编译程序">2、编译程序</a></li>
+    <li><a href="#3通过dlv运行程序">3、通过dlv运行程序</a></li>
+    <li><a href="#4配置vscode">4、配置vscode</a></li>
+    <li><a href="#5vscode-f5-启用调试">5、vscode F5 启用调试</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/golang/index.html"><span itemprop="name">Golangs</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/golang/index.html" title="Golangs (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><span class="topbar-control"><i class="fa-fw fas fa-chevron-right"></i></span>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable default" tabindex="-1">
+        <div class="flex-block-wrapper">
+          <article class="default">
+            <header class="headline">
+            </header>
+
+<h1 id=""></h1>
+
+<h1 id="go-语言相关">Go 语言相关</h1>
+<h1 id="一并发">一、并发</h1>
+<h2 id="1gmp模型">1、GMP模型</h2>
+<p><a href="#R-image-90304d537a09aca96d8714f3dab9a379" class="lightbox-link"><img alt="go-gmp" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/go_gmp.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-90304d537a09aca96d8714f3dab9a379"><img alt="go-gmp" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/go_gmp.jpg"></a></p>
+<blockquote>
+<p>GMP：机制是实现协程和并发的重要机制。</p>
+<p>GMP机制采用了M:N模型，M个goroutine映射到N个OS thread上执行。</p>
+</blockquote>
+<p>golang中有一个协程的概念，更轻量级的调度单元。</p>
+<ul>
+<li>占用栈空间小（2KB～2GB）</li>
+<li>上下文都在用户态切换，不会涉及到内核态</li>
+<li>协程切换速度大约1～2微秒，golang中协程切换速度为0.2微秒左右。</li>
+</ul>
+<h3 id="gmp的模型如何设计">GMP的模型如何设计？</h3>
+<blockquote>
+<p>全局队列：当P中的本地队列中有协程G溢出时，会被放到全局队列中。</p>
+<p>P的本地队列：P内置的G队列，存的数量不超过256个。</p>
+<p>一、当队列P1中的G1在运行过程中新建G2时，G2优先存放在P1的本地队列中，如果队列满了，则会把P1队列中一半的G移动到全局队列。</p>
+<p>二、如果P的本地队列为空，那么他会先到全局队列中获取G，如果全局队列中没有G，则会尝试从其他线程绑定的P中偷取一半的G。</p>
+</blockquote>
+<h3 id="g">g</h3>
+<p>1、g是goroutine，是对协程的抽象，是一种轻量级的线程实现，可以在单个线程中同时运行多个协程，从而实现并发执行。</p>
+<p>2、g有自己的运行栈、状态、以及执行的任务函数（用户通过go func指定）</p>
+<p>3、g需要绑定到p才能执行，在g的视角中，p是它的cpu</p>
+<p>4、G需要调度到M上才能运行，M是真正的执行者，调度器最多可以创建1万个线程。</p>
+<p>5、当一个goroutine阻塞或执行完毕时，对应的m会返回给p，p将m标记为空闲状态，并从队列中取出下一个goroutine映射到该m上执行。</p>
+<p>goroutin有三个状态：</p>
+<ul>
+<li>Waiting：goroutine正在等待systemcall执行完毕，或正在等待锁。</li>
+<li>Runable：goroutine想要在M上执行指令。</li>
+<li>Executing：goroutine正在M上执行指令当中。</li>
+</ul>
+<h3 id="p">p</h3>
+<p>1、p是调度器Processor，联系g与m</p>
+<p>2、p的数量决定了g最大并行数量，可由用户通过GOMAXPROCS进行设定（超过CPU核数无意义）</p>
+<p>3、go语言中的中阶层，负责将goroutine映射到m(OS thread)上执行，同时也负责调度和管理m(OS thread)。</p>
+<p>4、p负责协程的调度和管理，维护了一个goroutine队列，用于存储待执行的goroutine，当一个goroutine需要执行时，p会从队列中取出一个goroutine，并将其映射到一个空闲的m上执行。</p>
+<p>5、p的数量由启动时环境变量$GOMAXPROCS或者由runtime的方法GOMAXPROCS()决定，因为M需要和P绑定才能运行G，P的个数取决于设置的GOMAXPROCS，默认被设置为可用的CPU核数。</p>
+<h3 id="m">m</h3>
+<p>1、m是machine是go中线程的抽象</p>
+<p>2、m不直接执行g，而是先和p绑定，由其实现代理</p>
+<p>3、借由p的存在，m无需和g绑死，也无需记录g的状态信息，因此g在全生命周期中可实现跨m执行</p>
+<p>4、操作系统中的线程实现，是操作系统调度和管理的最小执行单元，可以执行计算任务和系统调用等操作。</p>
+<p>5、M的数量和P不一定匹配，可以设置很多M，M和P绑定才可运行，多余的M处于休眠状态。</p>
+<p>6、m的数量，go程序启动时，会设置m的最大数量，默认10000，但是内核很难创建出这么多线程，因此默认情况下m的最大数量取决于内核。也可以调用runtime/debug中的SetMaxThreads函数 ，手动设置m的最大数量。</p>
+<h3 id="p和m都是程序运行时就被创建好了的吗">P和M都是程序运行时就被创建好了的吗？</h3>
+<p>P和M创建时间不同。</p>
+<p>P：在确定P的最大数量n后，运行时系统会根据这个数量创建n个P。</p>
+<p>M：内核级线程的初始化是由内核管理的，当没有足够的M来关联P并运行其中的可运行的G时会请求创建新的M。比如M在运行G1时被阻塞了，此时需要新的M去绑定P，如果没有在休眠的M则需要新建M。</p>
+<h3 id="g在mp模型中流动过程">G在MP模型中流动过程？</h3>
+<p>1、调用go func()创建一个goroutine。</p>
+<p>2、新创建的G优先保存在P的本地队列中，如果P的本地队列已经满了就会保存在全局队列中。</p>
+<p>3、M需要在P的本地队列弹出一个可执行的G，如果P的本地队列为空，则先会去全局队列在中获取G，如果全局队列也为空则去其他P中偷取一半的G放到自己的P中。</p>
+<p>4、G将相关参数传输给M，为M执行G做准备。</p>
+<p>5、当M执行某一个G时，如果发生了系统调用会导致M阻塞，如果当前P队列中有一些G，runtime会将线程M和P分离，然后再获取空闲的线程或创建一个新的内核级线程来服务这个P，阻塞调用完成后G被销毁将值返回。</p>
+<p>6、销毁G，将执行结果返回。</p>
+<p>7、当M系统调用结束后，这个M会尝试获取一个空闲的P执行，如果获取不到P，那么这个线程M变成休眠状态，加入到空闲线程。</p>
+<h2 id="2并发">2、并发</h2>
+<blockquote>
+<p>并发：相继发生，同一时间间隔发生</p>
+<p>并行：同时进行，同一时刻</p>
+</blockquote>
+<h2 id="3sync">3、sync</h2>
+<h3 id="1syncmutex互斥锁">1.sync.Mutex互斥锁</h3>
+<p>保证同一时间只有一个goroutine可以获取锁，从而实现对共享资源的互斥访问。</p>
+<ul>
+<li>Lock 获取锁，会阻塞直到获取锁为止</li>
+<li>Unlock释放锁</li>
+<li>TryLock尝试获取锁，如果锁已经被占用则不会等待直接返回</li>
+</ul>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var count int
+var mutex sync.Mutex
+
+func increase() {
+    mutex.Lock()
+    defer mutex.Unlock()
+
+    count++
+}</code></pre></div><h3 id="2syncrwmutex读写互斥锁">2.sync.RWMutex读写互斥锁</h3>
+<p>提供更细粒度的读写访问控制。</p>
+<ul>
+<li>RLock获取锁</li>
+<li>RUnlock释放读锁</li>
+<li>Lock获取写锁</li>
+<li>Unlock释放写锁</li>
+</ul>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var count int
+var rwMutex sync.RWMutex
+
+func read() {
+    rwMutex.RLock()
+    defer rwMutex.RUnlock()
+
+    print(count)
+}
+
+func write() {
+    rwMutex.Lock()
+    defer rwMutex.Unlock()
+
+    count++
+}</code></pre></div><h3 id="3syncwaitgroup等待组">3.sync.WaitGroup等待组</h3>
+<p>用于等待一组goroutine结束后再继续执行</p>
+<ul>
+<li>Add添加一个等待单位</li>
+<li>Done表示一个等待单位完成</li>
+<li>Wait阻塞直到所有等待单位完成</li>
+</ul>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var wg sync.WaitGroup
+
+func worker() {
+    defer wg.Done()
+    // do work
+}
+
+wg.Add(1)
+go worker()
+wg.Wait() // 等待worker完成</code></pre></div><h3 id="4synconce一次性初始化">4.sync.Once一次性初始化</h3>
+<p>提供一次性初始化的功能，确保某个初始化逻辑只执行一次。单例模式。</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var once sync.Once
+var config *Config
+
+func initialize() {
+    config = loadConfig()
+}
+
+func GetConfig() *Config {
+    once.Do(initialize)
+    return config
+}</code></pre></div><h3 id="5syncmap线程安全nao">5.sync.Map线程安全nao</h3>
+<p>一个可以并发安全使用的map</p>
+<p>内部使用锁机制来保证并发安全，相比传统map有更好的扩展性。</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var configMap sync.Map
+
+configMap.Store(&#34;timeout&#34;, 500)
+
+if _, ok := configMap.Load(&#34;timeout&#34;); ok {
+// 使用超时
+}</code></pre></div><h3 id="6syncpool对象池">6.sync.Pool对象池</h3>
+<p>实现了一个可以重用的对象池</p>
+<p>对象池可以有效的减少对象频繁创建和销毁的性能开销</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var bufferPool sync.Pool
+
+func NewBuffer() *Buffer {
+v := bufferPool.Get()
+if v == nil {
+    return &amp;Buffer{} 
+}
+    return v.(*Buffer)
+}
+
+bufferPool.Put(b)
+
+bufferPool.Get()</code></pre></div><h3 id="实现一个阻塞式的消息队列支持多个接受者">实现一个阻塞式的消息队列，支持多个接受者</h3>
+<div class="highlight wrap-code"><pre tabindex="0"><code>type MessageQueue struct {
+    queue []interface{}
+    mutex sync.RWMutex
+}
+
+func NewMessageQueue() *MessageQueue {
+    return &amp;MessageQueue{queue: make([]interface{}, 0)}
+}
+
+func (q *MessageQueue) Enqueue(msg interface{}) {
+    q.mutex.Lock()
+    defer q.mutex.Unlock()
+
+    q.queue = append(q.queue, msg)
+}
+
+func (q *MessageQueue) Dequeue() interface{} {
+    q.mutex.RLock()
+    defer q.mutex.RUnlock()
+
+    // 获取首元素
+    msg := q.queue[0]
+    q.queue = q.queue[1:]
+    return msg
+}</code></pre></div><h1 id="二反射">二、反射</h1>
+<h1 id="二gc">二、GC</h1>
+<h1 id="三struct">三、struct</h1>
+<h1 id="四interface">四、Interface</h1>
+<h1 id="常用包">常用包</h1>
+<h2 id="1sync">1、Sync</h2>
+<h2 id="big">big</h2>
+<h2 id="os">os</h2>
+<p>1.os.Args 获取命令行参数</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>args[0]永远都是程序本身的路径,args[1:]包含所有参数。
+
+
+for _, arg := range os.Args[1:] {
+    fmt.Println(arg) 
+}</code></pre></div><p>2.os.Create 创建文件</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>file, err := os.Create(&#34;test.txt&#34;)
+if err != nil {
+    return err
+}
+defer file.Close()</code></pre></div><p>3.os.Open 打开文件</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>file, err := os.Open(&#34;test.txt&#34;) 
+if err != nil {
+    return err
+}
+defer file.Close()</code></pre></div><p>4.os.StartProcess启动新进程</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>executable := &#34;/path/to/test&#34;
+args := []string{&#34;-a&#34;, &#34;123&#34;}
+
+attr := &amp;os.ProcAttr{
+	Files: []*os.File{os.Stdin, os.Stdout, os.Stderr},
+}
+
+_, err := os.StartProcess(executable, args, attr)</code></pre></div><p>5.os.Getenv 获取环境变量</p>
+<p>6.os.Chdir切换当前工作目录</p>
+<p>7.os.Mkdir 创建目录</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>func main() {
+  err := os.Mkdir(&#34;testdir&#34;, 0755)
+
+  if err != nil {
+    log.Fatal(err)
+  }
+
+}</code></pre></div><p>8.os.Remove 删除文件</p>
+<p>9.os.Rename 重命名文件</p>
+<p>10.os.Truncate 可以对文件进行截断,使得文件只保留截断之前的内容。</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>func main() {
+  f, err := os.OpenFile(&#34;test.txt&#34;, os.O_RDWR, 0644)
+  if err != nil {
+    log.Fatal(err)
+  }
+  defer f.Close()
+
+  err = os.Truncate(&#34;test.txt&#34;, 10)
+  if err != nil {
+    log.Fatal(err)
+  }
+}</code></pre></div><p>11.os.TempDir 可以获取当前系统的临时文件目录。</p>
+<p>12.os.Getwd 可以获取当前进程的工作目录。</p>
+<p>13.os.Hostname 可以获取主机的名称。</p>
+<p>14.os.Environ 获取环境变量</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>env := os.Environ()
+for _, v := range env {
+    fmt.Println(v)
+}</code></pre></div><p>15.os.Exit 退出当前进程</p>
+<p>16.os.IsExist 判断文件或文件夹是否存在</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>func main() {
+  if _, err := os.Stat(&#34;/path/to/file&#34;); os.IsNotExist(err) {
+    fmt.Println(&#34;file does not exist&#34;)
+  }
+}</code></pre></div><p>17.os.Stat 获取文件信息</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>info, err := os.Stat(&#34;test.txt&#34;)
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(info.Size()) // 文件大小</code></pre></div><p>18.os.ReadFile 读取整个文件</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>data, err := os.ReadFile(&#34;test.txt&#34;) 
+if err != nil {
+    log.Fatal(err)
+   
+}
+fmt.Print(string(data))</code></pre></div><p>19.os.WriteFile 写入文件</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>data := []byte(&#34;Hello World&#34;) 
+
+err := os.WriteFile(&#34;data.txt&#34;, data, 0644)
+
+if err != nil {
+    log.Fatal(err)
+}</code></pre></div><h2 id="time">time</h2>
+<p>创建和获取时间</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>package main
+
+import (
+  &#34;fmt&#34;
+  &#34;time&#34;
+)
+
+func main() {
+  // 获取当前时间
+  now := time.Now()
+  fmt.Println(&#34;Current time:&#34;, now)
+
+  // 创建指定时间
+  specificTime :=
+    time.Date(2023, time.October, 25, 22, 30, 0, 0, time.UTC)
+
+  fmt.Println(&#34;Specific time:&#34;, specificTime)
+}</code></pre></div><p>时间的格式化与解析</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>package main
+
+import (
+  &#34;fmt&#34;
+  &#34;time&#34;
+)
+
+func main() {
+  // 时间格式化
+  now := time.Now()
+
+  formattedTime := now.Format(&#34;2006-01-02 15:04:05&#34;)
+
+  fmt.Println(&#34;Formatted time:&#34;, formattedTime)
+
+  // 时间解析
+  parsedTime, err :=
+    time.Parse(&#34;2006-01-02 15:04:05&#34;, &#34;2023-10-25 22:30:12&#34;)
+
+  if err != nil {
+    fmt.Println(&#34;Error:&#34;, err)
+    return
+  }
+
+  fmt.Println(&#34;Parsed time:&#34;, parsedTime)
+}</code></pre></div><p>时区处理与转换</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>package main
+
+import (
+  &#34;fmt&#34;
+  &#34;time&#34;
+)
+
+func main() {
+  // 获取时区
+  local := time.Now()
+
+  fmt.Println(&#34;Local time:&#34;, local)
+
+  // 转换时区
+  shanghaiTimeZone, err :=
+    time.LoadLocation(&#34;Asia/Shanghai&#34;)
+
+  if err != nil {
+    fmt.Println(&#34;Error:&#34;, err)
+    return
+  }
+
+  ShanghaiTime := local.In(shanghaiTimeZone)
+
+  fmt.Println(&#34;Shanghai time:&#34;, ShanghaiTime)
+}</code></pre></div><p>定时器与超时控制</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>package main
+
+import (
+  &#34;fmt&#34;
+  &#34;time&#34;
+)
+
+func main() {
+  // 创建定时器，等待2秒
+  timer := time.NewTimer(2 * time.Second)
+
+  // 等待定时器触发
+  &lt;-timer.C
+  fmt.Println(&#34;Timer expired!&#34;)
+}</code></pre></div><p>时间间隔与持续时间</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>package main
+
+import (
+  &#34;fmt&#34;
+  &#34;time&#34;
+)
+
+func main() {
+  // 计算时间间隔
+  start := time.Now()
+
+  time.Sleep(2 * time.Second)
+
+  end := time.Now()
+
+  duration := end.Sub(start)
+  
+  fmt.Println(&#34;Duration:&#34;, duration)
+}</code></pre></div><p>时间的比较与计算</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>package main
+
+import (
+  &#34;fmt&#34;
+  &#34;time&#34;
+)
+
+func main() {
+  // 比较时间
+  time1 :=
+    time.Date(2023, time.October, 25, 19, 0, 0, 0, time.UTC)
+
+  time2 :=
+    time.Date(2023, time.October, 25, 22, 0, 0, 0, time.UTC)
+
+  if time1.Before(time2) {
+    fmt.Println(&#34;time1 is before time2.&#34;)
+  }
+
+  // 计算时间
+  diff := time2.Sub(time1)
+
+  fmt.Println(&#34;Time difference:&#34;, diff)
+}</code></pre></div><h2 id="context">Context</h2>
+<h2 id="flag">flag</h2>
+<h2 id="log">log</h2>
+<h2 id="io">IO</h2>
+<h1 id="一常用">一、常用</h1>
+<h2 id="1调试显示代码位置">1、调试显示代码位置</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>log.SetFlags(log.Llongfile)
+log.Print(&#34;&#34;) </code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>  where := func() {
+    _, file, line, _ := runtime.Caller(1)
+    log.Printf(&#34;%s:%d&#34;, file, line)
+  }
+  where()</code></pre></div><h2 id="2go-mod">2、go mod</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod download  下载依赖的module到本地cache（默认为$GOPATH/pkg/mod目录）
+go mod edit      编辑go.mod文件
+go mod graph     打印模块依赖图
+go mod init      初始化当前文件夹, 创建go.mod文件
+go mod tidy      增加缺少的module，删除无用的module
+go mod vendor    将依赖复制到vendor下
+go mod verify    校验依赖
+go mod why       解释为什么需要依赖</code></pre></div><h2 id="3清理缓存">3、清理缓存</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go clean -modcache
+rm -rf mod.sum
+go mod tidy</code></pre></div><h2 id="4gomod-replace-本地源">4、go.mod replace 本地源</h2>
+<blockquote>
+<p>go.mod</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>//go env -w GOPRIVATE=192.168.0.10 GOINSECURE=192.168.0.10
+github.com/containerd/containerd =&gt; 192.168.0.10/aaa/containerd v1.0.0</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>git clone --single-branch --branch=v1.0.0 --depth=1 http://192.168.0.10/aaa/containerd build/aaa/containerd 
+replace github.com/containerd/containerd =&gt; build/aaa/containerd </code></pre></div><h2 id="5编译">5、编译</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go tool compile -d help</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>go build -ldflags=&#34;-s -w&#34; -o main main.go</code></pre></div><blockquote>
+<p>-s 忽略符号表和调试信息
+-w 忽略DWARFv3调试信息，使用该选项后将无法使用gdb进行调试</p>
+<p>-gcflags=&quot;-l -N&quot;可以关闭代码优化，从而缩短编译时间</p>
+</blockquote>
+<h2 id="6静态编译">6、静态编译</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go build -o output.exe -ldflags=&#34;-s -w -extldflags &#39;-static&#39;&#34;</code></pre></div><blockquote>
+<p>-ldflags=&quot;-s -w -extldflags &lsquo;-static&rsquo;&quot; 用于去除可执行文件中的符号表和调试信息，并将所有的依赖库链接为静态库</p>
+</blockquote>
+<h2 id="7压缩">7、压缩</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>upx
+1-9，9代表最高压缩率  
+go build -ldflags=&#34;-s -w&#34; -o main main.go &amp;&amp; upx -9 main</code></pre></div><h2 id="8go-mod">8、go mod</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod download</code></pre></div><blockquote>
+<p>下载依赖的module到本地cache（默认为$GOPATH/pkg/mod目录）</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod edit</code></pre></div><blockquote>
+<p>编辑go.mod文件</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod graph</code></pre></div><blockquote>
+<p>打印模块依赖图</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod init</code></pre></div><blockquote>
+<p>初始化当前文件夹, 创建go.mod文件</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod tidy </code></pre></div><blockquote>
+<p>增加缺少的module，删除无用的module</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod vendor</code></pre></div><blockquote>
+<p>将依赖复制到vendor下</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod verify</code></pre></div><blockquote>
+<p>校验依赖</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go mod why </code></pre></div><blockquote>
+<p>解释为什么需要依赖</p>
+</blockquote>
+<h2 id="9交叉编译">9、交叉编译</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>GOOS=linux GOARCH=arm64 go build ...
+GOOS=linux GOARCH=amd64 go build ...</code></pre></div><h2 id="10调试打印">10、调试打印</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>func pp(values ...interface{}) {
+    for _, v := range values {
+        fmt.Println(&#34;-----------------------------------------------------------------------------------&#34;)
+        fmt.Println(v)
+        fmt.Println(&#34;-----------------------------------------------------------------------------------&#34;)
+    }
+}</code></pre></div><h1 id="二go-语言环境安装">二、Go 语言环境安装</h1>
+<p><a href="https://golang.org/dl/" rel="external" target="_blank">https://golang.org/dl/</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>wget -O /usr/local/go1.20.3.linux-amd64.tar.gz https://golang.org/dl/go1.20.3.linux-amd64.tar.gz
+tar -C /usr/local -zxvf /usr/local/go1.20.3.linux-amd64.tar.gz
+echo &#34;export PATH=$PATH:/usr/local/go/bin&#34; |tee &gt;&gt; /etc/profile
+source /etc/profile</code></pre></div><h1 id="三基础语法">三、基础语法</h1>
+<h5 id="1第一个程序">1、第一个程序</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim hello.go
+
+package main
+
+import &#34;fmt&#34;
+
+func main() {
+  fmt.Println(&#34;Hello World!&#34;)
+}
+
+go run hello.go</code></pre></div><blockquote>
+<p>func main() 是程序开始执行的函数。main 函数是每一个可执行程序所必须包含的，一般来说都是在启动后第一个执行的函数（如果有 init() 函数则会先执行该函数）。</p>
+</blockquote>
+<h5 id="2声明">2、声明</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var a int = 10
+var b = 10
+c := 10
+k1, k2, k3 = 1, 2, 3
+_, b = 5, 7
+var balance = [5]float32{1000.0, 2.0, 3.4, 7.0, 50.0}
+a := [3][4]int{  
+ {0, 1, 2, 3},
+ {4, 5, 6, 7},
+ {8, 9, 10, 11},
+}
+
+// 这种不带声明格式的只能在函数体中出现
+vname1, vname2, vname3 := v1, v2, v3
+
+// 这种因式分解关键字的写法一般用于声明全局变量
+var (
+    vname1 v_type1
+    vname2 v_type2
+)
+
+空白标识符 _
+
+常量的定义格式：
+const identifier [type] = value</code></pre></div><h5 id="3字符串相关操作">3、字符串相关操作</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>// 拼接
+fmt.Println(&#34;hello&#34; + &#34;world&#34;)
+
+// %d 表示整型数字，%s 表示字符串
+var stockcode=123
+var enddate=&#34;2020-12-31&#34;
+var url=&#34;Code=%d &amp; endDate=%s&#34;
+var target_url=fmt.Sprintf(url,stockcode,enddate)
+fmt.Println(target_url)</code></pre></div><h5 id="4运算符">4、运算符</h5>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>++，&ndash;</td>
+<td></td>
+</tr>
+<tr>
+<td>==，!=，&gt;=，&lt;=</td>
+<td></td>
+</tr>
+<tr>
+<td>&amp;&amp;，||，!</td>
+<td></td>
+</tr>
+<tr>
+<td>=，+=，-=，*=，/=，%=</td>
+<td></td>
+</tr>
+<tr>
+<td>&laquo;=，&raquo;=，&amp;=，^=，|=</td>
+<td></td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>&amp;a，变量的实际地址</td>
+</tr>
+<tr>
+<td>*</td>
+<td>*a，指针变量</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight wrap-code"><pre tabindex="0"><code>A=60 B=13
+A = 0011 1100
+B = 0000 1101</code></pre></div><table>
+<thead>
+<tr>
+<th>位运算符</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&amp;</td>
+<td>按位与运算符</td>
+<td>A&amp;B=0000 1100</td>
+</tr>
+<tr>
+<td>|</td>
+<td>按位或运算符</td>
+<td>A|B=0011 1101</td>
+</tr>
+<tr>
+<td>^</td>
+<td>按位异或运算符，两对应的二进位相异时，结果为1。</td>
+<td>A^B=0011 0001</td>
+</tr>
+<tr>
+<td>&laquo;</td>
+<td>左移运算符，左移n位就是乘以2的n次方。把&laquo;左边的运算数的各二进位全部左移若干位。</td>
+<td>A&laquo;2=240，1111 0000</td>
+</tr>
+<tr>
+<td>&raquo;</td>
+<td>右移运算符，右移n位就是除以2的n次方。把&raquo;左边的运算数的各二进位全部右移若干位。</td>
+<td>A&raquo;2=15，0000 1111</td>
+</tr>
+</tbody>
+</table>
+<h5 id="5条件语句循环语句">5、条件语句、循环语句</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>if a &lt; 20 {
+	fmt.Printf(&#34;a 小于 20\n&#34; );
+} else if a == 20 {
+	fmt.Printf(&#34;a 等于 20\n&#34; );
+} else {
+	fmt.Printf(&#34;a 大于 20\n&#34; );
+}</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>switch {
+    case grade == &#34;A&#34; :
+    	fmt.Printf(&#34;优秀!\n&#34; )    
+    case grade == &#34;B&#34;, grade == &#34;C&#34; :
+    	fmt.Printf(&#34;良好\n&#34; )      
+    default:
+    	fmt.Printf(&#34;差\n&#34; );
+}
+
+fallthrough ?</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>func main() {
+	var c1, c2, c3 chan int
+	var i1, i2 int
+	select {
+	case i1 = &lt;-c1:
+		fmt.Printf(&#34;recived&#34;, i1, &#34;from c1\n&#34;)
+	case c2 &lt;- i2:
+		fmt.Printf(&#34;send&#34;, i2, &#34;to c2\n&#34;)
+	case i3, ok := (&lt;-c3):
+		if ok {
+			fmt.Printf(&#34;recived&#34;, i3, &#34;from c3\n&#34;)
+		} else {
+			fmt.Printf(&#34;c3 is closed\n&#34;)
+		}
+	default:
+		fmt.Printf(&#34;no\n&#34;)
+	}
+}</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>sum := 0
+for i := 0; i &lt;= 10; i++ {
+	sum += 1
+}</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>for sum &lt;= 10 {
+	sum += sum
+}</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>numbers := [6]int{1, 2, 3, 5}
+    for i,x:= range numbers {
+    	fmt.Printf(&#34;第 %d 位 x 的值 = %d\n&#34;, i,x)
+    }</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>var a int = 10
+LOOP: for a &lt; 20 {
+    if a == 15 {
+        /* 跳过迭代 */
+        a = a + 1
+        goto LOOP
+    }
+    fmt.Printf(&#34;a的值为 : %d\n&#34;, a)
+    a++    
+}  </code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>for true  {
+	fmt.Printf(&#34;这是无限循环。\n&#34;);
+}
+
+for {
+	fmt.Printf(&#34;这是无限循环。\n&#34;);
+}</code></pre></div><h5 id="6指针">6、指针</h5>
+<blockquote>
+<p>一个指针变量指向一个值的内存地址</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var ip *int /*指向整型*/
+var fp *float32 /*指向浮点型*/
+if(ptr != nil)     /* ptr 不是空指针 */
+if(ptr == nil)    /* ptr 是空指针 */</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>var a int = 20    /*声明实际变量*/
+var ip *int       /*声明指针参数*/
+ip = &amp;a           /*指针变量赋值*/
+
+fmt.Printf(&#34;a 变量的内存地址：%x\n&#34;, &amp;a)
+// 0xc0000160b0
+
+fmt.Printf(&#34;ip 变量存储的指针地址：%x\n&#34;, ip)
+// 0xc0000160b0
+
+fmt.Printf(&#34;*ip 变量的值：%d\n&#34;, *ip)
+// 20</code></pre></div><h5 id="7函数">7、函数</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>func max(num1, num2 int) int {
+   var result int
+
+   if (num1 &gt; num2) {
+      result = num1
+   } else {
+      result = num2
+   }
+   return result
+}</code></pre></div><blockquote>
+<p>语言函数作为实参</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>package main
+
+import (
+   &#34;fmt&#34;
+   &#34;math&#34;
+)
+
+func main(){
+   /* 声明函数变量 */
+   getSquareRoot := func(x float64) float64 {
+      return math.Sqrt(x)
+   }
+
+   /* 使用函数 */
+   fmt.Println(getSquareRoot(9))
+}</code></pre></div><blockquote>
+<p>闭包，可以直接使用函数内的变量，不必申明。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>func getSequence() func() int {
+	i := 0
+	return func() int {
+		i += 1
+		return i
+	}
+}</code></pre></div><h5 id="8结构体">8、结构体</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>type Books struct {
+   title string
+   author string
+   subject string
+   book_id int
+}
+
+func main(){
+	var Book1 Books
+	Book1.title = &#34;test&#34;
+	
+	var struct_pointer *Books
+	struct_pointer = &amp;Book1
+	struct_pointer.title
+}</code></pre></div><h5 id="9切片-slice">9、切片 Slice</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var slice1 []type = make([]type, length, capacity)
+slice1 := make([]type, len)
+
+var numbers = make([]int,3,5)
+if(numbers == nil){
+	fmt.Printf(&#34;切片是空的&#34;)
+}
+fmt.Printf(&#34;len=%d cap=%d slice=%v\n&#34;,len(numbers),cap(numbers),numbers)
+// len()获取长度，cap()切片最长可以达多少</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>numbers := []int{0,1,2,3,4,5,6,7,8}  
+printSlice(numbers)
+fmt.Println(&#34;numbers[1:4] ==&#34;, numbers[1:4])
+
+// 末尾插入0
+numbers = append(numbers, 0)
+
+// 保存到一个临时的切片
+tmp := append([]int{}, slice[2:]...)
+
+// 拷贝 numbers 的内容到 numbers1
+numbers1 := make([]int, len(numbers), (cap(numbers))*2)
+copy(numbers1, numbers)
+
+// 删除下标为index的元素
+slice = append(slice[:index], slice[index+1:]...)
+
+// 删除index1~index2之间的元素
+slice = append(slice[:index1], slice[index2:]...)</code></pre></div><h5 id="10范围-range">10、范围 Range</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>nums := []int{2, 3, 4}
+for k, v := range nums {
+	fmt.Println(k, v)
+}</code></pre></div><h5 id="11集合-map">11、集合 Map</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var map_variable map[key_data_type]value_data_type
+或
+map_variable := make(map[key_data_type]value_data_type)
+
+countryCapitalMap := map[string]string{&#34;France&#34;: &#34;Paris&#34;, &#34;Italy&#34;: &#34;Rome&#34;}
+
+countryCapitalMap [ &#34;France&#34; ] = &#34;巴黎&#34;
+countryCapitalMap [ &#34;Italy&#34; ] = &#34;罗马&#34;
+
+delete(countryCapitalMap, &#34;France&#34;)</code></pre></div><h5 id="12类型转换">12、类型转换</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>var sum int = 17
+var count int = 5
+var mean float32
+mean = float32(sum)/float32(count)
+
+var a int64 = 3
+var b int32
+b = int32(a)</code></pre></div><h5 id="13错误处理">13、错误处理</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>type error interface {
+    Error() string
+}</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>type DivideError struct {
+    dividee int
+    divider int
+}
+
+func (de *DivideError) Error() string {
+    strFormat := `
+    Cannot proceed, the divider is zero.
+    dividee: %d
+    divider: 0
+`
+    return fmt.Sprintf(strFormat, de.dividee)
+}
+
+func Divide(varDividee int, varDivider int) (result int, errorMsg string) {
+    if varDivider == 0 {
+            dData := DivideError{
+                    dividee: varDividee,
+                    divider: varDivider,
+            }
+            errorMsg = dData.Error()
+            return
+    } else {
+            return varDividee / varDivider, &#34;&#34;
+    }
+
+}
+
+func main() {
+    // 正常情况
+    if result, errorMsg := Divide(100, 10); errorMsg == &#34;&#34; {
+            fmt.Println(&#34;100/10 = &#34;, result)
+    }
+    // 当除数为零的时候会返回错误信息
+    if _, errorMsg := Divide(100, 0); errorMsg != &#34;&#34; {
+            fmt.Println(&#34;errorMsg is: &#34;, errorMsg)
+    }
+
+}</code></pre></div><h5 id="14并发">14、并发</h5>
+<blockquote>
+<p>goroutine 是轻量级线程，goroutine 的调度是由 Golang 运行时进行管理的。同一个程序中的所有 goroutine 共享同一个地址空间。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>package main
+
+import (
+	&#34;fmt&#34;
+	&#34;time&#34;
+)
+
+func say(s string) {
+	for i := 0; i &lt; 5; i++ {
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println(s)
+	}
+}
+
+func main() {
+	go say(&#34;world&#34;)
+	say(&#34;hello&#34;)
+}</code></pre></div><h5 id="15通道channel">15、通道（channel）</h5>
+<blockquote>
+<p>通道是用来传递数据的一个数据结构，通道可用于两个goroutine之间通过传递一个指定类型的值来同步运行和通讯。操作符&lt;-用于指定通道的方向，发送或接受。如果未指定方向，则为双向通道。</p>
+</blockquote>
+<blockquote>
+<p>带缓冲区的通道允许发送端的数据发送和接收端的数据获取处于异步状态，不过缓冲区的大小是有限的。</p>
+</blockquote>
+<blockquote>
+<p>如果通道不带缓冲区，发送方会阻塞直到接收方从通道中接受到了值。如果通道带缓冲，发送方则会阻塞直到发送的值被拷贝到缓冲区内；如果缓冲区已满，则意味着需要等待直到某个接收方获取到一个值，接收方在有值可以接受之前一直阻塞。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ch &lt;- v   // 把 v 发送到通道 ch
+v := &lt;-ch // 从 ch 接受数据，并把值赋值给 v
+
+ch := make(chan int, 100) // 通过 make 的第二个参数指定缓冲区大小</code></pre></div><blockquote>
+<p>如果通道接受不到数据后 ok 就为 false，这时通道就可以使用 close() 函数来关闭。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>v, ok := &lt;-ch
+
+func fibonacci(n int, c chan int) {
+        x, y := 0, 1
+        for i := 0; i &lt; n; i++ {
+                c &lt;- x
+                x, y = y, x+y
+        }
+        close(c)
+}</code></pre></div><h1 id="四实例">四、实例</h1>
+<div class="highlight wrap-code"><pre tabindex="0"><code>type MinStack struct {
+    stack []int
+    minStack []int
+}
+
+
+func Constructor() MinStack {
+    return MinStack{
+        stack: []int{},
+        minStack: []int{math.MaxInt64},
+    }
+}
+
+
+func (this *MinStack) Push(val int)  {
+    this.stack = append(this.stack, val)
+    this.minStack = append(this.minStack, Min(val, this.minStack[len(this.minStack) - 1]))
+}</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>nums []int
+sort.Ints(nums)
+
+math.inf
+
+math.MaxInt64</code></pre></div><h1 id="五dlv-调试">五、dlv 调试</h1>
+<h2 id="1安装dlv">1、安装dlv</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>go install github.com/go-delve/delve/cmd/dlv@latest</code></pre></div><h2 id="2编译程序">2、编译程序</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>GODEBUG=1 make</code></pre></div><h2 id="3通过dlv运行程序">3、通过dlv运行程序</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>/opt/go/bin/dlv exec ./bin/containerd --headless --listen 0.0.0.0:2345 --api-version 2</code></pre></div><h2 id="4配置vscode">4、配置vscode</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>lauch.json
+
+{
+    &#34;version&#34;: &#34;0.2.0&#34;,
+    &#34;configurations&#34;: [
+
+        {
+            &#34;name&#34;: &#34;Launch Package&#34;,
+            &#34;type&#34;: &#34;go&#34;,
+            &#34;request&#34;: &#34;attach&#34;,
+            &#34;mode&#34;: &#34;remote&#34;,
+            &#34;remotePath&#34;: &#34;/opt/containerd&#34;,
+            &#34;port&#34;: 2345,
+            &#34;dlvLoadConfig&#34;: {
+                &#34;followPointers&#34;: true,
+                &#34;maxVariableRecurse&#34;: 1,
+                &#34;maxStringLen&#34;: 2048,
+                &#34;maxArrayValues&#34;: 64,
+                &#34;maxStructFields&#34;: -1
+            },
+            &#34;host&#34;: &#34;192.168.0.127&#34;
+        }
+    ]
+}</code></pre></div><h2 id="5vscode-f5-启用调试">5、vscode F5 启用调试</h2>
+
+            <footer class="footline">
+            </footer>
+          </article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <style>
+            #R-logo svg,
+            #R-logo svg * {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              fill: #282828 !important;
+              fill: var(--MENU-SECTIONS-BG-color) !important;
+              opacity: .945;
+            }
+            a#R-logo {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+              font-size: 1.875rem;
+              font-weight: 300;
+              margin-top: -.8125rem;
+              max-width: 60%;
+              text-transform: uppercase;
+              width: 14.125rem;
+              white-space: nowrap;
+            }
+            a#R-logo:hover {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+            }
+            #R-logo svg {
+              margin-bottom: -1.25rem;
+              margin-inline-start: -1.47rem;
+              margin-inline-end: .5rem;
+              width: 40.5%;
+            }
+            @media only all and (max-width: 59.999rem) {
+              a#R-logo {
+                font-size: 1.5625rem;
+                margin-top: -.1875rem;
+              }
+              #R-logo svg {
+                margin-bottom: -.75rem;
+                margin-inline-start: -1.47rem;
+                margin-inline-end: .5rem;
+              }
+            }
+            @media all and (-ms-high-contrast:none) {
+              /* IE11s understanding of positioning is weird at best */
+              a#R-logo {
+                margin-top: -3.625rem;
+              }
+              #R-logo svg {
+                margin-bottom: -3.875rem;
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+            @media only all and (-ms-high-contrast:none) and (max-width: 59.999rem) {
+              #R-logo svg {
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+          </style>
+          <a id="R-logo" href="/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.044 64.044">
+              <path d="M46.103 136.34c-.642-.394-1.222-2.242-1.98-2.358-.76-.117-1.353.506-1.618 1.519-.266 1.012-.446 4.188.173 5.538.213.435.482.787 1.03.845.547.057.967-.504 1.45-1.027.482-.523.437-.9 1.142-.612.705.289 1.051.4 1.586 1.229.535.828 1.085 4.043.868 5.598-.241 1.458-.531 2.8-.59 4.088.26.075.517.148.772.217 2.68.724 5.373 1.037 7.873.02.001-.028.01-.105.008-.11-.048-.165-.18-.41-.36-.698-.18-.29-.414-.645-.586-1.114a3.212 3.212 0 0 1-.125-1.735c.056-.21.153-.342.249-.475 1.237-1.193 2.932-1.373 4.244-1.384.557-.004 1.389.016 2.198.255.809.239 1.706.724 2.068 1.843.187.578.114 1.17-.043 1.623-.153.438-.369.783-.545 1.091-.178.31-.329.6-.401.821-.007.02-.003.071-.005.094 2.256 1.008 4.716.91 7.189.398.55-.114 1.11-.247 1.673-.377.344-1.085.678-2.145.852-3.208.124-.752.158-2.311-.078-3.538-.118-.613-.306-1.15-.52-1.489-.221-.349-.413-.501-.747-.538-.243-.027-.51.013-.796.098-.67.223-1.33.606-1.966.76l-.008.002-.109.032c-.556.152-1.233.158-1.797-.36-.556-.51-.89-1.367-1.117-2.596-.283-1.528-.075-3.279.89-4.518l.071-.09h.07c.65-.71 1.485-.802 2.16-.599.706.213 1.333.629 1.772.84.736.354 1.185.319 1.475.171.291-.148.5-.439.668-.955.332-1.017.301-2.819.022-4.106-.148-.684-.13-1.292-.13-1.883-1.558-.463-3.067-.982-4.574-1.208-1.128-.169-2.263-.173-3.298.164-.13.046-.256.095-.38.15-.373.164-.633.342-.805.52-.077.098-.081.105-.087.21-.004.068.031.289.13.571.1.282.256.634.467 1.03.279.524.448 1.063.431 1.618a2.12 2.12 0 0 1-.499 1.309 1.757 1.757 0 0 1-.62.51h-.002c-.515.291-1.107.404-1.723.464-.86.083-1.787.026-2.598-.097-.806-.123-1.47-.28-1.948-.555-.444-.256-.79-.547-1.037-.925a2.273 2.273 0 0 1-.356-1.301c.029-.837.403-1.437.625-1.897.111-.23.191-.433.236-.583.045-.15.044-.25.046-.24-.005-.029-.127-.355-1.015-.741-1.138-.495-2.322-.673-3.533-.668h-.015a9.711 9.711 0 0 0-.521.016h-.002c-1.163.057-2.35.308-3.541.569.383 1.531.79 2.753.818 4.502-.096 1.297.158 2.114-1.03 2.935-.85.588-1.508.729-2.15.335" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:1.03763;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M61.472 101.34v.002c-.3-.003-.603.01-.894.04-.544.055-1.39.165-1.778.306-1.238.364.13 2.344.41 2.913.28.569.285 2.03.14 2.134-.144.103-.375.261-.934.345-.56.084.03-.037-1.589.086-1.62.122-5.506.29-8.265.248-.022.26-.036.521-.097.808-.309 1.442-.63 3.163-.494 4.074.071.473.168.65.414.8.23.14.737.235 1.62-.004.834-.227 1.3-.442 1.887-.456.595-.016 1.555.472 1.965.717.411.245-.03-.008.002 0s.128.05.176.102c.049.053-.276-.523.104.199.379.721.72 3.256.002 4.68-.46.913-1.01 1.49-1.64 1.711-.63.22-1.229.067-1.734-.135-.881-.353-1.584-.7-2.205-.647-1.199 1.94-1.186 4.17-.6 6.602.097.397.212.814.327 1.23 2.68-.556 5.542-1.016 8.337.132 1.064.437 1.73 1.015 1.902 1.857.169.831-.193 1.508-.438 1.986-.122.238-.23.46-.307.642-.07.164-.096.28-.104.324.069.429.309.723.686.945.385.227.89.355 1.35.423.723.104 1.567.152 2.287.086.693-.064 1.032-.338 1.241-.544a2.447 2.447 0 0 0 .303-.437.175.175 0 0 0 .013-.035c-.004-.066-.037-.246-.195-.527-.46-.816-.87-1.595-.817-2.51.028-.476.218-.938.529-1.288.304-.343.698-.586 1.186-.79 1.442-.606 2.96-.609 4.372-.409 1.525.216 2.963.679 4.378 1.083.226-2.09.784-3.9.592-5.77-.058-.565-.287-1.333-.598-1.827-.32-.508-.59-.717-1.036-.642-.648.11-1.472.935-2.707 1.078-.791.092-1.494-.267-1.95-.86-.45-.583-.678-1.335-.78-2.101-.202-1.525.031-3.229.89-4.27.615-.747 1.45-.887 2.15-.74.687.145 1.307.492 1.857.745v-.002c.546.252 1.033.388 1.281.344a.547.547 0 0 0 .353-.188c.113-.124.242-.35.384-.75.604-1.712.206-3.68-.303-5.654-.667.145-1.336.293-2.018.413-1.341.236-2.73.392-4.136.273-.656-.055-1.695-.085-2.58-.476-.442-.195-.903-.514-1.157-1.093-.259-.591-.205-1.313.08-2.014.223-.64 1.082-2.178.692-2.585-.391-.407-1.651-.56-2.554-.571z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.992837;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M83.128 98.116c-.484 1.875-1.057 3.757-2.486 5.033-.638.57-1.13.666-1.483.548-.401-.134-.715-.506-1.058-.973-.338-.461-.655-.97-1.076-1.332-.192-.165-.404-.315-.683-.38-.279-.066-.599-.02-.9.102-.489.196-.89.58-1.28 1.047a6.1 6.1 0 0 0-.985 1.632c-.234.591-.356 1.174-.277 1.713.072.487.392.977.905 1.185.463.187.926.156 1.36.154.433 0 .843.01 1.242.147.55.189.79.736.822 1.368.034.66-.145 1.412-.393 1.988l-.008.021c-.74 1.705-1.946 2.893-3.004 4.349l-.664.915.979.099c.924.092 1.788.26 2.468.675.46.281 1.806 1.205 2.794 2.222.497.513.888 1.031 1.047 1.502.078.231.095.422.05.6a.93.93 0 0 1-.345.474c-.301.223-.606.395-.864.532l-.354.186c-.107.058-.189.087-.345.228a.637.637 0 0 1 .062-.045l-.064.041-.209.236-.103.343s.003.126.007.152c.003.017.003.007.004.015v.002c.016.195.061.307.133.476a4.1 4.1 0 0 0 .32.596 5.7 5.7 0 0 0 2.8 2.258c.284.108.908.321 1.548.36.33.02.59.015.912-.13h.002c.08-.037.228-.095.382-.281.153-.186.19-.355.212-.445l.019-.075.003-.078c.023-.585-.037-1.296.072-1.899.153-.657.435-.956 1.009-.909 2.771.239 4.74 1.955 6.693 3.83l.742.714.279-1.155c.55-2.29 1.093-4.464 2.928-5.977.692-.57 1.184-.642 1.527-.509.39.151.676.536.996.995.319.458.605.926 1.07 1.212.194.119.464.232.784.209.32-.024.638-.163.988-.384 1.022-.645 1.778-1.756 2.086-2.942.136-.522.102-.991-.046-1.301-.158-.334-.433-.553-.754-.707-.653-.314-1.468-.373-2.094-.486-.825-.15-1.22-.475-1.345-.878-.13-.417 0-.953.335-1.61.6-1.173 1.887-2.602 3.13-3.911l.498-.526-.449-.432c-1.545-1.49-3.163-3.01-5.252-3.715h-.002c-.473-.16-1.097-.413-1.73-.424h-.003c-.311-.004-.596.04-.883.24v.002c-.22.155-.483.537-.583.937l-.008.036-.006.038c-.116.773-.06 1.467-.217 1.995-.063.212-.198.418-.359.507-.202.111-.492.153-.976.072-.582-.097-1.978-.69-3.021-1.503-.523-.407-.934-.85-1.117-1.3a1.153 1.153 0 0 1-.083-.63c.03-.184.1-.477.308-.593.21-.116.941-.32 1.377-.642h.002c.192-.141.403-.367.518-.64.114-.275.127-.526.123-.774-.006-.142-.036-.192-.08-.3a8.417 8.417 0 0 0-3-3.027c-1.226-.725-2.585-1.135-3.927-1.539-.434-.12-.844-.111-1.02.466zm.912.947c1.186.364 2.357.718 3.345 1.303 1.035.612 1.864 1.488 2.507 2.528-.514.263-1.095.5-1.44.79-.345.29-.729.914-.815 1.434-.084.509 0 .968.155 1.347.301.74.85 1.276 1.44 1.735 1.18.92 2.554 1.545 3.47 1.698.604.1 1.186.088 1.739-.216.594-.327.935-.911 1.088-1.427.264-.884.193-1.664.262-2.17h.1c.3.006.926.206 1.417.371 1.646.554 3.044 1.773 4.431 3.089-1.102 1.174-2.222 2.423-2.888 3.73-.42.823-.73 1.789-.453 2.687.283.913 1.1 1.415 2.138 1.603.691.126 1.472.226 1.84.403.19.091.258.182.278.223.03.064.058.075-.023.387-.21.804-.761 1.598-1.413 2.01-.247.155-.365.183-.407.187-.042.003-.061.002-.172-.066-.144-.088-.455-.473-.772-.929-.317-.454-.714-1.07-1.452-1.356-.783-.304-1.776-.022-2.713.75-1.942 1.6-2.626 3.764-3.146 5.8-1.802-1.676-3.772-3.138-6.589-3.517h-.002c-.346-.095-1.013-.031-1.293.143-.735.501-1.005 1.132-1.168 2.007-.125.69-.082 1.216-.074 1.659-.055.006-.046.01-.104.006-.42-.026-1.035-.215-1.244-.295-.947-.361-1.774-1.006-2.314-1.857-.054-.085-.072-.132-.109-.2l.027-.016c.284-.15.656-.36 1.045-.648.44-.327.789-.798.93-1.35a2.4 2.4 0 0 0-.068-1.379c-.254-.751-.753-1.353-1.295-1.911-1.09-1.124-2.452-2.049-2.99-2.378-.609-.372-1.303-.44-1.981-.56.875-1.094 1.878-2.251 2.596-3.921.294-.823.543-1.907.513-2.658-.049-.97-.489-2.013-1.52-2.367-.579-.2-1.131-.204-1.58-.203-.45.002-.786-.006-.97-.08h-.002c-.264-.107-.236-.108-.268-.33-.025-.17.021-.553.183-.962a4.67 4.67 0 0 1 .725-1.192c.29-.348.617-.59.705-.626.142-.057.176-.05.22-.04.045.011.127.052.263.17.235.201.56.671.92 1.161.354.484.791 1.08 1.543 1.33.8.267 1.784-.052 2.671-.846 1.594-1.424 2.235-3.317 2.714-5.051zm11.705 7.023c-.02.014.042-.002.042 0l-.008.035c.05-.2-.028-.04-.034-.035zM79.472 122.45a.198.198 0 0 1 .005.023v.014c-.002-.01-.003-.03-.005-.037zm-.29.732-.006.01-.044.027c.016-.01.033-.024.05-.036z" style="color:#000;fill:#282828;stroke-width:1.02352;-inkscape-stroke:none" transform="translate(-40.698 -95.175)"/>
+              <path d="M76.694 128.845c-.85-.012-1.668.253-2.434.67-.01.592-.015 1.17.109 1.772.323 1.573.422 3.553-.07 5.147-.247.804-.684 1.535-1.347 1.891-.663.356-1.467.296-2.362-.159-.522-.266-1.059-.62-1.487-.757-.223-.072-.392-.096-.522-.069-.13.027-.232.094-.362.27-.53.719-.681 1.823-.497 2.876.177 1.012.418 1.438.543 1.56.143.137.26.154.604.055.548-.158 1.523-.857 2.573-.972l.02-.002.5.058c.686.081 1.247.562 1.622 1.19.372.62.591 1.37.73 2.136.279 1.532.25 3.16.083 4.232-.14.91-.394 1.72-.632 2.53 1.719-.385 3.485-.692 5.307-.36 1.174.214 2.749.574 3.762 1.977l.088.122.046.159c.162.551.16 1.114.024 1.578-.13.45-.348.772-.533 1.023-.181.246-.336.444-.437.606-.102.16-.141.275-.145.336-.01.17 0 .197.07.315.057.1.186.242.39.366.408.246 1.106.414 1.843.45a7.842 7.842 0 0 0 2.174-.21 4.28 4.28 0 0 0 .822-.296c.218-.106.385-.242.377-.233l.029-.031c.025-.035.05-.072.05-.068 0-.004 0-.017-.003-.05a2.733 2.733 0 0 0-.21-.579c-.26-.548-.839-1.333-.822-2.46.01-.657.27-1.21.598-1.576.32-.357.696-.575 1.074-.736.759-.323 1.57-.418 2.054-.458 1.653-.136 3.252.296 4.755.765.457.142.905.29 1.352.434.325-2.258.902-4.247.598-6.217-.071-.46-.25-1.169-.486-1.684-.238-.518-.495-.762-.675-.779-.351-.032-.716.14-1.174.418-.457.277-1.005.665-1.695.742-.745.082-1.406-.291-1.84-.908-.428-.608-.653-1.394-.754-2.196-.203-1.596.016-3.377.794-4.493.568-.813 1.358-.984 2.024-.835.65.146 1.243.51 1.769.779.524.267.99.413 1.237.365a.527.527 0 0 0 .346-.2c.11-.132.235-.373.37-.798.612-1.918.27-3.894-.246-6.054-2.815-.851-5.49-1.534-8.089-.267a.727.727 0 0 0-.223.148c-.024.028-.018.021-.026.056.001-.003-.01.178.07.44.162.522.611 1.29.911 1.978l.004.009.029.063.024.084V133c.162.635.016 1.297-.274 1.727-.272.404-.618.636-.952.81-.675.353-1.399.484-1.724.533a5.888 5.888 0 0 1-3.973-.795c-.512-.311-.876-.594-1.133-1.02-.282-.466-.318-1.084-.172-1.557.252-.814.715-1.266.971-1.89a.663.663 0 0 0 .047-.14c.001-.013 0-.006-.007-.037a.761.761 0 0 0-.184-.268c-.264-.267-.865-.595-1.54-.826-1.356-.462-3.07-.659-3.583-.686-.062-.002-.121-.006-.178-.006z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.991342;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+            </svg>Relearn
+          </a>
+        </div>
+
+        <search>
+          <div class="searchbox default-animation">
+            <i class="fas fa-search" title="Search (CTRL+ALT+f)"></i>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1712923272" defer></script>
+        <script src="/js/lunr/lunr.min.js?1712923272" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1712923272" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1712923272" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1712923272" defer></script>
+        <script src="/js/search.js?1712923272" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-topics">
+          <ul class="enlarge morespace collapsible-menu">
+          <li data-nav-id="/basics/index.html" class=""><a class="padding" href="/basics/index.html">Basics</a><ul id="R-subsections-a6deabe447afe1b2e1405bfc57ca61ff" class="morespace collapsible-menu">
+          <li data-nav-id="/basics/second-content/index.html" class=""><a class="padding" href="/basics/second-content/index.html">Second Content</a></li>
+          <li data-nav-id="/basics/first-content/index.html" class=""><a class="padding" href="/basics/first-content/index.html">First Content</a></li></ul></li>
+          <li data-nav-id="/linux/index.html" class=""><a class="padding" href="/linux/index.html">Linuxes</a><ul id="R-subsections-9e5aaccdf48687824ccd3b3097af8e41" class="morespace collapsible-menu">
+          <li data-nav-id="/linux/abd-hl/index.html" class=""><a class="padding" href="/linux/abd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ansible-hl/index.html" class=""><a class="padding" href="/linux/ansible-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/linux/apache_multi_ports-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/build_pypi-hl/index.html" class=""><a class="padding" href="/linux/build_pypi-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/linux/change_centos_boot_kernel-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/cobbler-hl/index.html" class=""><a class="padding" href="/linux/cobbler-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/crontabs-hl/index.html" class=""><a class="padding" href="/linux/crontabs-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/dd-hl/index.html" class=""><a class="padding" href="/linux/dd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/linux/diy_centos_iso-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/dns-hl/index.html" class=""><a class="padding" href="/linux/dns-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/etcd-hl/index.html" class=""><a class="padding" href="/linux/etcd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/frp-hl/index.html" class=""><a class="padding" href="/linux/frp-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ftp-hl/index.html" class=""><a class="padding" href="/linux/ftp-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/gitlab-hl/index.html" class=""><a class="padding" href="/linux/gitlab-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/guestfish-hl/index.html" class=""><a class="padding" href="/linux/guestfish-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/haproxy-hl/index.html" class=""><a class="padding" href="/linux/haproxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/iscsi-hl/index.html" class=""><a class="padding" href="/linux/iscsi-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/kernel_make-hl/index.html" class=""><a class="padding" href="/linux/kernel_make-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/libvirt-hl/index.html" class=""><a class="padding" href="/linux/libvirt-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux-hl/index.html" class=""><a class="padding" href="/linux/linux-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_network-hl/index.html" class=""><a class="padding" href="/linux/linux_network-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_source-hl/index.html" class=""><a class="padding" href="/linux/linux_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_u-hl/index.html" class=""><a class="padding" href="/linux/linux_u-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/lvm-hl/index.html" class=""><a class="padding" href="/linux/lvm-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/mdadm-hl/index.html" class=""><a class="padding" href="/linux/mdadm-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/mysql-hl/index.html" class=""><a class="padding" href="/linux/mysql-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nested-hl/index.html" class=""><a class="padding" href="/linux/nested-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/net_bridge-hl/index.html" class=""><a class="padding" href="/linux/net_bridge-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nginx-hl/index.html" class=""><a class="padding" href="/linux/nginx-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nic_bond-hl/index.html" class=""><a class="padding" href="/linux/nic_bond-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/proxychains_ng-hl/index.html" class=""><a class="padding" href="/linux/proxychains_ng-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/pypi_local_source-hl/index.html" class=""><a class="padding" href="/linux/pypi_local_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/qemu_img-hl/index.html" class=""><a class="padding" href="/linux/qemu_img-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ramdisk-hl/index.html" class=""><a class="padding" href="/linux/ramdisk-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/root_extend-hl/index.html" class=""><a class="padding" href="/linux/root_extend-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/rpm_build-hl/index.html" class=""><a class="padding" href="/linux/rpm_build-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/samba-hl/index.html" class=""><a class="padding" href="/linux/samba-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh-hl/index.html" class=""><a class="padding" href="/linux/ssh-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh_forwading-hl/index.html" class=""><a class="padding" href="/linux/ssh_forwading-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh_interval-hl/index.html" class=""><a class="padding" href="/linux/ssh_interval-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/linux/ssr_privoxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/synology-hl/index.html" class=""><a class="padding" href="/linux/synology-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/systemd-hl/index.html" class=""><a class="padding" href="/linux/systemd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/tcpdump-hl/index.html" class=""><a class="padding" href="/linux/tcpdump-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/uboot-hl/index.html" class=""><a class="padding" href="/linux/uboot-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/unixbench-hl/index.html" class=""><a class="padding" href="/linux/unixbench-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/vim-hl/index.html" class=""><a class="padding" href="/linux/vim-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/virt_manager-hl/index.html" class=""><a class="padding" href="/linux/virt_manager-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/vm_to_router-hl/index.html" class=""><a class="padding" href="/linux/vm_to_router-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/linux/yum_install_conf_conflict-hl/index.html">Build</a></li></ul></li>
+          <li data-nav-id="/posts/index.html" class=""><a class="padding" href="/posts/index.html">Posts</a><ul id="R-subsections-6c8465a20210a85121ce7f08ddd74896" class="morespace collapsible-menu">
+          <li data-nav-id="/posts/fisrt-blog/index.html" class=""><a class="padding" href="/posts/fisrt-blog/index.html">Fisrt Blog</a></li></ul></li>
+          <li data-nav-id="/golang/index.html" class="parent "><a class="padding" href="/golang/index.html">Golangs</a><ul id="R-subsections-9846d6388830934b21e07a0f7d630c6c" class="morespace collapsible-menu">
+          <li data-nav-id="/golang/go/index.html" class="active"><a class="padding" href="/golang/go/index.html"></a></li></ul></li>
+          </ul>
+        </div>
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/golang/go/index.html" lang="zh_CN" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.variants && variants.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.variants && variants.markSelectedVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+	    <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1712923272" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1712923272" defer></script>
+    <script src="/js/theme.js?1712923272" defer></script>
+  </body>
+</html>

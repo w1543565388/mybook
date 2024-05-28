@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Openstack on My New Hugo Site</title>
+    <link>http://ip:1313/openstack/index.html</link>
+    <description>Recent content in Openstack on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <lastBuildDate>Fri, 12 Apr 2024 09:39:39 +0000</lastBuildDate>
+    <atom:link href="http://ip:1313/openstack/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>devstack相关</title>
+      <link>http://ip:1313/openstack/devstack-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/devstack-hl/index.html</guid>
+      <description>1、添加stack user，devstack需要运行在非root用户。 sudo useradd -s /bin/bash -d /opt/stack -m stack2、给用户提供sudo权限。 echo &amp;#34;stack ALL=(ALL) NOPASSWD: ALL&amp;#34; | sudo tee /etc/sudoers.d/stack sudo su - stack3、下载 devstack git clone https://git.openstack.org/openstack-dev/devstack cd devstack4、修改pip源、软件源 略5、创建local.conf文件，以下是mitaka版本的配置文件。 [[local|localrc]] # use TryStack git mirror GIT_BASE=http://git.trystack.cn NOVNC_REPO=http://git.trystack.cn/kanaka/noVNC.git SPICE_REPO=http://git.trystack.cn/git/spice/spice-html5.git # Define images to be automatically downloaded during the DevStack built process. DOWNLOAD_DEFAULT_IMAGES=False IMAGE_URLS=&amp;#34;http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img&amp;#34; # Credentials DATABASE_PASSWORD=0127 ADMIN_PASSWORD=0127 SERVICE_PASSWORD=0127 SERVICE_TOKEN=0127 RABBIT_PASSWORD=0127 #FLAT_INTERFACE=eth0 HOST_IP=172.18.20.157 SERVICE_HOST=172.18.20.157 MYSQL_HOST=172.18.20.157 RABBIT_HOST=172.18.20.157 GLANCE_HOSTPORT=172.18.20.157:9292 # Database Backend MySQL enable_service mysql # RPC Backend RabbitMQ enable_service rabbit # Enable Keystone - OpenStack Identity Service enable_service key # Horizon - OpenStack Dashboard Service enable_service horizon # Enable Glance - OpenStack Image service enable_service g-api g-reg # Enable Cinder - Block Storage service for OpenStack VOLUME_GROUP=&amp;#34;cinder-volumes&amp;#34; enable_service cinder c-api c-vol c-sch c-bak # Enable Heat (orchestration) Service enable_service heat h-api h-api-cfn h-api-cw h-eng # Enable Tempest - The OpenStack Integration Test Suite enable_service tempest # Enable NoVNC enable_service n-novnc # Enabling Neutron (network) Service disable_service n-net enable_service q-svc enable_service q-agt enable_service q-dhcp enable_service q-l3 enable_service q-meta enable_service q-metering enable_service neutron ## Neutron options Q_USE_SECGROUP=True FLOATING_RANGE=&amp;#34;172.</description>
+    </item>
+    <item>
+      <title>heat相关</title>
+      <link>http://ip:1313/openstack/heat-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/heat-hl/index.html</guid>
+      <description>read -p &amp;#34;how many groups do you want:&amp;#34; groups read -p &amp;#34;private_net_name:&amp;#34; private_net_name for((i=1;i&amp;lt;=$groups;i++));do heat stack-create -f /root/bigdata.yaml -P &amp;#34;private_net_name=&amp;#34;$private_net_name$i&amp;#34;_private_net&amp;#34; hadoop_$i doneheat_template_version: 2013-05-23 description: &amp;gt; HOT template to create a new neutron network plus a router to the public network, and for deploying two servers into the new network. The template also assigns floating IP addresses to each server so they are routable from the public network. parameters: myimage: type: string description: testsssssssssssssssssssssssss constraints: - custom_constraint: glance.</description>
+    </item>
+    <item>
+      <title>kolla网络规划</title>
+      <link>http://ip:1313/openstack/kolla_network-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/kolla_network-hl/index.html</guid>
+      <description>kolla_internal_vip_address: &amp;#34;192.168.110.10&amp;#34; kolla_external_vip_address: &amp;#34;192.168.21.10&amp;#34; network_interface: &amp;#34;em1&amp;#34; kolla_external_vip_interface: &amp;#34;em2&amp;#34; #api_interface: &amp;#34;{{ network_interface }}&amp;#34; #storage_interface: &amp;#34;{{ network_interface }}&amp;#34; #cluster_interface: &amp;#34;{{ network_interface }}&amp;#34; #tunnel_interface: &amp;#34;{{ network_interface }}&amp;#34; #dns_interface: &amp;#34;{{ network_interface }}&amp;#34; neutron_external_interface: &amp;#34;em3&amp;#34; em1：管理网网卡（internel、存储。。。） em2：管理网外部网卡（public） em3：外网网卡（浮动ip等，up网卡，不用配置ip）</description>
+    </item>
+    <item>
+      <title>kolla部署相关</title>
+      <link>http://ip:1313/openstack/kolla_deploy-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/kolla_deploy-hl/index.html</guid>
+      <description>一、环境要求 两张网卡&#xA;除系统盘外，至少1块磁盘&#xA;二、安装 kolla deploy&#xA;1、安装相关依赖 #CentOS dnf install -y python3-devel libffi-devel gcc openssl-devel python3-libselinux python3-venv #Ubuntu apt install -y python3-dev libffi-dev gcc libssl-dev python3-venv2、安装docker aliyun 安装docker-ce&#xA;tsinghua 安装docker-ce&#xA;curl -sSL https://get.docker.io | bash or curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun3、python 虚拟环境 mkdir /kolla python3 -m venv /kolla/venv3 source /kolla/venv3/bin/activate4、禁用防火墙 setenforce 0 systemctl stop firewalld systemctl disable firewalld iptables -L5、安装 kolla 和 kolla-ansible cd /kolla git clone -b stable/wallaby --depth=1 https://github.</description>
+    </item>
+    <item>
+      <title>kolla镜像构建</title>
+      <link>http://ip:1313/openstack/kolla_image_build-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/kolla_image_build-hl/index.html</guid>
+      <description>官网地址&#xA;1、环境准备 git clone https://github.com/openstack/kolla.git cd kolla git checkout -b queens origin/stable/queens pip install tox tox -e genconfig2、配置 build配置文件 kolla/etc/kolla/kolla-build.conf&#xA;[DEFAULT] base = centos base_tag = 7.4.1708 #tarballs_base = http://tarballs.openstack.org install_type = sourc tag = queens logs_dir = /home/hl/kolla_build/kolla/log [ceilometer-base] location = http://127.0.0.1/tars/ceilometer-10.0.0.tar.gz [cinder-base] location = http://127.0.0.1/tars/cinder-12.0.1.tar.gz [horizon] location = http://127.0.0.1/tars/horizon-13.0.0.tar.gz [horizon-plugin-fwaas-dashboard] #location = $tarballs_base/neutron-fwaas-dashboard/neutron-fwaas-dashboard-1.3.0.tar.gz location = http://127.0.0.1/tars/neutron-fwaas-dashboard-1.3.0.tar.gz [horizon-plugin-neutron-lbaas-dashboard] location = http://192.168.110.12/tars/neutron-lbaas-dashboard-4.0.0.tar.gz [horizon-plugin-trove-dashboard] location = http://192.168.110.12/tars/trove-dashboard-10.0.0.tar.gz [neutron-base] location = http://192.168.110.12/tars/neutron-12.0.4.tar.gz [nova-base] location = http://192.</description>
+    </item>
+    <item>
+      <title>Lfs上安装OpenStack</title>
+      <link>http://ip:1313/openstack/lsf_install_openstack-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/lsf_install_openstack-hl/index.html</guid>
+      <description>一、环境准备 1、更新内核 支持ip6tables&#xA;ip6tables-restore v1.4.21: ip6tables-restore: unable to initialize table &amp;#39;filter&amp;#39; Error occurred at line: 2 Try `ip6tables-restore -h&amp;#39; or &amp;#39;ip6tables-restore --help&amp;#39; for more information. CONFIG_NF_TABLES=m CONFIG_NF_TABLES_INET=m CONFIG_IP_NF_SECURITY=m CONFIG_IP6_NF_SECURITY=m&#xA;支持ovs&#xA;TASK [module-load : Load modules] ********************************************************************************************************************************* failed: [localhost] (item=openvswitch) =&amp;gt; {&amp;ldquo;ansible_loop_var&amp;rdquo;: &amp;ldquo;item&amp;rdquo;, &amp;ldquo;changed&amp;rdquo;: false, &amp;ldquo;item&amp;rdquo;: {&amp;ldquo;name&amp;rdquo;: &amp;ldquo;openvswitch&amp;rdquo;}, &amp;ldquo;msg&amp;rdquo;: &amp;ldquo;modprobe: FATAL: Module openvswitch not found in directory /lib/modules/4.19.37-rt19\n&amp;rdquo;, &amp;ldquo;name&amp;rdquo;: &amp;ldquo;openvswitch&amp;rdquo;, &amp;ldquo;params&amp;rdquo;: &amp;ldquo;&amp;rdquo;, &amp;ldquo;rc&amp;rdquo;: 1, &amp;ldquo;state&amp;rdquo;: &amp;ldquo;present&amp;rdquo;, &amp;ldquo;stderr&amp;rdquo;: &amp;ldquo;modprobe: FATAL: Module openvswitch not found in directory /lib/modules/4.</description>
+    </item>
+    <item>
+      <title>openstack windows虚拟机分辨率问题</title>
+      <link>http://ip:1313/openstack/openstack_win_vm_diaplay-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/openstack_win_vm_diaplay-hl/index.html</guid>
+      <description>glance image-upload --property hw_video_model=vga …… glance image-update --property hw_video_model=vga [image_uuid]Libvirt architecture - name of guest hardware architecture eg i686, x86_64, ppc64 hw_cdrom_bus - name of the CDROM bus to use eg virtio, scsi, ide hw_disk_bus - name of the hard disk bus to use eg virtio, scsi, ide hw_floppy_bus - name of the floppy disk bus to use eg fd, scsi, ide hw_qemu_guest_agent - boolean &amp;#39;yes&amp;#39; or &amp;#39;no&amp;#39; to enable QEMU guest agent hw_rng - name of the RNG device type eg virtio (pending merge) hw_scsi_model - name of the SCSI bus controller eg &amp;#39;virtio-scsi&amp;#39;, &amp;#39;lsilogic&amp;#39;, etc (pending merge) hw_video_model - name of the video adapter model to use, eg cirrus, vga, xen, qxl hw_video_ram - MB of video RAM to provide eg 64 (pending merge) hw_vif_model - name of a NIC device model eg virtio, e1000, rtl8139 hw_watchdog_action - action to take when watchdog device fires eg reset, poweroff, pause, none (pending merge) os_command_line - string of boot time command line arguments for the guest kernel VMWarehttps://zhuanlan.</description>
+    </item>
+    <item>
+      <title>OpenStack 相关</title>
+      <link>http://ip:1313/openstack/openstack-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/openstack-hl/index.html</guid>
+      <description>一、查看虚拟机console地址 openstack console url show novatest二、虚拟机开机启动 resume_guests_state_on_host_boot=true三、将虚拟机状态改为active nova reset-state --active fcfcb78b-4a58-49da-af39-d6c08a109db7四、扩展传统模式根磁盘 qemu-img info aa.qcow2 qemu-img resize aa.qcow2 +10G lsblk resize2fs /dev/vda1 yum install xfsprogs xfs_growfs -d /mnt lsblk df -h五、使用virsh挂载卷 pvcreate /dev/xvdb4 使用pvcreate转换 pvdisplay 查看已经存在的pv vgcreate myVG /dev/xvdb4 创建VG，可利用已经存在的VG名（myVG），同一VG名下的一组PV构成一个VG vgdisplay 查看VG 创建完成VG之后，才能从VG中划分一个LV lvcreate -l 100%FREE -n myLV myVG mkfs -t ext4 /dev/vg/instances mkfs -t ext4 /dev/vg/edu blkid /dev/myVG/myLV lvcreate -L 500G -n edu vg virsh attach-disk --domain instance-00000110 --source /dev/mysdb/edu --target vdb --persistent六、resize、迁移功能 修改nova配置 nova.</description>
+    </item>
+    <item>
+      <title>openstack中遇到的问题</title>
+      <link>http://ip:1313/openstack/openstack_faq-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/openstack_faq-hl/index.html</guid>
+      <description>[TOC]&#xA;一、配置ceilometer采集间隔 ceilometer相关配置 1、修改ceilometer采集数据时间间隔。 sed -i &amp;#39;/^-\ interval: /c -\ interval:\ 60&amp;#39; /etc/kolla/ceilometer-compute/polling.yaml docker restart ceilometer_compute 2、使用配置在重新部署kolla时依然生效。 cp /etc/kolla/ceilometer-compute/polling.yaml /etc/kolla/config/gnocchi相关配置 将基于low策略的metric更改基于medium： 1，删除原有 policy-rule 。 gnocchi archive-policy-rule delete default 2，创建新的 policy-rule 。 gnocchi archive-policy-rule create -a medium -m &amp;#34;*&amp;#34; default -a 指明&amp;lt;POLICY-NAME&amp;gt;。 3，删除所有metric，gnocchi会重新自动的建立基于新policy的metric 。 for i in `gnocchi metric list -c id -f value`; do gnocchi metric delete $i; donegnocchi相关配置 gnocchi archive-policy create -d granularity:0:03:00,points:3360 &amp;lt;POLICY-NAME&amp;gt; granularity为时间频率 points为 保存周期/时间频率二、ceph bug，虚拟机异常关机之后启动失败 由于 ceph版本过新，虚拟机异常关机之后导致启动失败，需要手动配置一下 caps，bug地址：https://bugs.</description>
+    </item>
+    <item>
+      <title>OpenStack对hygon的兼容</title>
+      <link>http://ip:1313/openstack/openstack_hygon_patch-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/openstack_hygon_patch-hl/index.html</guid>
+      <description>一、为什么要对OpenStack进行配置 海光处理器采用了与AMD EPYC 类似的体系结构，为了便于 QEMU 虚拟化处理器提供更好的兼容模式，需要对 QEMU-KVM进行CPU Vendor ID进行替换，进而支持 QEMU 虚拟机虚拟化 ；&#xA;QEMU在使用KVM虚拟化的时候只支持使用主机的CPU Vendor ID,目前海光处理器还不在此KVM虚拟化版本支持列表中，如果不配置就直接使用 QEMU/KVM，那么虚拟出来的虚拟机也为海光的 CPU VendorID，这将会导致某些OS虚拟机无法正常启动（例如Windows）；&#xA;Libvirt调用QEMU创建虚拟机进程，在配置Libvirt XML文件的时候需要指定CPU Model和VendorID，把这些参数传递给QEMU，虚拟机才能正常启动。&#xA;Openstack NOVA组件调用Libvirt接口控制虚拟机的生命周期，创建虚拟机的时候生成XML文件，原版的Openstack不会传递CPU的VendorID，需要做一些修改，传递相关的CPU参数才能生成正确的XML文件。&#xA;二、配置方法 1、给nova_compute打补丁，将补丁文件Hygon_OpenStack_Train.patch拷贝到/usr/lib/python2.7/site-packages/nova目录 cd /var/lib/kolla/venv/lib/python2.7/site-packages/nova2、应用补丁 补丁地址 git clone https://github.com/hlyani/openstack_hygon_patch.gitpatch -p1 &amp;lt; Hygon_OpenStack_Train.patch3、重新nova-compute服务 systemctl restart openstack-nova-compute4、先查看cpu型号 # lscpu Architecture: x86_64 CPU op-mode(s): 32-bit, 64-bit Byte Order: Little Endian CPU(s): 32 On-line CPU(s) list: 0-31 Thread(s) per core: 2 Core(s) per socket: 16 Socket(s): 1 NUMA node(s): 4 Vendor ID: HygonGenuine CPU family: 24 Model: 0 Model name: Hygon C86 7151 16-core Processor Stepping: 1 CPU MHz: 1200.</description>
+    </item>
+    <item>
+      <title>OVS 相关</title>
+      <link>http://ip:1313/openstack/ovs-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/ovs-hl/index.html</guid>
+      <description>一、OVS调试 1、ovs-vsctl show 96a55a7e-f49c-4dbe-b359-bafdff2ccad7 Manager &amp;#34;ptcp:6640:92.0.0.12&amp;#34; Bridge br-tun Controller &amp;#34;tcp:127.0.0.1:6633&amp;#34; is_connected: true fail_mode: secure Port br-tun Interface br-tun type: internal Port &amp;#34;vxlan-5c00000b&amp;#34; Interface &amp;#34;vxlan-5c00000b&amp;#34; type: vxlan options: {df_default=&amp;#34;true&amp;#34;, in_key=flow, local_ip=&amp;#34;92.0.0.12&amp;#34;, out_key=flow, remote_ip=&amp;#34;92.0.0.11&amp;#34;} Port patch-int Interface patch-int type: patch options: {peer=patch-tun} Bridge br-int Controller &amp;#34;tcp:127.0.0.1:6633&amp;#34; is_connected: true fail_mode: secure Port &amp;#34;qvo4fab3e51-fc&amp;#34; tag: 3 Interface &amp;#34;qvo4fab3e51-fc&amp;#34; Port int-br-ex Interface int-br-ex type: patch options: {peer=phy-br-ex} Port patch-tun Interface patch-tun type: patch options: {peer=patch-int} Port br-int Interface br-int type: internal Bridge br-ex Controller &amp;#34;tcp:127.</description>
+    </item>
+    <item>
+      <title>QEMU 源码编译</title>
+      <link>http://ip:1313/openstack/qemu_make-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/qemu_make-hl/index.html</guid>
+      <description>QEMU 是一个支持跨平台虚拟化的虚拟机，有 user mode 和 system mode 两种配置方式。其中 qemu 在 system mode 配置下模拟出整个计算机，可以在 qemu 之上运行一个操作系统。VMware 和 Virtualbox 之类通常只能在 x86 计算机上虚拟出一个 x86 虚拟机，而 QEMU 支持在 x86 上虚拟出一个 ARM 虚拟机。qemu 在 user mode 配置下，可以运行跟当前平台指令集不同的平台的可执行程序。&#xA;QEMU 中有两个重要的名词 host 和 target （guest），其中 host 表示 qemu 程序本身运行的平台，target（guest）表示 qemu 虚拟出的计算平台（system mode）或支持的可执行程序的运行平台（user mode）。&#xA;一、安装依赖 1、安装 ninja git clone git://github.com/ninja-build/ninja.git &amp;amp;&amp;amp; cd ninja ./configure.py --bootstrap cp ninja /usr/bin/ ninja --version2、安装其他依赖 dnf install -y glib2 glib2-devel gtk2-devel二、编译 QEMU 1、拉取源码 git clome https://github.</description>
+    </item>
+    <item>
+      <title>qemu-guest-agent 相关</title>
+      <link>http://ip:1313/openstack/qga-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/qga-hl/index.html</guid>
+      <description>1、配置nova nova image-meta image-id set hw_qemu_guest_agent=yes 2、配置glance glance image-create --name cirros \ --disk-format raw \ --container-format bare \ --file cirros-0.3.3-x86_64-disk.raw \ --public \ --property hw_qemu_guest_agent=yes \ --progress3、可以通过命令来读取虚拟机内部真实 ip virsh qemu-agent-command instance-xxx &amp;#39;{&amp;#34;execute&amp;#34;:&amp;#34;guest-network-get-interfaces&amp;#34;}&amp;#39; virsh qemu-agent-command instance-00000083 &amp;#39;{&amp;#34;execute&amp;#34;:&amp;#34;guest-info&amp;#34;}&amp;#39; |python -m json.tool virsh qemu-agent-command instance-00000083 &amp;#39;{&amp;#34;execute&amp;#34;:&amp;#34;guest-file-open&amp;#34;, &amp;#34;arguments&amp;#34;:{&amp;#34;path&amp;#34;:&amp;#34;/proc/cpuinfo&amp;#34;,&amp;#34;mode&amp;#34;:&amp;#34;r&amp;#34;}}&amp;#39; virsh qemu-agent-command instance-00000083 &amp;#39;{&amp;#34;execute&amp;#34;:&amp;#34;guest-file-read&amp;#34;, &amp;#34;arguments&amp;#34;:{&amp;#34;handle&amp;#34;:1003,&amp;#34;count&amp;#34;:10000}}&amp;#39;4、已有功能 目前qga最新版本为1.5.50，linux已经实现下面的所有功能，windows仅支持加*的那些功能： Ø guest-sync-delimited*：宿主机发送一个int数字给qga，qga返回这个数字，并且在后续返回字符串响应中加入ascii码为0xff的字符，其作用是检查宿主机与qga通信的同步状态，主要用在宿主机上多客户端与qga通信的情况下客户端间切换过程的状态同步检查，比如有两个客户端A、B，qga发送给A的响应，由于A已经退出，目前B连接到qga的socket，所以这个响应可能被B收到，如果B连接到socket之后，立即发送该请求给qga，响应中加入了这个同步码就能区分是A的响应还是B的响应；在qga返回宿主机客户端发送的int数字之前，qga返回的所有响应都要忽略； Ø guest-sync*：与上面相同，只是不在响应中加入0xff字符； Ø guest-ping*：Ping the guest agent, a non-error return implies success； Ø guest-get-time*：获取虚拟机时间（返回值为相对于1970-01-01 in UTC，Time in nanoseconds.）； Ø guest-set-time*：设置虚拟机时间（输入为相对于1970-01-01 in UTC，Time in nanoseconds.</description>
+    </item>
+    <item>
+      <title>删除cinder僵尸实例</title>
+      <link>http://ip:1313/openstack/delete_cinder_volume-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/delete_cinder_volume-hl/index.html</guid>
+      <description>1、使环境变量生效 source admin-openrc2、查看所有的磁盘 cinder list --all3、将磁盘的状态改为 available cinder reset-state --state available &amp;lt;UUID&amp;gt;4、将磁盘状态改为 detached cidner reset-state --attach-status detached &amp;lt;UUID&amp;gt;5、删除磁盘 cinder delete &amp;lt;UUID&amp;gt;</description>
+    </item>
+    <item>
+      <title>制作openstack镜像</title>
+      <link>http://ip:1313/openstack/make_openstack_image-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/make_openstack_image-hl/index.html</guid>
+      <description>一、制作windows镜像 1、准备软件 virt-manager&#xA;virtio-win-0.1.164.iso&#xA;virtio&#xA;spice-guest-tools-latest.exe spice-guest-tools&#xA;CloudbaseInitSetup_0_9_11_x64.msi cloudbase&#xA;2、封装系统sysprep C:\Windows\System32\Sysprep3、# 压缩镜像的稀疏文件。 bsdtar -zcvf win10.qcow2.tar.gz win10.qcow24、# 解压镜像。 tar -xvSf win10.qcow2.tar.gz5、压缩镜像 qemu-img convert -c -O qcow2 source.qcow2 shrunk.qcow2 virt-sparsify /path/to/source.qcow2 --compress /path/to/output.qcow26、转换镜像格式为raw。 qemu-img convert -O raw win10.qcow2 win10.raw7、上传镜像到glance。 glance image-create --progress --disk-format raw --container-format bare --name win10 --property hw_video_model=vga --property os_type=windows --file win10.rawopenstack image create --container-format bare --disk-format raw --public --protected --file win10.raw win10二、制作linux镜像 1、安装 python 虚拟环境并进入。 apt install python3-virtualenv squashfs-tools libguestfs-tools python3 -m venv venv3 source venv3/bin/activate2、linux 镜像通过 diskimage-builder 制作。 diskimage-builder</description>
+    </item>
+    <item>
+      <title>给虚拟机添加网卡</title>
+      <link>http://ip:1313/openstack/add_nic_to_vm-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/add_nic_to_vm-hl/index.html</guid>
+      <description>1、查看虚拟机 openstack server list +--------------------------------------+---------------------------+---------+--------------------------------+------------------------------------+-------------+ | ID | Name | Status | Networks | Image | Flavor | +--------------------------------------+---------------------------+---------+--------------------------------+------------------------------------+-------------+ | dc15eae5-3974-4e57-bdcd-6d6ebd7451d5 | qwehl | ACTIVE | test=20.1.1.3, 20.1.1.19 | | m1.medium | +--------------------------------------+---------------------------+---------+--------------------------------+------------------------------------+-------------+2、查看虚拟机详情（后面为虚拟机id） openstack server show dc15eae5-3974-4e57-bdcd-6d6ebd7451d5 +-----------------------------+----------------------------------------------------------+ | Field | Value | +-----------------------------+----------------------------------------------------------+ | OS-DCF:diskConfig | MANUAL | | OS-EXT-AZ:availability_zone | nova | | OS-EXT-STS:power_state | Running | | OS-EXT-STS:task_state | None | | OS-EXT-STS:vm_state | active | | OS-SRV-USG:launched_at | 2019-03-01T04:29:23.</description>
+    </item>
+    <item>
+      <title>迁移虚拟机到其他平台</title>
+      <link>http://ip:1313/openstack/migrate_to_other_platform-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/openstack/migrate_to_other_platform-hl/index.html</guid>
+      <description>1、查看虚拟机基本信息 openstack server list --all-project|grep hl_cirros bf8f03d1-5e96-4f63-8348-5e703d2c8c01 | hl_cirros | ACTIVE | hl=192.168.10.7|| 1G/1核/1GB |2、查看虚拟机详情 openstack server show bf8f03d1-5e96-4f63-8348-5e703d2c8c01 +-------------------------------------+----------------------------------------------------------+ | Field | Value | +-------------------------------------+----------------------------------------------------------+ | OS-DCF:diskConfig | MANUAL | | OS-EXT-AZ:availability_zone | nova | | OS-EXT-SRV-ATTR:host | tmp1 | | OS-EXT-SRV-ATTR:hypervisor_hostname | tmp1 | | OS-EXT-SRV-ATTR:instance_name | instance-000028ae | | OS-EXT-STS:power_state | Running | | OS-EXT-STS:task_state | None | | OS-EXT-STS:vm_state | active | | OS-SRV-USG:launched_at | 2019-01-10T13:40:35.000000 | | OS-SRV-USG:terminated_at | None | | accessIPv4 | | | accessIPv6 | | | addresses | hl=192.</description>
+    </item>
+  </channel>
+</rss>

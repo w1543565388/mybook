@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My New Hugo Site</title>
+    <link>http://ip:1313/index.html</link>
+    <description>Recent content on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <lastBuildDate>Fri, 24 May 2024 08:34:17 +0000</lastBuildDate>
+    <atom:link href="http://ip:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cephs</title>
+      <link>http://ip:1313/ceph/index.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://ip:1313/ceph/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pythons</title>
+      <link>http://ip:1313/python/index.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://ip:1313/python/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Proxy</title>
+      <link>http://ip:1313/proxy/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:31:13 +0000</pubDate>
+      <guid>http://ip:1313/proxy/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Other</title>
+      <link>http://ip:1313/other/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:18:56 +0000</pubDate>
+      <guid>http://ip:1313/other/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Question</title>
+      <link>http://ip:1313/question/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:07:54 +0000</pubDate>
+      <guid>http://ip:1313/question/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Database</title>
+      <link>http://ip:1313/database/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:06:45 +0000</pubDate>
+      <guid>http://ip:1313/database/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Istio</title>
+      <link>http://ip:1313/istio/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:06:25 +0000</pubDate>
+      <guid>http://ip:1313/istio/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>K8s</title>
+      <link>http://ip:1313/k8s/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:05:46 +0000</pubDate>
+      <guid>http://ip:1313/k8s/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Openstack</title>
+      <link>http://ip:1313/openstack/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:05:23 +0000</pubDate>
+      <guid>http://ip:1313/openstack/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Golang</title>
+      <link>http://ip:1313/golang/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:05:11 +0000</pubDate>
+      <guid>http://ip:1313/golang/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Docker</title>
+      <link>http://ip:1313/docker/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:04:41 +0000</pubDate>
+      <guid>http://ip:1313/docker/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Linux</title>
+      <link>http://ip:1313/linux/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 12:04:32 +0000</pubDate>
+      <guid>http://ip:1313/linux/index.html</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

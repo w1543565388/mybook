@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh_CN" dir="ltr">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.126.1">
+    <meta name="generator" content="Relearn 5.27.0+tip">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="k8s 相关 :: My New Hugo Site">
+    <meta name="twitter:description" content="一、相关概念 k8s components
+​	Kubernetes 是一个开源容器编排引擎，用于容器化应用的自动化部署、扩展、管理、自动扩缩容、维护等功能。k8s 最核心的两个设计理念容错性和易扩展性，容错性保证 k8s 系统稳定性和安全性的基础，易扩展性是保证 k8s 对变更友好，可以快速迭代增加新功能的基础。
+功能：
+快速部署应用（自动化容器部署和复制） 快速扩展应用（随时扩展或收缩容器规模） 无缝对接新应用功能（很容易升级应用到新版本） 提供容器弹性，如果容器失效就替换它 将容器组织成组，并提供容器间的负载均衡 节省资源，优化硬件资源的使用 特点：
+可移植：支持公有云、私有云、混合云、多重云（muti-cloud） 可扩展：模块化、插件化、可挂载、可组合 自动化：自动部署、自动重启、自动复制、自动伸缩/扩展 优势：
+容器编排 轻量级 开源 弹性伸缩 负载均衡 控制平面组件： 名称 说明 API Server API服务是控制平面的访问入口 Etcd 保存集群数据的键值对存储服务 Scheduler 调度Pod在工作节点上运行 kube-controllermanager 管理云平台无关的控制器 cloud-controllermanager 管理所有与云平台相关的控制器，这是为了把云平台相关的代码与k8s自身进行分离 节点平面组件： 名称 说明 kubelet 确保Pod中的容器运行正常 kube-proxy 用来实现服务的网络代理 container runtime 负责运行容器的软件，如Docker 核心思想 资源注册 发现框架 Pod k8s 基本调度单元，表示由一个或多个容器组成的分组。Pod 里面的容器共享一些资源，包括存储、网络和每个容器的运行配置。每个 Pod 都有唯一的 IP 地址，其中的容器共享同一个 IP 地址和端口范围，相互之间可以通过 localhost 访问。Pod 还可以使它的容器访问其定义的共享的存储卷（volume），通过这种方式，可以实现 Pod 容器之间的数据共享。">
+    <meta property="og:url" content="http://ip:1313/docker/k8s-hl/index.html">
+    <meta property="og:site_name" content="My New Hugo Site">
+    <meta property="og:title" content="k8s 相关 :: My New Hugo Site">
+    <meta property="og:description" content="一、相关概念 k8s components
+​	Kubernetes 是一个开源容器编排引擎，用于容器化应用的自动化部署、扩展、管理、自动扩缩容、维护等功能。k8s 最核心的两个设计理念容错性和易扩展性，容错性保证 k8s 系统稳定性和安全性的基础，易扩展性是保证 k8s 对变更友好，可以快速迭代增加新功能的基础。
+功能：
+快速部署应用（自动化容器部署和复制） 快速扩展应用（随时扩展或收缩容器规模） 无缝对接新应用功能（很容易升级应用到新版本） 提供容器弹性，如果容器失效就替换它 将容器组织成组，并提供容器间的负载均衡 节省资源，优化硬件资源的使用 特点：
+可移植：支持公有云、私有云、混合云、多重云（muti-cloud） 可扩展：模块化、插件化、可挂载、可组合 自动化：自动部署、自动重启、自动复制、自动伸缩/扩展 优势：
+容器编排 轻量级 开源 弹性伸缩 负载均衡 控制平面组件： 名称 说明 API Server API服务是控制平面的访问入口 Etcd 保存集群数据的键值对存储服务 Scheduler 调度Pod在工作节点上运行 kube-controllermanager 管理云平台无关的控制器 cloud-controllermanager 管理所有与云平台相关的控制器，这是为了把云平台相关的代码与k8s自身进行分离 节点平面组件： 名称 说明 kubelet 确保Pod中的容器运行正常 kube-proxy 用来实现服务的网络代理 container runtime 负责运行容器的软件，如Docker 核心思想 资源注册 发现框架 Pod k8s 基本调度单元，表示由一个或多个容器组成的分组。Pod 里面的容器共享一些资源，包括存储、网络和每个容器的运行配置。每个 Pod 都有唯一的 IP 地址，其中的容器共享同一个 IP 地址和端口范围，相互之间可以通过 localhost 访问。Pod 还可以使它的容器访问其定义的共享的存储卷（volume），通过这种方式，可以实现 Pod 容器之间的数据共享。">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="Docker :: My New Hugo Site">
+    <meta property="article:published_time" content="2024-04-12T09:39:39+00:00">
+    <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
+    <title>k8s 相关 :: My New Hugo Site</title>
+    <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
+    <link href="/css/fontawesome-all.min.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1716876877" rel="stylesheet">
+    <link href="/css/auto-complete.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1716876877" rel="stylesheet">
+    <link href="/css/fonts.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1716876877" rel="stylesheet">
+    <link href="/css/theme-auto.css?1716876877" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1716876877" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1716876877" rel="stylesheet">
+    <link href="/css/print.css?1716876877" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1716876877" rel="stylesheet">
+    <script src="/js/url.js?1716876877"></script>
+    <script src="/js/variant.js?1716876877"></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/ip:1313';
+      // variant stuff
+      window.relearn.themeVariantModifier='';
+      window.variants && variants.init( [ 'auto' ] );
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/docker/k8s-hl/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"><nav class="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#1参考链接">1、参考链接</a></li>
+    <li><a href="#2理解pod">2、理解pod</a></li>
+    <li><a href="#3容器与虚拟机对比">3、容器与虚拟机对比</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/docker/index.html"><span itemprop="name">Docker</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><span itemprop="name">k8s 相关</span><meta itemprop="position" content="2"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docker/k8s_deploy-hl/index.html" title="k8s 安装部署 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/docker/kubebuilder-hl/index.html" title="kubebuilder (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable default" tabindex="-1">
+        <div class="flex-block-wrapper">
+          <article class="default">
+            <header class="headline">
+            </header>
+
+<h1 id="k8s-相关">k8s 相关</h1>
+
+<h1 id="一相关概念">一、相关概念</h1>
+<p><a href="https://kubernetes.io/docs/concepts/overview/components/" rel="external" target="_blank">k8s components</a></p>
+<p>​		Kubernetes 是一个开源容器编排引擎，用于容器化应用的自动化部署、扩展、管理、自动扩缩容、维护等功能。k8s 最核心的两个设计理念容错性和易扩展性，容错性保证 k8s 系统稳定性和安全性的基础，易扩展性是保证  k8s 对变更友好，可以快速迭代增加新功能的基础。</p>
+<p>功能：</p>
+<ul>
+<li>快速部署应用（自动化容器部署和复制）</li>
+<li>快速扩展应用（随时扩展或收缩容器规模）</li>
+<li>无缝对接新应用功能（很容易升级应用到新版本）</li>
+<li>提供容器弹性，如果容器失效就替换它</li>
+<li>将容器组织成组，并提供容器间的负载均衡</li>
+<li>节省资源，优化硬件资源的使用</li>
+</ul>
+<p>特点：</p>
+<ul>
+<li>可移植：支持公有云、私有云、混合云、多重云（muti-cloud）</li>
+<li>可扩展：模块化、插件化、可挂载、可组合</li>
+<li>自动化：自动部署、自动重启、自动复制、自动伸缩/扩展</li>
+</ul>
+<p>优势：</p>
+<ul>
+<li>容器编排</li>
+<li>轻量级</li>
+<li>开源</li>
+<li>弹性伸缩</li>
+<li>负载均衡</li>
+</ul>
+<p><a href="#R-image-989a703015e3471234ebcdf2e1a15d12" class="lightbox-link"><img alt="k8s-basic" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/k8s.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-989a703015e3471234ebcdf2e1a15d12"><img alt="k8s-basic" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/k8s.png"></a></p>
+<p><a href="#R-image-478f1d37dae506b6a20443ca450f96f2" class="lightbox-link"><img alt="architecture" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/k8s_arch.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-478f1d37dae506b6a20443ca450f96f2"><img alt="architecture" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/k8s_arch.jpg"></a></p>
+<h4 id="控制平面组件">控制平面组件：</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API Server</td>
+<td>API服务是控制平面的访问入口</td>
+</tr>
+<tr>
+<td>Etcd</td>
+<td>保存集群数据的键值对存储服务</td>
+</tr>
+<tr>
+<td>Scheduler</td>
+<td>调度Pod在工作节点上运行</td>
+</tr>
+<tr>
+<td>kube-controllermanager</td>
+<td>管理云平台无关的控制器</td>
+</tr>
+<tr>
+<td>cloud-controllermanager</td>
+<td>管理所有与云平台相关的控制器，这是为了把云平台相关的代码与k8s自身进行分离</td>
+</tr>
+</tbody>
+</table>
+<h4 id="节点平面组件">节点平面组件：</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kubelet</td>
+<td>确保Pod中的容器运行正常</td>
+</tr>
+<tr>
+<td>kube-proxy</td>
+<td>用来实现服务的网络代理</td>
+</tr>
+<tr>
+<td>container runtime</td>
+<td>负责运行容器的软件，如Docker</td>
+</tr>
+</tbody>
+</table>
+<h4 id="核心思想">核心思想</h4>
+<ul>
+<li>资源注册</li>
+<li>发现框架</li>
+</ul>
+<h4 id="pod">Pod</h4>
+<p>k8s 基本调度单元，表示由一个或多个容器组成的分组。Pod 里面的容器共享一些资源，包括存储、网络和每个容器的运行配置。每个 Pod 都有唯一的 IP 地址，其中的容器共享同一个 IP 地址和端口范围，相互之间可以通过 localhost 访问。Pod 还可以使它的容器访问其定义的共享的存储卷（volume），通过这种方式，可以实现 Pod 容器之间的数据共享。</p>
+<h4 id="副本集replicaset">副本集（ReplicaSet）</h4>
+<p>保证在任何时候都有给定数量的Pod副本。当创建副本集时需要指定一个创建Pod的模板，同时确定Pod的选择器，并给出期望的Pod副本数量。在运行时，副本集根据指定的Pod选择器来监控当前Pod副本的数量，如果副本数量小于期望值，则根据Pod模板来创建新的Pod。一般用标签作为Pod的选择器。目的是维护一组在任何时候都处于运行状态的 Pod 副本的稳定集合。 它通常用来保证给定数量的、完全相同的 Pod 的可用性。建议使用 Deployment 而不是直接使用 ReplicaSet，除非需要自定义更新业务流程或根本不需要更新。这实际上意味着，可能永远不需要操作 ReplicaSet 对象，而是使用 Deployment，并在 spec 部分定义应用。</p>
+<h4 id="部署deployment">部署（Deployment）</h4>
+<p>部署在副本集上提供对Pod的更新功能，每个部署都有对应的副本集。当部署中创建的Pod模板发生变化时，这些Pod都需要被更新。在更新时，k8s会创建一个新的副本集来管理新的Pod，当更新完后，旧的副本集会被删除。部署可以采用不同的策略来更新这些Pod，最常用的策略是滚动更新，它可以保证在更新过程中服务不间断。在进行滚动更新时，k8s首先会创建新的副本集中的Pod，再删除已有副本集中的Pod。这个过程是交替进行的 ，在没有足够数量的新Pod运行之前，不会删除已有的Pod。同样的，在没有足够数量的已有Pod被删除之前，不会创建新的Pod。控制器为 Pods 和 ReplicaSets 提供声明式的更新能力。负责描述 Deployment 中的目标状态，而 Deployment 控制器以受控速率更改实际状态， 使其变为期望状态。可以定义 Deployment 以创建新的 ReplicaSet，或删除现有 Deployment， 并通过新的 Deployment 收养其资源。</p>
+<h4 id="有状态集statefulset">有状态集（StatefulSet）</h4>
+<p>副本集中的 Pod 没有标识符，不能进行区分，它唯一保证的是所包含的 Pod 总数。有些应用对运行的实例有启动顺序和唯一性的要求，典型的例子是通过多个实例组成集群的服务，如 Cassandra 和 RabbitMQ 等。这些应用要求实例有固定且唯一的网络标识，才能正确的建立集群，对于这样的应用，应该使用有状态集来管理。有状态集中的 Pod 都有唯一不变的标识符，这个标识符由有状态集的名称和 Pod 的序号组成。如果有状态集的名称是 cassandra，同时期望的 Pod 副本数量是 3，那么 Pod 的名称分别是 cassandra-0、cassandra-1 和 cassandra-2。有状态集需要一个对应的服务来提供 Pod 的 DNS 名称。有状态集在创建和扩展时有特殊的限制，如果一个有状态集期望的 Pod 副本数量是 N，那么有状态集会从 0 开始依次创建这些 Pod，在第 1 个 Pod 正常运行之前，不会创建第 2 个Pod；在删除 Pod 时，则是从第 N 个 Pod 开始反向依次删除。是用来管理有状态应用的工作负载 API 对象。StatefulSet 用来管理某 Pod 集合的部署和扩缩， 并为这些 Pod 提供持久存储和持久标识符。StatefulSet 为它们的每个 Pod 维护了一个有粘性的 ID。这些 Pod 是基于相同的规约来创建的， 但是不能相互替换：无论怎么调度，每个 Pod 都有一个永久不变的 ID。如果希望使用存储卷为工作负载提供持久存储，可以使用 StatefulSet 作为解决方案的一部分。 尽管 StatefulSet 中的单个 Pod 仍可能出现故障，但持久的 Pod 标识符使得将现有卷与替换已失败 Pod 的新 Pod 相匹配变得更加容易。弊端：当删除 StatefulSets 时，StatefulSet 不提供任何终止 Pod 的保证。 为了实现 StatefulSet 中的 Pod 可以有序地且体面地终止，可以在删除之前将 StatefulSet 缩放为0，在默认 Pod 管理策略(OrderedReady) 时使用滚动更新，可能进入需要人工干预才能修复的损坏状态。</p>
+<h4 id="守护程序集daemonset">守护程序集（DaemonSet）</h4>
+<p>守护程序集确保在全部或部分的集群节点上运行 Pod，每个节点上最多运行一个 Pod 副本。如果应用需要执行的任务与节点相关，则应该使用守护程序集，比如收集日志和节点性能指标数据的应用，都应该使用守护程序集来部署。确保全部（或者某些）节点上运行一个 Pod 的副本。 当有节点加入集群时， 也会为他们新增一个 Pod 。 当有节点从集群移除时，这些 Pod 也会被回收。删除 DaemonSet 将会删除它创建的所有 Pod。DaemonSet 与 Deployments 非常类似， 它们都能创建 Pod，并且 Pod 中的进程都不希望被终止（例如，Web 服务器、存储服务器）。建议为无状态的服务使用 Deployments，比如前端服务。对这些服务而言，对副本的数量进行扩缩容、平滑升级，比精确控制 Pod 运行在某个主机上要重要得多。 当需要 Pod 副本总是运行在全部或特定主机上，并需要它们先于其他 Pod 启动时， 应该使用 DaemonSet。</p>
+<h4 id="服务service">服务（Service）</h4>
+<p>应用在运行时经常需要为其他应用提供服务。在使用控制器管理应用的 Pod 时，Pod 的 IP 地址会随着 Pod 的创建和删除而发生变化。因此，我们不能使用 Pod 的 IP 地址作为访问服务的方式。Kubernetes 中的服务（Service）作为一组 Pod 的抽象，定义了如何访问这些 Pod，它实现了服务发现和负载均衡两项重要的功能。在创建服务时需通过选择器来选择服务所对应的 Pod，应用服务的消费者使用服务的地址来访问 Pod，实际的访问请求会被分发到服务所对应的某个 Pod 上。当 Pod 发生变化时，服务会自动更新所对应的 Pod 列表。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">集群IP地址</td>
+<td style="text-align:center">ClusterIP</td>
+<td style="text-align:center">服务发布为集群内部的IP地址，只能在集群内部访问</td>
+</tr>
+<tr>
+<td style="text-align:center">节点端口</td>
+<td style="text-align:center">NodePort</td>
+<td style="text-align:center">服务发布在每个节点上的固定端口</td>
+</tr>
+<tr>
+<td style="text-align:center">负载均衡服务</td>
+<td style="text-align:center">LoadBalancer</td>
+<td style="text-align:center">服务发布为可供外部访问的负载均衡服务</td>
+</tr>
+<tr>
+<td style="text-align:center">外部名称</td>
+<td style="text-align:center">ExternalName</td>
+<td style="text-align:center">服务映射成外部名称</td>
+</tr>
+</tbody>
+</table>
+<h4 id="存储卷">存储卷：</h4>
+<p>容器运行时对内部文件所做的修改是瞬时的，当容器停止之后，相关的修改会丢失。Kubernetes 提供了两个对象，即持久卷和持久卷要求，持久卷可以由管理员手动创建，或者由存储服务动态创建，用户则以持久卷要求的形式来声明所需要使用的持久卷的大小和访问模式；持久卷要求可以与手动创建的持久卷进行绑定，如果需要动态创建，则由存储服务完成创建之后，再进行绑定。一旦完成绑定，持久卷可以用类似卷的方式来访问。</p>
+<h4 id="任务和定时任务">任务和定时任务：</h4>
+<p>当需要执行一次性任务时，我们可以使用任务对象在创建任务时指定需要运行的 Pod 模板。当需要定期执行任务时，则可以使用定时任务对象，在创建时，需要指定定时任务的 cron 表达式。</p>
+<h4 id="配置表configmap">配置表（ConfigMap）：</h4>
+<p>当它运行在 Kubernetes 上时，应该使用配置表（ConfigMap）来管理配置。配置表可以看成是包含名值对的哈希表。</p>
+<h4 id="容器运行时container-runtime">容器运行时（Container Runtime）：</h4>
+<p>支持多个容器运行环境: Docker、 containerd、cri-o、 rktlet 以及任何实现 Kubernetes CRI (容器运行环境接口)。</p>
+<h4 id="master节点">Master节点</h4>
+<h5 id="controllermanager">ControllerManager</h5>
+<ul>
+<li>集群内各种资源controller的核心管理者</li>
+<li>针对每一种具体的资源，都有相应的Controller</li>
+<li>保证其下管理的每个Controller所对应的的资源始终处于“期望状态”</li>
+</ul>
+<p>作为基本的运行单元，Pod缺少响应的管理功能。如果一个Pod在运行中出现错误，并不会自动创建新的Pod来替代它。如果需要管理Pod，则应该利用k8s提供不同类别的控制器，包括副本集、部署、有状态集合守护进程集。在主节点上运行控制器组件，从逻辑上讲，每个控制器都是一个单独的进程，但是为了减低复杂性，它们都会被编译到同一个可执行文件，并在一个进程中运行。</p>
+<p>这些控制器包括：</p>
+<ul>
+<li>节点控制器（Node Controller）：负责在节点出现故障时进行通知和响应。</li>
+<li>副本控制器（Replication Controller）：负责为系统中的每个副本控制器对象维护正确数量的Pod。</li>
+<li>端点控制器（Endpoint Controller）：填充端点对象（即加入Service与Pod）。</li>
+<li>服务账户和令牌控制器（Service Account &amp; Token Controllers）：为新的命名空间创建默认账户和API访问令牌。</li>
+</ul>
+<h5 id="api-server">API Server</h5>
+<ul>
+<li>集群控制的唯一入口，是提供 Kubernetes 集群控制 RESTful API 的核心组件</li>
+<li>集群内各个组件之间数据交互和通信的中枢</li>
+<li>提供集群控制的安全机制（身份认证、授权以及admission control）</li>
+</ul>
+<h5 id="scheduler">Scheduler</h5>
+<ul>
+<li>通过API Server的Watch接口监听新建Pod副本信息，并通过调度算法为该Pod选择一个最合适的Node</li>
+<li>支持自定义调度算法provider</li>
+<li>默认调度算法内置预选策略和优选策略，决策考量资源需求、服务质量、软硬件约束、亲缘性、数据局部性等指标参数</li>
+</ul>
+<h5 id="etcd">Etcd</h5>
+<ul>
+<li>Kubernetes集群的主数据库，存储着所有资源对象以及状态</li>
+<li>默认与Master组件部署在一个Node上</li>
+<li>Etcd的数据变更都是通过API Server进行</li>
+</ul>
+<h4 id="node节点">Node节点</h4>
+<blockquote>
+<p>kubernets集群中真正的工作负载节点</p>
+</blockquote>
+<ul>
+<li>
+<h5 id="kubelet">Kubelet</h5>
+<ul>
+<li>位于集群中每个Node上的非容器形式的服务进程组件，Master和Node之间的桥梁</li>
+<li>处理Master下发到本Node上的Pod创建、启停等任务管理任务；向API Server注册Node信息</li>
+<li>监控本Node上容器和节点资源情况，并定期向Master汇报节点资源占用情况</li>
+</ul>
+</li>
+<li>
+<h5 id="kube-proxy">Kube-proxy</h5>
+<ul>
+<li>
+<p>Service抽象概念的实现，将到Service的请求按策略（负载均衡）算法分发到后端Pod（Endpoint）上</p>
+</li>
+<li>
+<p>默认使用iptables mode实现</p>
+</li>
+<li>
+<p>支持nodeport模式，实现从外部访问集群内的service</p>
+</li>
+<li>
+<p>容器运行时（Container Runtime）：支持多个容器运行环境: Docker、 containerd、cri-o、 rktlet 以及任何实现 Kubernetes CRI (容器运行环境接口)。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="k8s核心组件">k8s核心组件</h4>
+<table>
+<thead>
+<tr>
+<th>组件名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>etcd</td>
+<td>保存整个集群的状态</td>
+</tr>
+<tr>
+<td>apiserver</td>
+<td>提供资源操作的唯一入口，并提供认证、授权、访问控制、api注册和发现等机制</td>
+</tr>
+<tr>
+<td>controller manager</td>
+<td>负责维护集群状态，比如故障检测、自动扩展、滚动更新等</td>
+</tr>
+<tr>
+<td>scheduer</td>
+<td>负责资源的调度，按照预定的调度策略将pod调度到相应的机器上</td>
+</tr>
+<tr>
+<td>kubelet</td>
+<td>负责维护容器的生命周期，同时负责volume（CVI）和网络（CNI）的管理，主要负责监视指派到它所在node上的pod，包括增删改监控等</td>
+</tr>
+<tr>
+<td>container runtime</td>
+<td>负责镜像管理以及pod和容器的真正运行（CRI）</td>
+</tr>
+<tr>
+<td>kube-proxy</td>
+<td>负责为service提供cluster内部的服务发现和负载均衡，负责为pod对象提供代理</td>
+</tr>
+</tbody>
+</table>
+<h4 id="其他组件">其他组件</h4>
+<table>
+<thead>
+<tr>
+<th>组件名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kube-dns</td>
+<td>负责为整个集群提供DNS服务</td>
+</tr>
+<tr>
+<td>ingress controller</td>
+<td>为服务提供外网入口</td>
+</tr>
+<tr>
+<td>heapster</td>
+<td>提供资源监控</td>
+</tr>
+<tr>
+<td>dashboard</td>
+<td>提供GUI</td>
+</tr>
+<tr>
+<td>federation</td>
+<td>提供跨可用区的集群</td>
+</tr>
+<tr>
+<td>fluentd-elasticsearch</td>
+<td>提供集群日志采集、存储与查询</td>
+</tr>
+</tbody>
+</table>
+<h4 id="重要概念">重要概念</h4>
+<ul>
+<li>
+<h5 id="pod-1">Pod</h5>
+<blockquote>
+<p>运行于Node节点上，若干相关容器的组合。Pod内包含的容器运行在同一宿主机上，使用相同的网络命名空间、IP地址和端口。Pod是Kubernets最基本的部署调度单元。每个Pod可以由一个或多个业务容器和一个根容器（Pause容器）组成。一个Pod表示某个应用的一个实例。</p>
+<p>Pod只提供容器的运行环境并保持容器的运行状态，重启容器不会造成Pod重启。</p>
+<p>Pod不会自愈。如果Pod运行的Node故障，或者是调度器本身故障，这个Pod就会被删除。同样的，如果Pod所在Node缺少资源或者Pod处于维护状态，Pod也会被驱逐。Kubernetes使用更高级的称为Controller的抽象层，来管理Pod实例。虽然可以直接使用Pod，但是在Kubernetes中通常是使用Controller来管理Pod的。</p>
+<p>Pod中共享的环境包括Linux的namespace、cgroup和其他可能的隔绝环境。</p>
+</blockquote>
+</li>
+<li>
+<h5 id="node">Node</h5>
+<blockquote>
+<p>Node节点是Kubernetes集群中的工作节点，Node上的负载由Master节点分配，工作负载主要是运行容器应用。</p>
+</blockquote>
+</li>
+<li>
+<h5 id="replicaset">ReplicaSet</h5>
+<blockquote>
+<p>是Pod副本的抽象，用于解决Pod的扩容和伸缩</p>
+</blockquote>
+</li>
+<li>
+<h5 id="deployment">Deployment</h5>
+<blockquote>
+<p>Deployment表示部署，在内部使用ReplicaSet实现。可以通过Deployment来生成相应的ReplicaSet完成Pod副本的创建。</p>
+</blockquote>
+</li>
+<li>
+<h5 id="replication-controller">Replication Controller</h5>
+<blockquote>
+<p>Replication Controller用来管理Pod的副本，保证集群中存在指定数量的Pod副本。集群中副本的数量大于指定的数量，则会停止指定数量之外的多余容器数量，反之，则会启动少于指定数量个数的容器，保证数量不变。Replication Controller是实现弹性伸缩、动态扩容和滚动升级的核心。</p>
+</blockquote>
+</li>
+<li>
+<h5 id="service">Service</h5>
+<blockquote>
+<p>Service定义了Pod的逻辑集合和访问该集合的策略，是真实服务的抽象。Service提供了一个统一的服务访问入口以及服务代理和发现机制，关联多个相同Label的Pod，用户不需要了解后台Pod是如何运行。</p>
+</blockquote>
+</li>
+<li>
+<h5 id="label">Label</h5>
+<blockquote>
+<p>Kubernets中任意API对象都是通过Label进行标识，Label的实质是一系列的Key/Value键值对。其中Key和Value由用户自己指定。Label可以附加在各种资源对象上，如Node、Pod、Service、RC等，一个资源对象可以定义任意数量的Label，同一个Label也可以被添加到任意数量的资源对象上去。Label是Replication Controller和Service运行的基础，两者通过Label来进行关联Node上运行的Pod。</p>
+</blockquote>
+</li>
+<li>
+<h5 id="kube-dns">kube-dns</h5>
+<blockquote>
+<p>负责为整个集群提供DNS服务</p>
+</blockquote>
+</li>
+<li>
+<h5 id="ingress-conroller">Ingress Conroller</h5>
+<blockquote>
+<p>为服务提供外网入口</p>
+</blockquote>
+</li>
+<li>
+<h5 id="heapster">Heapster</h5>
+<blockquote>
+<p>提供资源监控</p>
+</blockquote>
+</li>
+<li>
+<h5 id="dashboard">Dashboard</h5>
+<blockquote>
+<p>提供GUI</p>
+</blockquote>
+</li>
+<li>
+<h5 id="rbac">RBAC</h5>
+<blockquote>
+<p>基于角色的访问控制</p>
+</blockquote>
+<blockquote>
+<p>kubernetes有一个很基本的特性就是它的所有资源对象都是模型化的 API 对象，允许执行 CRUD(Create、Read、Update、Delete)操作(也就是我们常说的增、删、改、查操作)，比如下面的这下资源：</p>
+<ul>
+<li>Pods</li>
+<li>ConfigMaps</li>
+<li>Deployments</li>
+<li>Nodes</li>
+<li>Secrets</li>
+<li>Namespaces</li>
+</ul>
+<p>上面这些资源对象的可能存在的操作有：</p>
+<ul>
+<li>create</li>
+<li>get</li>
+<li>delete</li>
+<li>list</li>
+<li>update</li>
+<li>edit</li>
+<li>watch</li>
+<li>exec</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h1 id="二网络相关">二、网络相关</h1>
+<h5 id="1k8s网络特征">1、k8s网络特征：</h5>
+<ul>
+<li>1.每个pod都有一个ip</li>
+<li>2.所有pod可以通过ip访问其他pod（不管是否在同一台物理机）</li>
+<li>3.Pod内的所有容器共享一个 linux net namespace，pod内的容器，都可以使用localhost来访问pod内的其他容器</li>
+<li>4.所有容器可以不用nat转换访问其他容器</li>
+<li>5.所有节点都可以不用nat转换与所有容器通讯</li>
+<li>6.容器地址和别人看到的地址是同一个地址</li>
+</ul>
+<h5 id="2不同node中pod相互通信需要满足的条件">2、不同node中pod相互通信需要满足的条件：</h5>
+<ul>
+<li>
+<p>1.整个k8s集群中的pod ip不能冲突</p>
+</li>
+<li>
+<p>2.需要将pod ip和所在node ip关联起来，通过关联可以让pod能互访</p>
+<ul>
+<li>
+<p>1)Node中的docker0的网桥地址不能冲突</p>
+</li>
+<li>
+<p>2)Pod中的数据在发出时，需要有一个机制知道对方的pod ip在哪个node上</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><a href="#R-image-770daa78a44222352e9b56d4842e63ea" class="lightbox-link"><img alt="k8s_net" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/k8s_net.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-770daa78a44222352e9b56d4842e63ea"><img alt="k8s_net" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/k8s_net.jpg"></a></p>
+<p><a href="#R-image-3fb93f85e7d8268ba4234e6fb75746bf" class="lightbox-link"><img alt="k8s_net1" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/k8s_net1.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-3fb93f85e7d8268ba4234e6fb75746bf"><img alt="k8s_net1" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/k8s_net1.jpg"></a></p>
+<ol>
+<li>默认docker0网络为172.17.0.0/16的网段，每个容器都在这个子网内获得ip并且将docker0作为网关</li>
+<li>2.k8s中，每个node上的docker0都是可以被路由到的，也就是说，在同一个集群内，各个主机都是可以访问其他主机上的pod  ip，并不需要在主机上做端口映射。</li>
+<li>当启动pod时，同一pod下的所有容器都使用同一个网络命名空间（如：同一个ip），所以必须要使用容器网络的container模式，如果将所有pod中的容器做成一个链式的结构，中间任何一个容器出问题，都会引起连锁反映，所以在每个pod中引入了一个pause，其他容器都链接到这个容器，由pause来负责端口规划和映射。如下图：</li>
+</ol>
+<p><a href="#R-image-586e30fef7d380b71f729d6011fcba7f" class="lightbox-link"><img alt="k8s_net2" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/k8s_net2.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-586e30fef7d380b71f729d6011fcba7f"><img alt="k8s_net2" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/k8s_net2.jpg"></a></p>
+<p><a href="#R-image-229255a86c5510ee614180c40de3bc36" class="lightbox-link"><img alt="cni" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/cni.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-229255a86c5510ee614180c40de3bc36"><img alt="cni" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/cni.jpg"></a></p>
+<p>​         k8s采用Container Networking Interface(CNI)规范。 目前Kubernetes 支持的网络方案，比如 Flannel、Calico、Canal、Weave Net 等。</p>
+<h5 id="3flannelhost-gwvxlan">3、Flannel（host-gw、vxlan）</h5>
+<p>Flannel是Overlay网络的一种，也是将源数据包封装在另一种网络包里面进行路由转发和通信，目前已经支持UDP、VXLAN、AWS  VPC和GCE路由等数据转发方式。Flannel通过给每台宿主机分配一个子网的方式为容器提供虚拟网络，它基于Linux TUN/TAP，使用UDP封装IP包来创建overlay网络，并借助etcd维护网络的分配情况。</p>
+<ul>
+<li>
+<p>它给每个node上的docker容器分配互不冲突的IP地址；</p>
+</li>
+<li>
+<p>它能给这些IP地址之间建立一个覆盖网络，通过覆盖网络，将数据包原封不动的传递到目标容器内。</p>
+</li>
+</ul>
+<p><a href="#R-image-7b2863d5ccd4f31d7577f02f38f7860e" class="lightbox-link"><img alt="flannel-networking" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/flannel-networking.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-7b2863d5ccd4f31d7577f02f38f7860e"><img alt="flannel-networking" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/flannel-networking.png"></a></p>
+<p><a href="#R-image-854d2c63006a57b6fdbda27bbd7b83cd" class="lightbox-link"><img alt="flannel" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/flannel.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-854d2c63006a57b6fdbda27bbd7b83cd"><img alt="flannel" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/flannel.jpg"></a></p>
+<h5 id="4calicoipipbgp">4、Calico（IPIP、BGP）</h5>
+<ul>
+<li>是一个纯3层的数据中心网络方案。</li>
+<li>Calico在每一个计算节点利用Linux Kernel实现了一个高效的vRouter来负责数据转发，而每个vRouter通过BGP协议负责把自己上运行的workload的路由信息像整个Calico网络内传播——小规模部署可以直接互联，大规模下可通过指定的BGP route reflector来完成。</li>
+<li>Calico节点组网可以直接利用数据中心的网络结构（无论是L2或者L3），不需要额外的NAT，隧道或者Overlay Network。</li>
+<li>Calico基于iptables还提供了丰富而灵活的网络Policy，保证通过各个节点上的ACLs来提供Workload的多租户隔离、安全组以及其他可达性限制等功能。</li>
+</ul>
+<p>此外，Calico基于iptables还提供了丰富的网络策略，实现了k8s的Network Policy策略，提供容器间网络可达性限制的功能。</p>
+<p>Calico的主要组件如下：</p>
+<ul>
+<li>
+<p>Felix：Calico Agent，运行在每台Node上，负责为容器设置网络源（IP地址、路由规则、iptables规则等），保证主机容器网络互通。</p>
+</li>
+<li>
+<p>etcd：Calico使用的存储后端。</p>
+</li>
+<li>
+<p>BGP Client(BIRD)：负责把Felix在各Node上设置的路由信息通过BGP协议广播到Calico网络。</p>
+</li>
+<li>
+<p>BGP Route Reflector(BIRD)：通过一个或者多个BGP Route Reflector来完成大规模集群的分级路由分发。</p>
+</li>
+<li>
+<p>Calicoctl：Calico命令行管理工具。</p>
+</li>
+</ul>
+<p><a href="#R-image-85525ebfe9d705ff9b83e64c7bdef055" class="lightbox-link"><img alt="calico" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/calico.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-85525ebfe9d705ff9b83e64c7bdef055"><img alt="calico" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/calico.jpg"></a></p>
+<p><a href="#R-image-6962ee6f9cf09c69c9781b0a3771fdc3" class="lightbox-link"><img alt="calico_arch" class="noborder lazy lightbox noshadow figure-image" loading="lazy" src="../../imgs/calico_arch.jpg" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-6962ee6f9cf09c69c9781b0a3771fdc3"><img alt="calico_arch" class="noborder lazy lightbox noshadow lightbox-image" loading="lazy" src="../../imgs/calico_arch.jpg"></a></p>
+<h1 id="三其他">三、其他</h1>
+<h2 id="1参考链接">1、参考链接</h2>
+<p><a href="https://www.qikqiak.com/k8s-book/" rel="external" target="_blank">https://www.qikqiak.com/k8s-book/</a></p>
+<h2 id="2理解pod">2、理解pod</h2>
+<ol>
+<li>在探讨pod和容器的区别之前，我们先谈谈为什么k8s会使用pod这个最小单元，而不是使用docker的容器，k8s既然使用了pod，当然有它的理由。</li>
+</ol>
+<ul>
+<li>
+<p>更利于扩展
+k8s不仅仅支持Docker容器，也支持rkt甚至用户自定义容器，为什么会有这么多不同的容器呢，因为容器并不是真正的虚拟机，docker的一些概念和误区总结，此外，Kubernetes不依赖于底层某一种具体的规则去实现容器技术，而是通过CRI这个抽象层操作容器，这样就会需要pod这样一个东西，pod内部再管理多个业务上紧密相关的用户业务容器，就会更有利用业务扩展pod而不是扩展容器。</p>
+</li>
+<li>
+<p>更容易定义一组容器的状态</p>
+<p>如果没有使用pod，而是直接使用一组容器去跑一个业务呢，那么当其中一个或者若干个容器出现问题呢，如何去定义这一组容器的状态呢，通过pod这个概念，这个问题就可以很好的解决，一组业务容器跑在一个k8s的pod中，这个pod中会有一个pause容器，这个容器与其他的业务容器都没有关系，以这个pause容器的状态来代表这个pod的状态，</p>
+</li>
+<li>
+<p>利于容器间文件共享，以及通信。
+pause容器有一个ip地址，和一个存储卷，pod中的其他容器共享pause容器的ip地址和存储，这样就做到了文件共享和互信。</p>
+</li>
+</ul>
+<ol start="2">
+<li>pod和容器的区别</li>
+</ol>
+<ul>
+<li>总结，pod是k8s的最小单元，容器包含在pod中，一个pod中有一个pause容器和若干个业务容器，而容器就是单独的一个容器，简而言之，pod是一组容器，而容器单指一个容器。</li>
+</ul>
+<h2 id="3容器与虚拟机对比">3、容器与虚拟机对比</h2>
+<blockquote>
+<p>虚拟机就像房子，容器就像胶囊公寓。</p>
+</blockquote>
+<p>**容器：**容器本质是基于镜像的跨环境迁移。</p>
+<p>**容器两个特性：**1、封装（配置、文件路径、权限）2、标准（无论什么容器运行环境，将同样的镜像运行起来，都可以还原当时的那一刻）</p>
+<p><strong>容器优势：</strong></p>
+<ol>
+<li>环境依赖更少</li>
+<li>更轻量（虚拟机镜像大几十G上百G，容器镜像一般不到1G）</li>
+<li>好移动（因为轻量所以迁移会更快，虚拟机不适合跨环境迁移）</li>
+<li>启动快（没有内核、镜像小）、可以回滚、可以弹性。适合部署无状态的服务，随时重启都可以（弊端：随意重启有状态服务，不知丢失数据是什么）</li>
+<li>适合于微服务（变化大、流量大）（进程多、更新快）</li>
+<li>利于CI/CD，快速部署、用以轻松建立、维护、扩容和滚动更新应用程序。</li>
+</ol>
+<p><strong>容器缺点：</strong></p>
+<ol>
+<li>隔离性不佳</li>
+<li>共享kernel</li>
+</ol>
+<p><strong>VM优势：</strong></p>
+<ol>
+<li>隔离全面</li>
+<li>自带kernel</li>
+</ol>
+<p><strong>VM缺点：</strong></p>
+<ol>
+<li>镜像比较大、笨重</li>
+<li>对于跨环境迁移能力不足</li>
+<li>物理资源损耗更大</li>
+<li>推荐使用容器的场景：部署无状态的服务，同虚拟机互补使用，实现更好的隔离性</li>
+<li>如部署有状态的服务，需要对应用有一定的了解（做好health check和容错）</li>
+<li>持续集成的场景，可以顺利在开发、测试、生产之间迁移</li>
+<li>适合部署跨云、跨域、跨数据中心的混合云场景下的应用部署和弹性伸缩</li>
+<li>跨操作系统的场景</li>
+<li>应用经常变更和迭代的场景</li>
+</ol>
+
+            <footer class="footline">
+            </footer>
+          </article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <style>
+            #R-logo svg,
+            #R-logo svg * {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              fill: #282828 !important;
+              fill: var(--MENU-SECTIONS-BG-color) !important;
+              opacity: .945;
+            }
+            a#R-logo {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+              font-size: 1.875rem;
+              font-weight: 300;
+              margin-top: -.8125rem;
+              max-width: 60%;
+              text-transform: uppercase;
+              width: 14.125rem;
+              white-space: nowrap;
+            }
+            a#R-logo:hover {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+            }
+            #R-logo svg {
+              margin-bottom: -1.25rem;
+              margin-inline-start: -1.47rem;
+              margin-inline-end: .5rem;
+              width: 40.5%;
+            }
+            @media only all and (max-width: 59.999rem) {
+              a#R-logo {
+                font-size: 1.5625rem;
+                margin-top: -.1875rem;
+              }
+              #R-logo svg {
+                margin-bottom: -.75rem;
+                margin-inline-start: -1.47rem;
+                margin-inline-end: .5rem;
+              }
+            }
+            @media all and (-ms-high-contrast:none) {
+              /* IE11s understanding of positioning is weird at best */
+              a#R-logo {
+                margin-top: -3.625rem;
+              }
+              #R-logo svg {
+                margin-bottom: -3.875rem;
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+            @media only all and (-ms-high-contrast:none) and (max-width: 59.999rem) {
+              #R-logo svg {
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+          </style>
+          <a id="R-logo" href="/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.044 64.044">
+              <path d="M46.103 136.34c-.642-.394-1.222-2.242-1.98-2.358-.76-.117-1.353.506-1.618 1.519-.266 1.012-.446 4.188.173 5.538.213.435.482.787 1.03.845.547.057.967-.504 1.45-1.027.482-.523.437-.9 1.142-.612.705.289 1.051.4 1.586 1.229.535.828 1.085 4.043.868 5.598-.241 1.458-.531 2.8-.59 4.088.26.075.517.148.772.217 2.68.724 5.373 1.037 7.873.02.001-.028.01-.105.008-.11-.048-.165-.18-.41-.36-.698-.18-.29-.414-.645-.586-1.114a3.212 3.212 0 0 1-.125-1.735c.056-.21.153-.342.249-.475 1.237-1.193 2.932-1.373 4.244-1.384.557-.004 1.389.016 2.198.255.809.239 1.706.724 2.068 1.843.187.578.114 1.17-.043 1.623-.153.438-.369.783-.545 1.091-.178.31-.329.6-.401.821-.007.02-.003.071-.005.094 2.256 1.008 4.716.91 7.189.398.55-.114 1.11-.247 1.673-.377.344-1.085.678-2.145.852-3.208.124-.752.158-2.311-.078-3.538-.118-.613-.306-1.15-.52-1.489-.221-.349-.413-.501-.747-.538-.243-.027-.51.013-.796.098-.67.223-1.33.606-1.966.76l-.008.002-.109.032c-.556.152-1.233.158-1.797-.36-.556-.51-.89-1.367-1.117-2.596-.283-1.528-.075-3.279.89-4.518l.071-.09h.07c.65-.71 1.485-.802 2.16-.599.706.213 1.333.629 1.772.84.736.354 1.185.319 1.475.171.291-.148.5-.439.668-.955.332-1.017.301-2.819.022-4.106-.148-.684-.13-1.292-.13-1.883-1.558-.463-3.067-.982-4.574-1.208-1.128-.169-2.263-.173-3.298.164-.13.046-.256.095-.38.15-.373.164-.633.342-.805.52-.077.098-.081.105-.087.21-.004.068.031.289.13.571.1.282.256.634.467 1.03.279.524.448 1.063.431 1.618a2.12 2.12 0 0 1-.499 1.309 1.757 1.757 0 0 1-.62.51h-.002c-.515.291-1.107.404-1.723.464-.86.083-1.787.026-2.598-.097-.806-.123-1.47-.28-1.948-.555-.444-.256-.79-.547-1.037-.925a2.273 2.273 0 0 1-.356-1.301c.029-.837.403-1.437.625-1.897.111-.23.191-.433.236-.583.045-.15.044-.25.046-.24-.005-.029-.127-.355-1.015-.741-1.138-.495-2.322-.673-3.533-.668h-.015a9.711 9.711 0 0 0-.521.016h-.002c-1.163.057-2.35.308-3.541.569.383 1.531.79 2.753.818 4.502-.096 1.297.158 2.114-1.03 2.935-.85.588-1.508.729-2.15.335" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:1.03763;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M61.472 101.34v.002c-.3-.003-.603.01-.894.04-.544.055-1.39.165-1.778.306-1.238.364.13 2.344.41 2.913.28.569.285 2.03.14 2.134-.144.103-.375.261-.934.345-.56.084.03-.037-1.589.086-1.62.122-5.506.29-8.265.248-.022.26-.036.521-.097.808-.309 1.442-.63 3.163-.494 4.074.071.473.168.65.414.8.23.14.737.235 1.62-.004.834-.227 1.3-.442 1.887-.456.595-.016 1.555.472 1.965.717.411.245-.03-.008.002 0s.128.05.176.102c.049.053-.276-.523.104.199.379.721.72 3.256.002 4.68-.46.913-1.01 1.49-1.64 1.711-.63.22-1.229.067-1.734-.135-.881-.353-1.584-.7-2.205-.647-1.199 1.94-1.186 4.17-.6 6.602.097.397.212.814.327 1.23 2.68-.556 5.542-1.016 8.337.132 1.064.437 1.73 1.015 1.902 1.857.169.831-.193 1.508-.438 1.986-.122.238-.23.46-.307.642-.07.164-.096.28-.104.324.069.429.309.723.686.945.385.227.89.355 1.35.423.723.104 1.567.152 2.287.086.693-.064 1.032-.338 1.241-.544a2.447 2.447 0 0 0 .303-.437.175.175 0 0 0 .013-.035c-.004-.066-.037-.246-.195-.527-.46-.816-.87-1.595-.817-2.51.028-.476.218-.938.529-1.288.304-.343.698-.586 1.186-.79 1.442-.606 2.96-.609 4.372-.409 1.525.216 2.963.679 4.378 1.083.226-2.09.784-3.9.592-5.77-.058-.565-.287-1.333-.598-1.827-.32-.508-.59-.717-1.036-.642-.648.11-1.472.935-2.707 1.078-.791.092-1.494-.267-1.95-.86-.45-.583-.678-1.335-.78-2.101-.202-1.525.031-3.229.89-4.27.615-.747 1.45-.887 2.15-.74.687.145 1.307.492 1.857.745v-.002c.546.252 1.033.388 1.281.344a.547.547 0 0 0 .353-.188c.113-.124.242-.35.384-.75.604-1.712.206-3.68-.303-5.654-.667.145-1.336.293-2.018.413-1.341.236-2.73.392-4.136.273-.656-.055-1.695-.085-2.58-.476-.442-.195-.903-.514-1.157-1.093-.259-.591-.205-1.313.08-2.014.223-.64 1.082-2.178.692-2.585-.391-.407-1.651-.56-2.554-.571z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.992837;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M83.128 98.116c-.484 1.875-1.057 3.757-2.486 5.033-.638.57-1.13.666-1.483.548-.401-.134-.715-.506-1.058-.973-.338-.461-.655-.97-1.076-1.332-.192-.165-.404-.315-.683-.38-.279-.066-.599-.02-.9.102-.489.196-.89.58-1.28 1.047a6.1 6.1 0 0 0-.985 1.632c-.234.591-.356 1.174-.277 1.713.072.487.392.977.905 1.185.463.187.926.156 1.36.154.433 0 .843.01 1.242.147.55.189.79.736.822 1.368.034.66-.145 1.412-.393 1.988l-.008.021c-.74 1.705-1.946 2.893-3.004 4.349l-.664.915.979.099c.924.092 1.788.26 2.468.675.46.281 1.806 1.205 2.794 2.222.497.513.888 1.031 1.047 1.502.078.231.095.422.05.6a.93.93 0 0 1-.345.474c-.301.223-.606.395-.864.532l-.354.186c-.107.058-.189.087-.345.228a.637.637 0 0 1 .062-.045l-.064.041-.209.236-.103.343s.003.126.007.152c.003.017.003.007.004.015v.002c.016.195.061.307.133.476a4.1 4.1 0 0 0 .32.596 5.7 5.7 0 0 0 2.8 2.258c.284.108.908.321 1.548.36.33.02.59.015.912-.13h.002c.08-.037.228-.095.382-.281.153-.186.19-.355.212-.445l.019-.075.003-.078c.023-.585-.037-1.296.072-1.899.153-.657.435-.956 1.009-.909 2.771.239 4.74 1.955 6.693 3.83l.742.714.279-1.155c.55-2.29 1.093-4.464 2.928-5.977.692-.57 1.184-.642 1.527-.509.39.151.676.536.996.995.319.458.605.926 1.07 1.212.194.119.464.232.784.209.32-.024.638-.163.988-.384 1.022-.645 1.778-1.756 2.086-2.942.136-.522.102-.991-.046-1.301-.158-.334-.433-.553-.754-.707-.653-.314-1.468-.373-2.094-.486-.825-.15-1.22-.475-1.345-.878-.13-.417 0-.953.335-1.61.6-1.173 1.887-2.602 3.13-3.911l.498-.526-.449-.432c-1.545-1.49-3.163-3.01-5.252-3.715h-.002c-.473-.16-1.097-.413-1.73-.424h-.003c-.311-.004-.596.04-.883.24v.002c-.22.155-.483.537-.583.937l-.008.036-.006.038c-.116.773-.06 1.467-.217 1.995-.063.212-.198.418-.359.507-.202.111-.492.153-.976.072-.582-.097-1.978-.69-3.021-1.503-.523-.407-.934-.85-1.117-1.3a1.153 1.153 0 0 1-.083-.63c.03-.184.1-.477.308-.593.21-.116.941-.32 1.377-.642h.002c.192-.141.403-.367.518-.64.114-.275.127-.526.123-.774-.006-.142-.036-.192-.08-.3a8.417 8.417 0 0 0-3-3.027c-1.226-.725-2.585-1.135-3.927-1.539-.434-.12-.844-.111-1.02.466zm.912.947c1.186.364 2.357.718 3.345 1.303 1.035.612 1.864 1.488 2.507 2.528-.514.263-1.095.5-1.44.79-.345.29-.729.914-.815 1.434-.084.509 0 .968.155 1.347.301.74.85 1.276 1.44 1.735 1.18.92 2.554 1.545 3.47 1.698.604.1 1.186.088 1.739-.216.594-.327.935-.911 1.088-1.427.264-.884.193-1.664.262-2.17h.1c.3.006.926.206 1.417.371 1.646.554 3.044 1.773 4.431 3.089-1.102 1.174-2.222 2.423-2.888 3.73-.42.823-.73 1.789-.453 2.687.283.913 1.1 1.415 2.138 1.603.691.126 1.472.226 1.84.403.19.091.258.182.278.223.03.064.058.075-.023.387-.21.804-.761 1.598-1.413 2.01-.247.155-.365.183-.407.187-.042.003-.061.002-.172-.066-.144-.088-.455-.473-.772-.929-.317-.454-.714-1.07-1.452-1.356-.783-.304-1.776-.022-2.713.75-1.942 1.6-2.626 3.764-3.146 5.8-1.802-1.676-3.772-3.138-6.589-3.517h-.002c-.346-.095-1.013-.031-1.293.143-.735.501-1.005 1.132-1.168 2.007-.125.69-.082 1.216-.074 1.659-.055.006-.046.01-.104.006-.42-.026-1.035-.215-1.244-.295-.947-.361-1.774-1.006-2.314-1.857-.054-.085-.072-.132-.109-.2l.027-.016c.284-.15.656-.36 1.045-.648.44-.327.789-.798.93-1.35a2.4 2.4 0 0 0-.068-1.379c-.254-.751-.753-1.353-1.295-1.911-1.09-1.124-2.452-2.049-2.99-2.378-.609-.372-1.303-.44-1.981-.56.875-1.094 1.878-2.251 2.596-3.921.294-.823.543-1.907.513-2.658-.049-.97-.489-2.013-1.52-2.367-.579-.2-1.131-.204-1.58-.203-.45.002-.786-.006-.97-.08h-.002c-.264-.107-.236-.108-.268-.33-.025-.17.021-.553.183-.962a4.67 4.67 0 0 1 .725-1.192c.29-.348.617-.59.705-.626.142-.057.176-.05.22-.04.045.011.127.052.263.17.235.201.56.671.92 1.161.354.484.791 1.08 1.543 1.33.8.267 1.784-.052 2.671-.846 1.594-1.424 2.235-3.317 2.714-5.051zm11.705 7.023c-.02.014.042-.002.042 0l-.008.035c.05-.2-.028-.04-.034-.035zM79.472 122.45a.198.198 0 0 1 .005.023v.014c-.002-.01-.003-.03-.005-.037zm-.29.732-.006.01-.044.027c.016-.01.033-.024.05-.036z" style="color:#000;fill:#282828;stroke-width:1.02352;-inkscape-stroke:none" transform="translate(-40.698 -95.175)"/>
+              <path d="M76.694 128.845c-.85-.012-1.668.253-2.434.67-.01.592-.015 1.17.109 1.772.323 1.573.422 3.553-.07 5.147-.247.804-.684 1.535-1.347 1.891-.663.356-1.467.296-2.362-.159-.522-.266-1.059-.62-1.487-.757-.223-.072-.392-.096-.522-.069-.13.027-.232.094-.362.27-.53.719-.681 1.823-.497 2.876.177 1.012.418 1.438.543 1.56.143.137.26.154.604.055.548-.158 1.523-.857 2.573-.972l.02-.002.5.058c.686.081 1.247.562 1.622 1.19.372.62.591 1.37.73 2.136.279 1.532.25 3.16.083 4.232-.14.91-.394 1.72-.632 2.53 1.719-.385 3.485-.692 5.307-.36 1.174.214 2.749.574 3.762 1.977l.088.122.046.159c.162.551.16 1.114.024 1.578-.13.45-.348.772-.533 1.023-.181.246-.336.444-.437.606-.102.16-.141.275-.145.336-.01.17 0 .197.07.315.057.1.186.242.39.366.408.246 1.106.414 1.843.45a7.842 7.842 0 0 0 2.174-.21 4.28 4.28 0 0 0 .822-.296c.218-.106.385-.242.377-.233l.029-.031c.025-.035.05-.072.05-.068 0-.004 0-.017-.003-.05a2.733 2.733 0 0 0-.21-.579c-.26-.548-.839-1.333-.822-2.46.01-.657.27-1.21.598-1.576.32-.357.696-.575 1.074-.736.759-.323 1.57-.418 2.054-.458 1.653-.136 3.252.296 4.755.765.457.142.905.29 1.352.434.325-2.258.902-4.247.598-6.217-.071-.46-.25-1.169-.486-1.684-.238-.518-.495-.762-.675-.779-.351-.032-.716.14-1.174.418-.457.277-1.005.665-1.695.742-.745.082-1.406-.291-1.84-.908-.428-.608-.653-1.394-.754-2.196-.203-1.596.016-3.377.794-4.493.568-.813 1.358-.984 2.024-.835.65.146 1.243.51 1.769.779.524.267.99.413 1.237.365a.527.527 0 0 0 .346-.2c.11-.132.235-.373.37-.798.612-1.918.27-3.894-.246-6.054-2.815-.851-5.49-1.534-8.089-.267a.727.727 0 0 0-.223.148c-.024.028-.018.021-.026.056.001-.003-.01.178.07.44.162.522.611 1.29.911 1.978l.004.009.029.063.024.084V133c.162.635.016 1.297-.274 1.727-.272.404-.618.636-.952.81-.675.353-1.399.484-1.724.533a5.888 5.888 0 0 1-3.973-.795c-.512-.311-.876-.594-1.133-1.02-.282-.466-.318-1.084-.172-1.557.252-.814.715-1.266.971-1.89a.663.663 0 0 0 .047-.14c.001-.013 0-.006-.007-.037a.761.761 0 0 0-.184-.268c-.264-.267-.865-.595-1.54-.826-1.356-.462-3.07-.659-3.583-.686-.062-.002-.121-.006-.178-.006z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.991342;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+            </svg>Relearn
+          </a>
+        </div>
+
+        <search>
+          <div class="searchbox default-animation">
+            <i class="fas fa-search" title="Search (CTRL+ALT+f)"></i>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1716876878" defer></script>
+        <script src="/js/lunr/lunr.min.js?1716876878" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1716876878" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1716876878" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1716876878" defer></script>
+        <script src="/js/search.js?1716876878" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-topics">
+          <ul class="enlarge morespace collapsible-menu">
+          <li data-nav-id="/ceph/index.html" class=""><a class="padding" href="/ceph/index.html">Cephs</a><ul id="R-subsections-fd10f71351f87e0d2cf3e598548366c8" class="morespace collapsible-menu">
+          <li data-nav-id="/ceph/first/index.html" class=""><a class="padding" href="/ceph/first/index.html">First</a></li>
+          <li data-nav-id="/ceph/ceph_dashboard-hl/index.html" class=""><a class="padding" href="/ceph/ceph_dashboard-hl/index.html">Ceph 启用 Dashboard</a></li>
+          <li data-nav-id="/ceph/ceph_deploy-hl/index.html" class=""><a class="padding" href="/ceph/ceph_deploy-hl/index.html">Ceph 相关</a></li>
+          <li data-nav-id="/ceph/ceph_optimize-hl/index.html" class=""><a class="padding" href="/ceph/ceph_optimize-hl/index.html">Ceph 调优参考</a></li>
+          <li data-nav-id="/ceph/cephconf-hl/index.html" class=""><a class="padding" href="/ceph/cephconf-hl/index.html">ceph.conf</a></li>
+          <li data-nav-id="/ceph/crushmap-hl/index.html" class=""><a class="padding" href="/ceph/crushmap-hl/index.html">crushmap</a></li></ul></li>
+          <li data-nav-id="/python/index.html" class=""><a class="padding" href="/python/index.html">Pythons</a><ul id="R-subsections-36a3ed262b315ff04085d7b53a448994" class="morespace collapsible-menu">
+          <li data-nav-id="/python/first/index.html" class=""><a class="padding" href="/python/first/index.html">First</a></li>
+          <li data-nav-id="/python/django-hl/index.html" class=""><a class="padding" href="/python/django-hl/index.html">Django 相关</a></li>
+          <li data-nav-id="/python/flask-hl/index.html" class=""><a class="padding" href="/python/flask-hl/index.html">Flask 相关</a></li>
+          <li data-nav-id="/python/jinja2-hl/index.html" class=""><a class="padding" href="/python/jinja2-hl/index.html">Jinja2 相关</a></li>
+          <li data-nav-id="/python/python_logging-hl/index.html" class=""><a class="padding" href="/python/python_logging-hl/index.html">Python logging模块</a></li>
+          <li data-nav-id="/python/sqlalchemy-hl/index.html" class=""><a class="padding" href="/python/sqlalchemy-hl/index.html">Python Sqlalchemy</a></li>
+          <li data-nav-id="/python/python_obfuscated_code-hl/index.html" class=""><a class="padding" href="/python/python_obfuscated_code-hl/index.html">Python 代码混淆</a></li>
+          <li data-nav-id="/python/python_code_standards-hl/index.html" class=""><a class="padding" href="/python/python_code_standards-hl/index.html">Python 代码规范</a></li>
+          <li data-nav-id="/python/python_file-hl/index.html" class=""><a class="padding" href="/python/python_file-hl/index.html">Python 文件操作</a></li>
+          <li data-nav-id="/python/python-hl/index.html" class=""><a class="padding" href="/python/python-hl/index.html">Python 相关</a></li>
+          <li data-nav-id="/python/python_decorators-hl/index.html" class=""><a class="padding" href="/python/python_decorators-hl/index.html">Python 装饰器</a></li>
+          <li data-nav-id="/python/scrapy-hl/index.html" class=""><a class="padding" href="/python/scrapy-hl/index.html">scrapy 爬虫</a></li>
+          <li data-nav-id="/python/urllib2-hl/index.html" class=""><a class="padding" href="/python/urllib2-hl/index.html">urllib2 爬虫</a></li>
+          <li data-nav-id="/python/xpath-hl/index.html" class=""><a class="padding" href="/python/xpath-hl/index.html">xpath 相关</a></li>
+          <li data-nav-id="/python/yield-hl/index.html" class=""><a class="padding" href="/python/yield-hl/index.html">yield</a></li>
+          <li data-nav-id="/python/regular_expression-hl/index.html" class=""><a class="padding" href="/python/regular_expression-hl/index.html">正则表达式相关</a></li></ul></li>
+          <li data-nav-id="/proxy/index.html" class=""><a class="padding" href="/proxy/index.html">Proxy</a><ul id="R-subsections-7af45055f134bf4d7ad1ff39a99c084b" class="morespace collapsible-menu">
+          <li data-nav-id="/proxy/proxy/index.html" class=""><a class="padding" href="/proxy/proxy/index.html">Proxy相关</a></li></ul></li>
+          <li data-nav-id="/other/index.html" class=""><a class="padding" href="/other/index.html">Other</a><ul id="R-subsections-dd17f32865650128ca32bc9ce5ee4fdf" class="morespace collapsible-menu">
+          <li data-nav-id="/other/anaconda-hl/index.html" class=""><a class="padding" href="/other/anaconda-hl/index.html">anaconda 相关</a></li>
+          <li data-nav-id="/other/apidoc-hl/index.html" class=""><a class="padding" href="/other/apidoc-hl/index.html">apidoc 相关</a></li>
+          <li data-nav-id="/other/build_atlas-hl/index.html" class=""><a class="padding" href="/other/build_atlas-hl/index.html">Atlas 驱动构建</a></li>
+          <li data-nav-id="/other/cloudfoundry-hl/index.html" class=""><a class="padding" href="/other/cloudfoundry-hl/index.html">cloudfoundry 相关</a></li>
+          <li data-nav-id="/other/github_pages-hl/index.html" class=""><a class="padding" href="/other/github_pages-hl/index.html">github pages</a></li>
+          <li data-nav-id="/other/ionic_cordova-hl/index.html" class=""><a class="padding" href="/other/ionic_cordova-hl/index.html">ionic 、cordova 编译 andriod</a></li>
+          <li data-nav-id="/other/java-hl/index.html" class=""><a class="padding" href="/other/java-hl/index.html">Java 相关</a></li>
+          <li data-nav-id="/other/jupyter-hl/index.html" class=""><a class="padding" href="/other/jupyter-hl/index.html">jupyter 相关</a></li>
+          <li data-nav-id="/other/kafka-hl/index.html" class=""><a class="padding" href="/other/kafka-hl/index.html">Kafka 相关</a></li>
+          <li data-nav-id="/other/keepalived-hl/index.html" class=""><a class="padding" href="/other/keepalived-hl/index.html">keepalived 相关</a></li>
+          <li data-nav-id="/other/linux_desktop_rdp-hl/index.html" class=""><a class="padding" href="/other/linux_desktop_rdp-hl/index.html">Linux Desktop rdp 相关</a></li>
+          <li data-nav-id="/other/mqtt-hl/index.html" class=""><a class="padding" href="/other/mqtt-hl/index.html">MQTT 相关</a></li>
+          <li data-nav-id="/other/nativefier-hl/index.html" class=""><a class="padding" href="/other/nativefier-hl/index.html">Nativefier 相关</a></li>
+          <li data-nav-id="/other/ovirt-hl/index.html" class=""><a class="padding" href="/other/ovirt-hl/index.html">Ovirt 相关</a></li>
+          <li data-nav-id="/other/ptp-hl/index.html" class=""><a class="padding" href="/other/ptp-hl/index.html">ptp 相关</a></li>
+          <li data-nav-id="/other/pyqt5-hl/index.html" class=""><a class="padding" href="/other/pyqt5-hl/index.html">PyQt5 相关</a></li>
+          <li data-nav-id="/other/stratos_ui-hl/index.html" class=""><a class="padding" href="/other/stratos_ui-hl/index.html">stratos-ui 相关</a></li>
+          <li data-nav-id="/other/svn-hl/index.html" class=""><a class="padding" href="/other/svn-hl/index.html">svn 相关</a></li>
+          <li data-nav-id="/other/web-hl/index.html" class=""><a class="padding" href="/other/web-hl/index.html">Web 相关</a></li>
+          <li data-nav-id="/other/webdriver-hl/index.html" class=""><a class="padding" href="/other/webdriver-hl/index.html">webdriver 相关</a></li>
+          <li data-nav-id="/other/websocket-hl/index.html" class=""><a class="padding" href="/other/websocket-hl/index.html">websocket 相关</a></li>
+          <li data-nav-id="/other/xenserver-hl/index.html" class=""><a class="padding" href="/other/xenserver-hl/index.html">xenserver 相关</a></li>
+          <li data-nav-id="/other/gitbook-hl/index.html" class=""><a class="padding" href="/other/gitbook-hl/index.html">一、gitbook 相关</a></li>
+          <li data-nav-id="/other/computer_network_foundation-hl/index.html" class=""><a class="padding" href="/other/computer_network_foundation-hl/index.html">计算机网络基础</a></li>
+          <li data-nav-id="/other/be_mined-hl/index.html" class=""><a class="padding" href="/other/be_mined-hl/index.html">记一次被挖矿</a></li></ul></li>
+          <li data-nav-id="/question/index.html" class=""><a class="padding" href="/question/index.html">Question</a></li>
+          <li data-nav-id="/database/index.html" class=""><a class="padding" href="/database/index.html">Database</a></li>
+          <li data-nav-id="/istio/index.html" class=""><a class="padding" href="/istio/index.html">Istio</a></li>
+          <li data-nav-id="/k8s/index.html" class=""><a class="padding" href="/k8s/index.html">K8s</a></li>
+          <li data-nav-id="/openstack/index.html" class=""><a class="padding" href="/openstack/index.html">Openstack</a><ul id="R-subsections-9bba764a9f110e94af4bc7a89f9db759" class="morespace collapsible-menu">
+          <li data-nav-id="/openstack/devstack-hl/index.html" class=""><a class="padding" href="/openstack/devstack-hl/index.html">devstack相关</a></li>
+          <li data-nav-id="/openstack/heat-hl/index.html" class=""><a class="padding" href="/openstack/heat-hl/index.html">heat相关</a></li>
+          <li data-nav-id="/openstack/kolla_network-hl/index.html" class=""><a class="padding" href="/openstack/kolla_network-hl/index.html">kolla网络规划</a></li>
+          <li data-nav-id="/openstack/kolla_deploy-hl/index.html" class=""><a class="padding" href="/openstack/kolla_deploy-hl/index.html">kolla部署相关</a></li>
+          <li data-nav-id="/openstack/kolla_image_build-hl/index.html" class=""><a class="padding" href="/openstack/kolla_image_build-hl/index.html">kolla镜像构建</a></li>
+          <li data-nav-id="/openstack/lsf_install_openstack-hl/index.html" class=""><a class="padding" href="/openstack/lsf_install_openstack-hl/index.html">Lfs上安装OpenStack</a></li>
+          <li data-nav-id="/openstack/openstack_win_vm_diaplay-hl/index.html" class=""><a class="padding" href="/openstack/openstack_win_vm_diaplay-hl/index.html">openstack windows虚拟机分辨率问题</a></li>
+          <li data-nav-id="/openstack/openstack-hl/index.html" class=""><a class="padding" href="/openstack/openstack-hl/index.html">OpenStack 相关</a></li>
+          <li data-nav-id="/openstack/openstack_faq-hl/index.html" class=""><a class="padding" href="/openstack/openstack_faq-hl/index.html">openstack中遇到的问题</a></li>
+          <li data-nav-id="/openstack/openstack_hygon_patch-hl/index.html" class=""><a class="padding" href="/openstack/openstack_hygon_patch-hl/index.html">OpenStack对hygon的兼容</a></li>
+          <li data-nav-id="/openstack/ovs-hl/index.html" class=""><a class="padding" href="/openstack/ovs-hl/index.html">OVS 相关</a></li>
+          <li data-nav-id="/openstack/qemu_make-hl/index.html" class=""><a class="padding" href="/openstack/qemu_make-hl/index.html">QEMU 源码编译</a></li>
+          <li data-nav-id="/openstack/qga-hl/index.html" class=""><a class="padding" href="/openstack/qga-hl/index.html">qemu-guest-agent 相关</a></li>
+          <li data-nav-id="/openstack/delete_cinder_volume-hl/index.html" class=""><a class="padding" href="/openstack/delete_cinder_volume-hl/index.html">删除cinder僵尸实例</a></li>
+          <li data-nav-id="/openstack/make_openstack_image-hl/index.html" class=""><a class="padding" href="/openstack/make_openstack_image-hl/index.html">制作openstack镜像</a></li>
+          <li data-nav-id="/openstack/add_nic_to_vm-hl/index.html" class=""><a class="padding" href="/openstack/add_nic_to_vm-hl/index.html">给虚拟机添加网卡</a></li>
+          <li data-nav-id="/openstack/migrate_to_other_platform-hl/index.html" class=""><a class="padding" href="/openstack/migrate_to_other_platform-hl/index.html">迁移虚拟机到其他平台</a></li></ul></li>
+          <li data-nav-id="/golang/index.html" class=""><a class="padding" href="/golang/index.html">Golang</a><ul id="R-subsections-9846d6388830934b21e07a0f7d630c6c" class="morespace collapsible-menu">
+          <li data-nav-id="/golang/go_athens-hl/index.html" class=""><a class="padding" href="/golang/go_athens-hl/index.html">Go Authens</a></li>
+          <li data-nav-id="/golang/go-hl/index.html" class=""><a class="padding" href="/golang/go-hl/index.html">Go 语言相关</a></li></ul></li>
+          <li data-nav-id="/docker/index.html" class="parent "><a class="padding" href="/docker/index.html">Docker</a><ul id="R-subsections-37ef7d0ce1cc039dbba9ad71298a0daf" class="morespace collapsible-menu">
+          <li data-nav-id="/docker/buildah-hl/index.html" class=""><a class="padding" href="/docker/buildah-hl/index.html">Buildah</a></li>
+          <li data-nav-id="/docker/chartmuseum-hl/index.html" class=""><a class="padding" href="/docker/chartmuseum-hl/index.html">chartmuseum 相关</a></li>
+          <li data-nav-id="/docker/containerd-hl/index.html" class=""><a class="padding" href="/docker/containerd-hl/index.html">Containerd</a></li>
+          <li data-nav-id="/docker/docker_compose-hl/index.html" class=""><a class="padding" href="/docker/docker_compose-hl/index.html">docker compose 相关</a></li>
+          <li data-nav-id="/docker/docker_registry-hl/index.html" class=""><a class="padding" href="/docker/docker_registry-hl/index.html">docker registry 相关</a></li>
+          <li data-nav-id="/docker/docker_swarm-hl/index.html" class=""><a class="padding" href="/docker/docker_swarm-hl/index.html">docker swarm 相关</a></li>
+          <li data-nav-id="/docker/docker-hl/index.html" class=""><a class="padding" href="/docker/docker-hl/index.html">docker 相关</a></li>
+          <li data-nav-id="/docker/docker_net-hl/index.html" class=""><a class="padding" href="/docker/docker_net-hl/index.html">docker 网络相关</a></li>
+          <li data-nav-id="/docker/harbor-hl/index.html" class=""><a class="padding" href="/docker/harbor-hl/index.html">harbor 相关</a></li>
+          <li data-nav-id="/docker/helm-hl/index.html" class=""><a class="padding" href="/docker/helm-hl/index.html">helm 相关</a></li>
+          <li data-nav-id="/docker/k3s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k3s_deploy-hl/index.html">k3s 安装与使用</a></li>
+          <li data-nav-id="/docker/k3s_make-hl/index.html" class=""><a class="padding" href="/docker/k3s_make-hl/index.html">k3s 源码编译</a></li>
+          <li data-nav-id="/docker/k8s_use-hl/index.html" class=""><a class="padding" href="/docker/k8s_use-hl/index.html">k8s 使用</a></li>
+          <li data-nav-id="/docker/k8s_ceph-hl/index.html" class=""><a class="padding" href="/docker/k8s_ceph-hl/index.html">k8s 使用 ceph 储存</a></li>
+          <li data-nav-id="/docker/k8s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k8s_deploy-hl/index.html">k8s 安装部署</a></li>
+          <li data-nav-id="/docker/k8s-hl/index.html" class="active"><a class="padding" href="/docker/k8s-hl/index.html">k8s 相关</a></li>
+          <li data-nav-id="/docker/kubebuilder-hl/index.html" class=""><a class="padding" href="/docker/kubebuilder-hl/index.html">kubebuilder</a></li>
+          <li data-nav-id="/docker/kubeedge-hl/index.html" class=""><a class="padding" href="/docker/kubeedge-hl/index.html">kubeedge</a></li>
+          <li data-nav-id="/docker/openshift-hl/index.html" class=""><a class="padding" href="/docker/openshift-hl/index.html">openshift 相关</a></li>
+          <li data-nav-id="/docker/overlay2-hl/index.html" class=""><a class="padding" href="/docker/overlay2-hl/index.html">overlay2</a></li>
+          <li data-nav-id="/docker/rancher-hl/index.html" class=""><a class="padding" href="/docker/rancher-hl/index.html">rancher 相关</a></li>
+          <li data-nav-id="/docker/multiarch-hl/index.html" class=""><a class="padding" href="/docker/multiarch-hl/index.html">容器交叉编译</a></li>
+          <li data-nav-id="/docker/debootstrap-hl/index.html" class=""><a class="padding" href="/docker/debootstrap-hl/index.html">容器基础镜像构建</a></li>
+          <li data-nav-id="/docker/convert_iso_to_docker_img-hl/index.html" class=""><a class="padding" href="/docker/convert_iso_to_docker_img-hl/index.html">将ISO镜像转换为docker镜像</a></li>
+          <li data-nav-id="/docker/usual_software-hl/index.html" class=""><a class="padding" href="/docker/usual_software-hl/index.html">常用软件安装</a></li>
+          <li data-nav-id="/docker/mount_usb_to_docker-hl/index.html" class=""><a class="padding" href="/docker/mount_usb_to_docker-hl/index.html">挂载USB到docker容器</a></li></ul></li>
+          <li data-nav-id="/linux/index.html" class=""><a class="padding" href="/linux/index.html">Linux</a><ul id="R-subsections-9e5aaccdf48687824ccd3b3097af8e41" class="morespace collapsible-menu">
+          <li data-nav-id="/linux/libvirt-hl/index.html" class=""><a class="padding" href="/linux/libvirt-hl/index.html">[libvirt 相关](/etc/sysconfig/libvirtd )</a></li>
+          <li data-nav-id="/linux/abd-hl/index.html" class=""><a class="padding" href="/linux/abd-hl/index.html">abd</a></li>
+          <li data-nav-id="/linux/ansible-hl/index.html" class=""><a class="padding" href="/linux/ansible-hl/index.html">ansible 相关</a></li>
+          <li data-nav-id="/linux/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/linux/apache_multi_ports-hl/index.html">apache 多端口</a></li>
+          <li data-nav-id="/linux/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/linux/diy_centos_iso-hl/index.html">CentOS iso 镜像定制</a></li>
+          <li data-nav-id="/linux/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/linux/change_centos_boot_kernel-hl/index.html">CentOS 修改默认启动内核</a></li>
+          <li data-nav-id="/linux/cobbler-hl/index.html" class=""><a class="padding" href="/linux/cobbler-hl/index.html">cobbler 相关</a></li>
+          <li data-nav-id="/linux/crontabs-hl/index.html" class=""><a class="padding" href="/linux/crontabs-hl/index.html">crontabs 计划任务相关</a></li>
+          <li data-nav-id="/linux/dd-hl/index.html" class=""><a class="padding" href="/linux/dd-hl/index.html">dd 相关</a></li>
+          <li data-nav-id="/linux/etcd-hl/index.html" class=""><a class="padding" href="/linux/etcd-hl/index.html">ETCD 相关</a></li>
+          <li data-nav-id="/linux/frp-hl/index.html" class=""><a class="padding" href="/linux/frp-hl/index.html">frp 相关</a></li>
+          <li data-nav-id="/linux/ftp-hl/index.html" class=""><a class="padding" href="/linux/ftp-hl/index.html">ftp 相关</a></li>
+          <li data-nav-id="/linux/gitlab-hl/index.html" class=""><a class="padding" href="/linux/gitlab-hl/index.html">GitLab</a></li>
+          <li data-nav-id="/linux/guestfish-hl/index.html" class=""><a class="padding" href="/linux/guestfish-hl/index.html">guestfish 相关</a></li>
+          <li data-nav-id="/linux/haproxy-hl/index.html" class=""><a class="padding" href="/linux/haproxy-hl/index.html">haproxy 相关</a></li>
+          <li data-nav-id="/linux/iscsi-hl/index.html" class=""><a class="padding" href="/linux/iscsi-hl/index.html">iscsi 相关</a></li>
+          <li data-nav-id="/linux/kernel_make-hl/index.html" class=""><a class="padding" href="/linux/kernel_make-hl/index.html">kernel 内核编译</a></li>
+          <li data-nav-id="/linux/linux_u-hl/index.html" class=""><a class="padding" href="/linux/linux_u-hl/index.html">Linux U盘占用</a></li>
+          <li data-nav-id="/linux/linux_source-hl/index.html" class=""><a class="padding" href="/linux/linux_source-hl/index.html">Linux 源制作</a></li>
+          <li data-nav-id="/linux/linux-hl/index.html" class=""><a class="padding" href="/linux/linux-hl/index.html">Linux 相关</a></li>
+          <li data-nav-id="/linux/linux_network-hl/index.html" class=""><a class="padding" href="/linux/linux_network-hl/index.html">linux 网络配置</a></li>
+          <li data-nav-id="/linux/lvm-hl/index.html" class=""><a class="padding" href="/linux/lvm-hl/index.html">LVM 逻辑卷相关</a></li>
+          <li data-nav-id="/linux/mysql-hl/index.html" class=""><a class="padding" href="/linux/mysql-hl/index.html">mysql 相关</a></li>
+          <li data-nav-id="/linux/nginx-hl/index.html" class=""><a class="padding" href="/linux/nginx-hl/index.html">nginx 相关</a></li>
+          <li data-nav-id="/linux/pypi_local_source-hl/index.html" class=""><a class="padding" href="/linux/pypi_local_source-hl/index.html">pip 本地源</a></li>
+          <li data-nav-id="/linux/proxychains_ng-hl/index.html" class=""><a class="padding" href="/linux/proxychains_ng-hl/index.html">proxychains-ng 代理工具</a></li>
+          <li data-nav-id="/linux/rpm_build-hl/index.html" class=""><a class="padding" href="/linux/rpm_build-hl/index.html">Python rpm编译</a></li>
+          <li data-nav-id="/linux/qemu_img-hl/index.html" class=""><a class="padding" href="/linux/qemu_img-hl/index.html">qemu-img</a></li>
+          <li data-nav-id="/linux/samba-hl/index.html" class=""><a class="padding" href="/linux/samba-hl/index.html">Samba 相关</a></li>
+          <li data-nav-id="/linux/ssh-hl/index.html" class=""><a class="padding" href="/linux/ssh-hl/index.html">ssh 相关</a></li>
+          <li data-nav-id="/linux/ssh_interval-hl/index.html" class=""><a class="padding" href="/linux/ssh_interval-hl/index.html">ssh 自动断开</a></li>
+          <li data-nav-id="/linux/ssh_forwading-hl/index.html" class=""><a class="padding" href="/linux/ssh_forwading-hl/index.html">ssh 转发</a></li>
+          <li data-nav-id="/linux/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/linux/ssr_privoxy-hl/index.html">ssr privoxy 相关</a></li>
+          <li data-nav-id="/linux/synology-hl/index.html" class=""><a class="padding" href="/linux/synology-hl/index.html">Synology</a></li>
+          <li data-nav-id="/linux/systemd-hl/index.html" class=""><a class="padding" href="/linux/systemd-hl/index.html">systemd</a></li>
+          <li data-nav-id="/linux/tcpdump-hl/index.html" class=""><a class="padding" href="/linux/tcpdump-hl/index.html">tcpdump 相关</a></li>
+          <li data-nav-id="/linux/uboot-hl/index.html" class=""><a class="padding" href="/linux/uboot-hl/index.html">uboot</a></li>
+          <li data-nav-id="/linux/vim-hl/index.html" class=""><a class="padding" href="/linux/vim-hl/index.html">Vim 常用命令</a></li>
+          <li data-nav-id="/linux/virt_manager-hl/index.html" class=""><a class="padding" href="/linux/virt_manager-hl/index.html">virt-manager 相关</a></li>
+          <li data-nav-id="/linux/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/linux/yum_install_conf_conflict-hl/index.html">yum 安装时文件冲突</a></li>
+          <li data-nav-id="/linux/net_bridge-hl/index.html" class=""><a class="padding" href="/linux/net_bridge-hl/index.html">创建网桥</a></li>
+          <li data-nav-id="/linux/build_pypi-hl/index.html" class=""><a class="padding" href="/linux/build_pypi-hl/index.html">发布pypi软件包</a></li>
+          <li data-nav-id="/linux/root_extend-hl/index.html" class=""><a class="padding" href="/linux/root_extend-hl/index.html">将 home 目录空间扩容到根目录</a></li>
+          <li data-nav-id="/linux/vm_to_router-hl/index.html" class=""><a class="padding" href="/linux/vm_to_router-hl/index.html">将虚拟机作为router</a></li>
+          <li data-nav-id="/linux/nested-hl/index.html" class=""><a class="padding" href="/linux/nested-hl/index.html">嵌套虚拟化</a></li>
+          <li data-nav-id="/linux/dns-hl/index.html" class=""><a class="padding" href="/linux/dns-hl/index.html">搭建本地 dns 服务器</a></li>
+          <li data-nav-id="/linux/nic_bond-hl/index.html" class=""><a class="padding" href="/linux/nic_bond-hl/index.html">网络端口聚合绑定</a></li>
+          <li data-nav-id="/linux/ramdisk-hl/index.html" class=""><a class="padding" href="/linux/ramdisk-hl/index.html">虚拟内存盘</a></li>
+          <li data-nav-id="/linux/mdadm-hl/index.html" class=""><a class="padding" href="/linux/mdadm-hl/index.html">软 raid</a></li></ul></li>
+          </ul>
+        </div>
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/docker/k8s-hl/index.html" lang="zh_CN" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.variants && variants.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.variants && variants.markSelectedVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+	    <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1716876878" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1716876878" defer></script>
+    <script src="/js/theme.js?1716876878" defer></script>
+  </body>
+</html>

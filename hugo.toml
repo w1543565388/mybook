@@ -1,0 +1,4 @@
+baseURL = 'https://example.org/'
+languageCode = 'zh_CN'
+title = 'My New Hugo Site'
+theme = 'relearn'
