@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="zh_CN" dir="ltr">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.126.1">
+    <meta name="generator" content="Relearn 5.27.0+tip">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Ovirt 相关 :: My New Hugo Site">
+    <meta name="twitter:description" content="一、介绍 oVirt是一个开源服务，是部署在操作系统（CentOS、Red Hat Enterprise Linux）上的桌面虚拟化平台。
+1、oVirt-engine 虚拟机允许你配置你的网络，存储，节点还有镜像，虚拟机也提供了命令行工具ovirt-engine-cli和很实用的API（ovirt-engine-api），包含了python包装器，这个wrapper可以允许开发者整合功能到第三方的shell脚本中管理。
+2、VDSM 这个虚拟桌面和服务管理守护进程运行在oVirt的管理节点上，允许oVirt远程的部署，开始，停止monitor端的机器。
+3、oVirt-node 虚拟节点仅是一个运行在虚拟机上的操作系统，他也可以把一个标准发行版的linux转换成一个节点，这个节点可以通过 ovirt-engine管理，通过VDSM和其他依赖安装。
+4、dwh and reports 对于ovirt-engine，报告和数据仓库的这个组件是可选择的，并且是分别分装和开发的。
+5、基本概念 数据中心：数据中心是所有物理资源和逻辑资源的最大容器单位，它是所有虚拟机，存储，和网络的集合。
+集群： 一个集群指的是物理主机的集合，在这里，主机可以看做是虚拟机的资源池。在同一个集群中的主机共享相同的网络和存储架构，而且集群中的虚拟机可以在属于该集群的不同的主机之间迁移。
+逻辑网络：逻辑网络是物理网络在逻辑上的表示，它把网络负载根据管理流量，主机流量，存储流量和虚拟机的流量分组，从而更好的实现网络的管理和流量的分离。
+主机：主机就是物理上的服务器，虚拟机在主机上运行。一个主机可以运行一个或者多个虚拟机，正如上面提到的，是主机组成了集群。在一个集群中的虚拟机可以在不同的主机间迁移。
+存储池：存储池是一个逻辑上的概念，包含同一种存储类型的仓库，比如 iSCSI，Fibre Channel，NFS，或者 POSIX。每一种存储池都可以包含几个同类型的存储域，用来存储虚拟机镜像，ISO 文件，或者是用来导入/导出存储域。
+虚拟机：虚拟机就像实际的机器一样，有自己的硬件(CPU，内存等)，包含操作系统和一系列应用软件。 EayunOS 系统中的虚拟机有两种: 虚拟桌面和虚拟服务器。多个同样的虚拟机能同时快速的在一个池里面创建。注意，虚拟机的创建，管理，删除等操作只能被超级用户和授予相关权限的用户执行。
+模板：模板是一种虚拟机模型，这种模型预先定义了虚拟机的很多内容，比如操作系统等。通过模板，可以在简单的一个操作中以最快的方式创建大量的虚拟机。
+虚拟机池：虚拟机池是指一组相同的虚拟机的集合。对一些特定的目的，虚拟机池很有用。比如不同部门虚拟机使用的划分，一个池给市场部门用，另一个池给研发部门用，等等。
+快照：快照是指某一个时间点虚拟机操作系统的所有内容的一个状态。快照有很多用途，比如在升级虚拟机或者修改虚拟机内容的时候，可以建立一个快照，当升级完系统出问题的时候，可以用快照恢复到之前的状态。
+用户类型：系统支持不同级别的管理员和用户权限。系统管理员管理物力资源，比如数据中心，主机，存储资源等。是系统管理员建立的虚拟机池和虚拟机，用户具有访问这些虚拟机的能力。
+事件和监控：报警，警告和其它关于系统的通知可以帮助系统管理员更好的了解整个系统的性能和资源的状态。
+报表：从基于 JasperReports 的报表模块，或是数据库产生需要的报表。用户也可以使用任何支持 SQL 语句的查询工具查询包含主机，虚拟机和存储等的监控数据。
+二、系统要求 资源 最小要求 CPU 2核 Memory &gt;4GB Hard Disk &gt;25G Network Interface &gt;1张 ， &gt;1Gbps 三、安装 install ovirt
+1、安装ovirt-engine相关软件 yum -y install http://resources.ovirt.org/pub/yum-repo/ovirt-release43.rpm yum -y update yum -y install nfs-utils ovirt-engine2、配置ovirt-engine engine-setup3、连接到管理员界面 在浏览器输入地址，https://your-manager-fqdn/ovirt-engine，第一次登陆用户名admin。">
+    <meta property="og:url" content="http://ip:1313/other/ovirt-hl/index.html">
+    <meta property="og:site_name" content="My New Hugo Site">
+    <meta property="og:title" content="Ovirt 相关 :: My New Hugo Site">
+    <meta property="og:description" content="一、介绍 oVirt是一个开源服务，是部署在操作系统（CentOS、Red Hat Enterprise Linux）上的桌面虚拟化平台。
+1、oVirt-engine 虚拟机允许你配置你的网络，存储，节点还有镜像，虚拟机也提供了命令行工具ovirt-engine-cli和很实用的API（ovirt-engine-api），包含了python包装器，这个wrapper可以允许开发者整合功能到第三方的shell脚本中管理。
+2、VDSM 这个虚拟桌面和服务管理守护进程运行在oVirt的管理节点上，允许oVirt远程的部署，开始，停止monitor端的机器。
+3、oVirt-node 虚拟节点仅是一个运行在虚拟机上的操作系统，他也可以把一个标准发行版的linux转换成一个节点，这个节点可以通过 ovirt-engine管理，通过VDSM和其他依赖安装。
+4、dwh and reports 对于ovirt-engine，报告和数据仓库的这个组件是可选择的，并且是分别分装和开发的。
+5、基本概念 数据中心：数据中心是所有物理资源和逻辑资源的最大容器单位，它是所有虚拟机，存储，和网络的集合。
+集群： 一个集群指的是物理主机的集合，在这里，主机可以看做是虚拟机的资源池。在同一个集群中的主机共享相同的网络和存储架构，而且集群中的虚拟机可以在属于该集群的不同的主机之间迁移。
+逻辑网络：逻辑网络是物理网络在逻辑上的表示，它把网络负载根据管理流量，主机流量，存储流量和虚拟机的流量分组，从而更好的实现网络的管理和流量的分离。
+主机：主机就是物理上的服务器，虚拟机在主机上运行。一个主机可以运行一个或者多个虚拟机，正如上面提到的，是主机组成了集群。在一个集群中的虚拟机可以在不同的主机间迁移。
+存储池：存储池是一个逻辑上的概念，包含同一种存储类型的仓库，比如 iSCSI，Fibre Channel，NFS，或者 POSIX。每一种存储池都可以包含几个同类型的存储域，用来存储虚拟机镜像，ISO 文件，或者是用来导入/导出存储域。
+虚拟机：虚拟机就像实际的机器一样，有自己的硬件(CPU，内存等)，包含操作系统和一系列应用软件。 EayunOS 系统中的虚拟机有两种: 虚拟桌面和虚拟服务器。多个同样的虚拟机能同时快速的在一个池里面创建。注意，虚拟机的创建，管理，删除等操作只能被超级用户和授予相关权限的用户执行。
+模板：模板是一种虚拟机模型，这种模型预先定义了虚拟机的很多内容，比如操作系统等。通过模板，可以在简单的一个操作中以最快的方式创建大量的虚拟机。
+虚拟机池：虚拟机池是指一组相同的虚拟机的集合。对一些特定的目的，虚拟机池很有用。比如不同部门虚拟机使用的划分，一个池给市场部门用，另一个池给研发部门用，等等。
+快照：快照是指某一个时间点虚拟机操作系统的所有内容的一个状态。快照有很多用途，比如在升级虚拟机或者修改虚拟机内容的时候，可以建立一个快照，当升级完系统出问题的时候，可以用快照恢复到之前的状态。
+用户类型：系统支持不同级别的管理员和用户权限。系统管理员管理物力资源，比如数据中心，主机，存储资源等。是系统管理员建立的虚拟机池和虚拟机，用户具有访问这些虚拟机的能力。
+事件和监控：报警，警告和其它关于系统的通知可以帮助系统管理员更好的了解整个系统的性能和资源的状态。
+报表：从基于 JasperReports 的报表模块，或是数据库产生需要的报表。用户也可以使用任何支持 SQL 语句的查询工具查询包含主机，虚拟机和存储等的监控数据。
+二、系统要求 资源 最小要求 CPU 2核 Memory &amp;gt;4GB Hard Disk &amp;gt;25G Network Interface &amp;gt;1张 ， &amp;gt;1Gbps 三、安装 install ovirt
+1、安装ovirt-engine相关软件 yum -y install http://resources.ovirt.org/pub/yum-repo/ovirt-release43.rpm yum -y update yum -y install nfs-utils ovirt-engine2、配置ovirt-engine engine-setup3、连接到管理员界面 在浏览器输入地址，https://your-manager-fqdn/ovirt-engine，第一次登陆用户名admin。">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="Other :: My New Hugo Site">
+    <meta property="article:published_time" content="2024-04-12T09:39:39+00:00">
+    <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
+    <title>Ovirt 相关 :: My New Hugo Site</title>
+    <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
+    <link href="/css/fontawesome-all.min.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716876879" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1716876879" rel="stylesheet">
+    <link href="/css/auto-complete.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716876879" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1716876879" rel="stylesheet">
+    <link href="/css/fonts.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716876879" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1716876879" rel="stylesheet">
+    <link href="/css/theme-auto.css?1716876879" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1716876879" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1716876879" rel="stylesheet">
+    <link href="/css/print.css?1716876879" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1716876879" rel="stylesheet">
+    <script src="/js/url.js?1716876879"></script>
+    <script src="/js/variant.js?1716876879"></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/ip:1313';
+      // variant stuff
+      window.relearn.themeVariantModifier='';
+      window.variants && variants.init( [ 'auto' ] );
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/other/ovirt-hl/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"><nav class="TableOfContents">
+  <ul>
+    <li><a href="#一介绍">一、介绍</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#二系统要求">二、系统要求</a></li>
+    <li><a href="#三安装">三、安装</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#四ovirt编译">四、ovirt编译</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#五定制化图标">五、定制化图标</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#六add-license">六、add license</a></li>
+    <li><a href="#七hosted-engine">七、hosted-engine</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#八用户管理">八、用户管理</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#九配置cinder">九、配置cinder</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#十backup--restore">十、backup &amp;&amp; restore</a>
+      <ul>
+        <li><a href="#environment">environment</a></li>
+        <li><a href="#backup">Backup</a></li>
+        <li><a href="#restore">Restore</a></li>
+      </ul>
+    </li>
+    <li><a href="#十一qos">十一、QOS</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#十二使用nat网络">十二、使用nat网络</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#十三ovirt-shell">十三、ovirt-shell</a></li>
+    <li><a href="#十四其他问题">十四、其他问题</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#十五ovirt-virsh">十五、ovirt virsh</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/other/index.html"><span itemprop="name">Other</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><span itemprop="name">Ovirt 相关</span><meta itemprop="position" content="2"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/other/nativefier-hl/index.html" title="Nativefier 相关 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/other/ptp-hl/index.html" title="ptp 相关 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable default" tabindex="-1">
+        <div class="flex-block-wrapper">
+          <article class="default">
+            <header class="headline">
+            </header>
+
+<h1 id="ovirt-相关">Ovirt 相关</h1>
+
+<h2 id="一介绍">一、介绍</h2>
+<blockquote>
+<p>oVirt是一个开源服务，是部署在操作系统（CentOS、Red Hat Enterprise Linux）上的桌面虚拟化平台。</p>
+</blockquote>
+<h5 id="1ovirt-engine">1、oVirt-engine</h5>
+<blockquote>
+<p>虚拟机允许你配置你的网络，存储，节点还有镜像，虚拟机也提供了命令行工具ovirt-engine-cli和很实用的API（ovirt-engine-api），包含了python包装器，这个wrapper可以允许开发者整合功能到第三方的shell脚本中管理。</p>
+</blockquote>
+<h5 id="2vdsm">2、VDSM</h5>
+<blockquote>
+<p>这个虚拟桌面和服务管理守护进程运行在oVirt的管理节点上，允许oVirt远程的部署，开始，停止monitor端的机器。</p>
+</blockquote>
+<h5 id="3ovirt-node">3、oVirt-node</h5>
+<blockquote>
+<p>虚拟节点仅是一个运行在虚拟机上的操作系统，他也可以把一个标准发行版的linux转换成一个节点，这个节点可以通过 ovirt-engine管理，通过VDSM和其他依赖安装。</p>
+</blockquote>
+<h5 id="4dwh-and-reports">4、dwh and reports</h5>
+<blockquote>
+<p>对于ovirt-engine，报告和数据仓库的这个组件是可选择的，并且是分别分装和开发的。</p>
+</blockquote>
+<h5 id="5基本概念">5、基本概念</h5>
+<ul>
+<li>
+<p>数据中心：数据中心是所有物理资源和逻辑资源的最大容器单位，它是所有虚拟机，存储，和网络的集合。</p>
+</li>
+<li>
+<p>集群： 一个集群指的是物理主机的集合，在这里，主机可以看做是虚拟机的资源池。在同一个集群中的主机共享相同的网络和存储架构，而且集群中的虚拟机可以在属于该集群的不同的主机之间迁移。</p>
+</li>
+<li>
+<p>逻辑网络：逻辑网络是物理网络在逻辑上的表示，它把网络负载根据管理流量，主机流量，存储流量和虚拟机的流量分组，从而更好的实现网络的管理和流量的分离。</p>
+</li>
+<li>
+<p>主机：主机就是物理上的服务器，虚拟机在主机上运行。一个主机可以运行一个或者多个虚拟机，正如上面提到的，是主机组成了集群。在一个集群中的虚拟机可以在不同的主机间迁移。</p>
+</li>
+<li>
+<p>存储池：存储池是一个逻辑上的概念，包含同一种存储类型的仓库，比如 iSCSI，Fibre Channel，NFS，或者 POSIX。每一种存储池都可以包含几个同类型的存储域，用来存储虚拟机镜像，ISO 文件，或者是用来导入/导出存储域。</p>
+</li>
+<li>
+<p>虚拟机：虚拟机就像实际的机器一样，有自己的硬件(CPU，内存等)，包含操作系统和一系列应用软件。 EayunOS 系统中的虚拟机有两种: 虚拟桌面和虚拟服务器。多个同样的虚拟机能同时快速的在一个池里面创建。注意，虚拟机的创建，管理，删除等操作只能被超级用户和授予相关权限的用户执行。</p>
+</li>
+<li>
+<p>模板：模板是一种虚拟机模型，这种模型预先定义了虚拟机的很多内容，比如操作系统等。通过模板，可以在简单的一个操作中以最快的方式创建大量的虚拟机。</p>
+</li>
+<li>
+<p>虚拟机池：虚拟机池是指一组相同的虚拟机的集合。对一些特定的目的，虚拟机池很有用。比如不同部门虚拟机使用的划分，一个池给市场部门用，另一个池给研发部门用，等等。</p>
+</li>
+<li>
+<p>快照：快照是指某一个时间点虚拟机操作系统的所有内容的一个状态。快照有很多用途，比如在升级虚拟机或者修改虚拟机内容的时候，可以建立一个快照，当升级完系统出问题的时候，可以用快照恢复到之前的状态。</p>
+</li>
+<li>
+<p>用户类型：系统支持不同级别的管理员和用户权限。系统管理员管理物力资源，比如数据中心，主机，存储资源等。是系统管理员建立的虚拟机池和虚拟机，用户具有访问这些虚拟机的能力。</p>
+</li>
+<li>
+<p>事件和监控：报警，警告和其它关于系统的通知可以帮助系统管理员更好的了解整个系统的性能和资源的状态。</p>
+</li>
+<li>
+<p>报表：从基于 JasperReports 的报表模块，或是数据库产生需要的报表。用户也可以使用任何支持 SQL 语句的查询工具查询包含主机，虚拟机和存储等的监控数据。</p>
+</li>
+</ul>
+<h2 id="二系统要求">二、系统要求</h2>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>最小要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>2核</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>&gt;4GB</td>
+</tr>
+<tr>
+<td>Hard Disk</td>
+<td>&gt;25G</td>
+</tr>
+<tr>
+<td>Network Interface</td>
+<td>&gt;1张 ， &gt;1Gbps</td>
+</tr>
+</tbody>
+</table>
+<h2 id="三安装">三、安装</h2>
+<p><a href="https://www.ovirt.org/documentation/install-guide/chap-Installing_oVirt.html" rel="external" target="_blank">install ovirt</a></p>
+<h5 id="1安装ovirt-engine相关软件">1、安装ovirt-engine相关软件</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install http://resources.ovirt.org/pub/yum-repo/ovirt-release43.rpm
+yum -y update
+yum -y install nfs-utils ovirt-engine</code></pre></div><h5 id="2配置ovirt-engine">2、配置ovirt-engine</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>engine-setup</code></pre></div><h5 id="3连接到管理员界面">3、连接到管理员界面</h5>
+<blockquote>
+<p>在浏览器输入地址，https://your-manager-fqdn/ovirt-engine，第一次登陆用户名admin。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code># vim /etc/ovirt-engine/engine.conf.d/99-custom-sso-setup.conf
+SSO_ALTERNATE_ENGINE_FQDNS=&#34;alias1.example.com alias2.example.com&#34;
+
+admin@internal
+http://myovirt:80/ovirt-engine
+https://myovirt:443/ovirt-engine</code></pre></div><h5 id="4添加存储">4、添加存储</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>systemctl start rpcbind
+systemctl enable rpcbind
+
+mkdir /iso /data /import_export
+chown -R vdsm:kvm /iso 
+chown -R vdsm:kvm /data
+chown -R vdsm:kvm /import_export
+
+在exports中添加相关内容
+vim /etc/exports
+vim /etc/exports.d/ovirt-engine-iso-domain.exports
+
+/iso            *(rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)
+/data           *(rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)
+/import_export  *(rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)
+
+systemctl restart rpcbind
+systemctl restart nfs
+
+exportfs -r
+
+service ovirt-engine restart</code></pre></div><h5 id="5上传iso镜像">5、上传iso镜像</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>engine-iso-uploader -i iso upload /root/cirros-0.3.4-x86_64-disk.iso</code></pre></div><h5 id="6查看ovirt-engine日志">6、查看ovirt-engine日志</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>tailf /var/log/ovirt-engine/engine.log</code></pre></div><h5 id="7ovirt-node">7、ovirt node</h5>
+<blockquote>
+<p>安装完oVirt Engine服务后，就可以安装节点主机来运行虚拟机了。在oVirt架构中，你可以使用 oVirt Node, Fedora 或者 CentOS 做为节点主机的操作系统。</p>
+</blockquote>
+<blockquote>
+<p>centos7 node 修改hosts文件engine加进去</p>
+</blockquote>
+<h5 id="8使用virsh-list">8、使用virsh list</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>virsh list
+
+vdsm@ovirt
+shibboleth
+
+hosted-engine --help</code></pre></div><h2 id="四ovirt编译">四、ovirt编译</h2>
+<h4 id="一使用rpm方式编译">（一）、使用rpm方式编译</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>wget http://resources.ovirt.org/pub/ovirt-4.1/rpm/el7Workstation/SRPMS/ovirt-engine-4.1.4.2-1.el7.centos.src.rpm
+ 
+//axel -n 4 http://resources.ovirt.org/pub/ovirt-4.1/rpm/el7Workstation/SRPMS/ovirt-engine-4.1.4.2-1.el7.centos.src.rpm
+ 
+rpm -i ovirt-engine-4.1.4.2-1.el7.centos.src.rpm
+ 
+vim ~/rpmbuild/SPECS/ovirt-engine.spec
+ 
+rpm -ql ovirt-engine |grep jar
+ 
+yum -y install rpm-build
+ 
+rpmbuild -ba ~/rpmbuild/SPECS/ovirt-engine.spec //根据 spec 文件同时构建二进制 RPM 和源代码 RPM 
+ 
+//rpm -U</code></pre></div><blockquote>
+<p>Building locales requires more than 10240 available file descriptors, currently 1024</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ulimit -n 10240</code></pre></div><blockquote>
+<p>[ERROR] OutOfMemoryError: Increase heap size or lower gwt.jjs.maxThreads</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>cd /root/rpmbuild/SOURCES
+
+tar -zxvf ovirt-engine-4.1.4.2.tar.gz
+
+vim frontend/webadmin/modules/pom.xml
+
+&lt;gwt.jvmArgs&gt;-Xms8g -Xmx8g -XX:MaxDirectMemorySize=4096m&lt;/gwt.jvmArgs&gt;  //Two JVM options are often used to tune JVM heap size: -Xmx for maximum heap size, and -Xms for initial heap size.
+
+&lt;gwt-plugin.extraJvmArgs&gt;
+  -Dgwt.jjs.permutationWorkerFactory=com.google.gwt.dev.ThreadedPermutationWorkerFactory \
+  -Dgwt.jjs.maxThreads=1 \
+  -Djava.io.tmpdir=&#34;${project.build.directory}/tmp&#34; \
+  -Djava.util.prefs.systemRoot=&#34;${project.build.directory}/tmp&#34; \
+  -Djava.util.prefs.userRoot=&#34;${project.build.directory}/tmp&#34; \
+  -Djava.util.logging.config.class=org.ovirt.engine.ui.gwtextension.JavaLoggingConfig \
+  ${gwt.jvmArgs}
+&lt;/gwt-plugin.extraJvmArgs&gt;
+
+rm -rf ovirt-engine-4.1.4.2.tar.gz
+
+tar -zcvf ovirt-engine-4.1.4.2.tar.gz *
+
+rpmbuild -ba ~/rpmbuild/SPECS/ovirt-engine.spec //重新编译 </code></pre></div><h4 id="二搭建环境并使用build方式编译">（二）、搭建环境并使用build方式编译</h4>
+<h5 id="一安装构建环境">一、安装构建环境</h5>
+<h6 id="1安装snapshot库">1、安装snapshot库</h6>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install http://resources.ovirt.org/pub/yum-repo/ovirt-release42.rpm</code></pre></div><h6 id="2安装编译依赖包">2、安装编译依赖包</h6>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install mailcap openssl m2crypto python-psycopg2 python-cheetah python-daemon libxml2-python unzip ovirt-host-deploy ovirt-setup-lib git maven postgresql-server java-1.8.0-openjdk-devel wget python-pip</code></pre></div><h6 id="3检查-jdk">3、检查 JDK</h6>
+<p>使用“alternatives”命令验证javac是否已经指向已安装的Jdk1.8路径。</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>alternatives --display javac</code></pre></div><p>如果javac没有指向正确的目录，那么可以使用以下命令进行设置。</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>alternatives --set javac /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/bin/javac</code></pre></div><h6 id="4检查-maven">4.检查 maven</h6>
+<p>验证Maven的环境变量已经设置成功</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>mvn -version</code></pre></div><p>Maven 设置</p>
+<p>设置 ~/.m2/ directory 库。</p>
+<p>将下列内容拷贝到配置settings文件中。</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>cat &gt; ~/.m2/settings.xml &lt;&lt;&#34;EOT&#34;
+
+&lt;settings xmlns=&#34;http://maven.apache.org/POM/4.0.0&#34;
+     xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;
+     xsi:schemaLocation=&#34;http://maven.apache.org/POM/4.0.0
+                         http://maven.apache.org/xsd/settings-1.0.0.xsd&#34;&gt;
+     &lt;activeProfiles&gt;
+          &lt;activeProfile&gt;oVirtEnvSettings&lt;/activeProfile&gt;
+     &lt;/activeProfiles&gt;
+     &lt;profiles&gt;
+          &lt;profile&gt;
+               &lt;id&gt;oVirtEnvSettings&lt;/id&gt;
+               &lt;properties&gt;                               
+                    &lt;jbossHome&gt;${env.JBOSS_HOME}&lt;/jbossHome&gt;
+                    &lt;JAVA_HOME&gt;${env.JAVA_HOME}&lt;/JAVA_HOME&gt;
+               &lt;/properties&gt;
+          &lt;/profile&gt;
+      &lt;/profiles&gt;
+&lt;/settings&gt;
+
+EOT</code></pre></div><p>备注：</p>
+<p>一定要配置以上maven配置文件，否则在后续编译中会出错。请确保jdk的环境变量设置正确。</p>
+<p>在环境变量中设置以上需要的环境变量方法为:在用户的家目录中将以下环境变量添加到/etc/profile文件中。</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.151-1.b12.el7_4.x86_64/
+export JBOSS_HOME=/usr/share/jboss-as</code></pre></div><h5 id="二安装jboss-as">二、安装JBoss AS</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>cd /usr/share
+wget http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.tar.gz
+tar -zxvf jboss-as-7.1.1.Final.tar.gz --no-same-owner
+ln -s /usr/share/jboss-as-7.1.1.Final /usr/share/jboss-as
+su - -c &#39;chmod -R 777 /usr/share/jboss-as&#39;</code></pre></div><p>校验是否安装成功</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>/usr/share/jboss-as/bin/standalone.sh</code></pre></div><p>请确保对于$JBOSS_HOME/standalone/deployments文件夹有写权限，该目录是ovirt-engine的部署目录。</p>
+<p>TroubleShooting</p>
+<h6 id="1下面是一些有用的java_opts的设置可以添加到standaloneconf脚本中">1.下面是一些有用的JAVA_OPTS的设置，可以添加到standalone.conf脚本中：</h6>
+<div class="highlight wrap-code"><pre tabindex="0"><code>· -Xmx512m - maximum Java heap size of 512m
+
+· -Xdebug - include debugging</code></pre></div><h6 id="2在运行时添加-b-0000用于绑定所有的ip">2.在运行时添加-b 0.0.0.0用于绑定所有的IP</h6>
+<h6 id="3确定8080或者8009端口未被占用其他可能需要的端口号有8443808310904457">3.确定8080或者8009端口未被占用。其他可能需要的端口号有:8443/8083/1090/4457</h6>
+<h6 id="4jboss会绑定主机名称确认该主机名称已经被添加到etchosts目录下">4.JBoss会绑定主机名称，确认该主机名称已经被添加到/etc/hosts目录下。</h6>
+<h6 id="5如果部署后的文件并不是最新的代码可以使用下面的语句移除已经先部署的代码">5.如果部署后的文件并不是最新的代码，可以使用下面的语句移除已经先部署的代码。</h6>
+<div class="highlight wrap-code"><pre tabindex="0"><code># &gt; cd $JBOSS_HOME/standalone
+
+# &gt; rm -rf deployments/engine.ear 
+
+# &gt; rm -rf deployments/engine.ear.deployed 
+
+# &gt; rm -rf tmp
+
+# &gt; rm -rf data (should be done only in development environment)    
+
+# &gt; # Change the JBOSS_HOME environment variable to the new location
+
+# &gt; su - -c &#39;chmod -R 777 /usr/share/jboss-as&#39;
+
+# &gt; # Change the Jboss home in ~/.m2/settings.xml file to point to the new location</code></pre></div><h5 id="三安装postgresql">三、安装PostgreSQL</h5>
+<p>初始化数据库</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>service postgresql initdb
+chkconfig postgresql on
+service postgresql restart</code></pre></div><p>修改数据库连接</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /var/lib/pgsql/data/pg_hba.conf</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>默认：
+# TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
+# &#34;local&#34; is for Unix domain socket connections only
+local   all         all                               peer
+# IPv4 local connections:
+host    all         all         127.0.0.1/32          ident
+# IPv6 local connections:
+host    all         all         ::1/128               ident
+
+做如下修改：【ps:如果后期有问题，可将ident,password,password都修改为trust】
+# TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
+# &#34;local&#34; is for Unix domain socket connections only
+local   all         all                               ident
+# IPv4 local connections:
+host    all         all         127.0.0.1/32          password
+# IPv6 local connections:
+host    all         all         ::1/128               password</code></pre></div><p>重启：</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>service postgresql restart</code></pre></div><p>创建数据库</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>su - postgres -c &#34;psql -d template1 -c \&#34;create user engine password &#39;engine&#39;;\&#34;&#34;</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code># CREATE ROLE
+
+su - postgres -c &#34;psql -d template1 -c \&#34;create database engine owner engine template template0 encoding &#39;UTF8&#39; lc_collate &#39;en_US.UTF-8&#39; lc_ctype &#39;en_US.UTF-8&#39;;\&#34;&#34;
+
+# CREATE DATABASE</code></pre></div><h5 id="四编译ovirt-engine源码切换至普通用户模式">四、编译oVirt-engine源码（切换至普通用户模式）</h5>
+<ol>
+<li>
+<h6 id="获取源码">获取源码</h6>
+</li>
+</ol>
+<div class="highlight wrap-code"><pre tabindex="0"><code>git clone git://gerrit.ovirt.org/ovirt-engine</code></pre></div><p>编译（必须在ovirt-engine目录下）</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>make install-dev PREFIX=&#34;$HOME/ovirt-engine&#34;</code></pre></div><h5 id="五setup安装切换至普通用户模式">五、Setup安装（切换至普通用户模式</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>HOME/ovirt-engine/bin/engine-setup</code></pre></div><h5 id="六启动服务切换至普通用户模式">六、启动服务（切换至普通用户模式）</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>HOME/ovirt-engine/share/ovirt-engine/services/ovirt-engine/ovirt-engine.py start</code></pre></div><h5 id="七修改代码后">七、修改代码后</h5>
+<p>重新安装：</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>make install-dev PREFIX=&#34;$HOME/ovirt-engine&#34; </code></pre></div><p>重新编译：</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>make clean install-dev PREFIX=&#34;$HOME/ovirt-engine&#34; </code></pre></div><p>重新编译指定模块：</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>make clean install-dev PREFIX=$HOME/ovirt-engine \ 
+EXTRA_BUILD_FLAGS=&#34;-pl org.ovirt.engine.core:webadmin&#34; </code></pre></div><p>GWT调试模式：</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>make install-dev PREFIX=&#34;$HOME/ovirt-engine&#34; 
+make gwt-debug DEBUG_MODULE=&lt;module&gt; 
+While &lt;module&gt; is webadmin or userportal-gwtp. </code></pre></div><h5 id="三编译开发">(三)、编译开发</h5>
+<h4 id="添加ovirt42源">添加ovirt42源</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum install http://resources.ovirt.org/pub/yum-repo/ovirt-release42.rpm
+touch /etc/yum.repos.d/ovirt-snapshots.repo
+
+[ovirt-snapshots]
+name=local
+baseurl=http://resources.ovirt.org/pub/ovirt-master-snapshot/rpm/el$releasever
+enabled=1
+gpgcheck=0
+priority=10
+
+[ovirt-snapshots-static]
+name=local
+baseurl=http://resources.ovirt.org/pub/ovirt-master-snapshot-static/rpm/el$releasever
+enabled=1
+gpgcheck=0
+priority=10</code></pre></div><h4 id="安装第三方包">安装第三方包</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install git java-devel maven openssl postgresql-server \
+     m2crypto python-psycopg2 python-cheetah python-daemon libxml2-python \
+     unzip pyflakes python-pep8 python-docker-py mailcap python-jinja2 \
+     python-dateutil bind-utils</code></pre></div><h4 id="wildfly-82-for-ovirt-36-development">WildFly 8.2 for oVirt 3.6+ development</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install ovirt-engine-wildfly ovirt-engine-wildfly-overlay</code></pre></div><h4 id="jboss-711-for-backporting-changes-to-ovirt-35">JBoss 7.1.1 for backporting changes to oVirt 3.5</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install ovirt-engine-jboss-as</code></pre></div><h4 id="安装ovirt包">安装ovirt包</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum install ovirt-host-deploy ovirt-setup-lib ovirt-js-dependencies</code></pre></div><h4 id="make-sure-openjdk-is-the-java-preferred">Make sure openjdk is the java preferred:</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>alternatives --config java
+alternatives --config javac</code></pre></div><h4 id="数据库配置">数据库配置</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>#postgresql-setup -D /data/psql initdb
+postgresql-setup initdb
+
+vim /var/lib/pgsql/data/pg_hba.conf
+...
+host    all             all             192.168.21.0/24            trust
+...
+
+systemctl restart postgresql.service
+systemctl enable postgresql.service
+
+su - postgres -c &#34;psql -d template1 -c \&#34;create user engine password &#39;engine&#39;;\&#34;&#34;
+su - postgres -c &#34;psql -d template1 -c \&#34;create database engine owner engine template template0 encoding &#39;UTF8&#39; lc_collate &#39;en_US.UTF-8&#39; lc_ctype &#39;en_US.UTF-8&#39;;\&#34;&#34;</code></pre></div><h4 id="编译">编译</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>mkdir -p &#34;$HOME&#34;
+cd &#34;$HOME&#34;
+git clone git://gerrit.ovirt.org/ovirt-engine
+
+cd ovirt-engine
+make install-dev PREFIX=&#34;$HOME/ovirt-engine&#34;
+
+If WildFly 8.2 should be used, then it&#39;s required to manually setup ovirt-engine-wildfly-overlay using following command:
+
+echo &#34;ENGINE_JAVA_MODULEPATH=&#34;/usr/share/ovirt-engine-wildfly-overlay/modules:${ENGINE_JAVA_MODULEPATH}&#34;&#34; \
+  &gt; $PREFIX/etc/ovirt-engine/engine.conf.d/20-setup-jboss-overlay.conf</code></pre></div><h4 id="运行">运行</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>$HOME/ovirt-engine/bin/engine-setup</code></pre></div><h4 id="ovirt运行起来过后开启ovirt-engine服务">ovirt运行起来过后，开启ovirt-engine服务</h4>
+<div class="highlight wrap-code"><pre tabindex="0"><code>$HOME/ovirt-engine/share/ovirt-engine/services/ovirt-engine/ovirt-engine.py start</code></pre></div><h2 id="五定制化图标">五、定制化图标</h2>
+<h5 id="1ovirt_top_logopng">1、ovirt_top_logo.png</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>/usr/share/ovirt-engine/branding/ovirt.brand/images/ovirt_top_logo.png</code></pre></div><h5 id="2usrshareovirt-enginebrandingovirtbrandwelcome_pagetemplate">2、/usr/share/ovirt-engine/branding/ovirt.brand/welcome_page.template</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>&lt;script&gt;
+    //document.location = &#34;webadmin/?locale={userLocale}&#34;;
+    document.location = &#34;webadmin/?locale=zh_CN&#34;;
+&lt;/script&gt;</code></pre></div><h5 id="3vim-backendmanagermoduleswelcomesrcmainwebappweb-infovirt-enginejsp">3、vim backend/manager/modules/welcome/src/main/webapp/WEB-INF/ovirt-engine.jsp</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>&lt;html class=&#34;obrand_background&#34; style=&#34;display:none&#34;&gt;
+
+//document.write(&#39;&lt;span class=&#34;version-text&#34;&gt;&lt;fmt:message key=&#34;obrand.welcome.version&#34;&gt;&lt;fmt:param value=&#34;${requestScope[\&#39;version\&#39;]}&#34; /&gt; &lt;/fmt:message&gt;&lt;/span&gt;&#39;)</code></pre></div><h5 id="4commoncss">4、common.css</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>.obrand_loginPageLogoImage {
+    /background-image: url(images/ovirt_top_right_logo.png);/</code></pre></div><p>.obrand_loginPageLogoImage {
+/<em>background-image: url(images/ovirt_top_right_logo.png);</em>/</p>
+<h5 id="5brandingovirtbrandexternal_resourcesproperties">5、branding/ovirt.brand/external_resources.properties</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>//注释所有</code></pre></div><h5 id="6vim-messages_zh_cnproperties">6、vim messages_zh_CN.properties</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>oVirt -&gt; tmpCloud</code></pre></div><h2 id="六add-license">六、add license</h2>
+<blockquote>
+<p>本地开发环境打包，打包结果如enginesso.war文件夹，将目录下所有文件拷贝至服务器engine部署目录，例如/usr/share/ovirt-engine/engine.ear/enginesso.war/，然后重启服务即可</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>org.ovirt.engine.core.sso.servlets.InteractiveAuthServlet
+
+/**
+             * 注册码验证开始
+             */
+            boolean checkRes = true;
+            try {
+                String filepath = &#34;/etc/ovirt-engine/license&#34;;
+                File file = new File(filepath);
+                if(!file.exists()){
+                    response.sendRedirect(request.getContextPath() + &#34;/fileNotException.html&#34;);
+                    return;
+                }
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filepath)));
+                String firstLine = reader.readLine();
+
+                String reg = firstLine.substring(0,36);
+                String mac2 = firstLine.substring(36);
+
+                String mac = getStr1(reg) + mac2;
+                String regCode = getStr2(reg);
+
+                if(!(regCode.contains(&#34;base&#34;) | regCode.contains(&#34;super&#34;))){
+                    log.error(&#34;error user&#34;);
+                    response.sendRedirect(request.getContextPath() + &#34;/roleException.html&#34;);
+                    return;
+                }else {
+                    Long timeString = Long.valueOf(regCode.substring(0,10));
+                    Long nowtime = System.currentTimeMillis()/1000;
+                    if(nowtime&gt;timeString){
+                        log.error(&#34;error time&#34;);
+                        response.sendRedirect(request.getContextPath() + &#34;/timeException.html&#34;);
+                        return;
+                    }
+                }
+                if(regCode.contains(&#34;base&#34;)){
+                    String machineCodePath = &#34;/etc/ovirt-engine/product_uuid&#34;;
+                    reader = new BufferedReader(new InputStreamReader(new FileInputStream(machineCodePath)));
+                    String machineCode = reader.readLine().replace(&#34;/&#34;,&#34;&#34;);
+
+                    String publicKey = RSAUtils.loadKeyByFile(&#34;/etc/ovirt-engine/license_public_key.pem&#34;);
+
+                    checkRes = RSAUtils.verify(BaseEncoding.base64().decode(publicKey), machineCode.getBytes(), BaseEncoding.base64().decode(mac));
+                    if (checkRes == false){
+                        response.sendRedirect(request.getContextPath() + &#34;/systemStand.html&#34;);
+                        return;
+                    }
+                }
+                reader.close();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                log.error(&#34;-------------解析license信息发生异常--------------&#34;);
+                response.sendRedirect(request.getContextPath() + &#34;/fileException.html&#34;);
+                return;
+            }</code></pre></div><h2 id="七hosted-engine">七、hosted-engine</h2>
+<p><a href="https://www.ovirt.org/develop/release-management/features/integration/heapplianceflow/" rel="external" target="_blank">https://www.ovirt.org/develop/release-management/features/integration/heapplianceflow/</a></p>
+<p><a href="https://www.ovirt.org/blog/2016/07/Manage-Your-Hosted-Engine-Hosts-Deployment/" rel="external" target="_blank">https://www.ovirt.org/blog/2016/07/Manage-Your-Hosted-Engine-Hosts-Deployment/</a></p>
+<h5 id="1安装部署hosted-engine">1、安装部署hosted-engine</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install http://resources.ovirt.org/pub/yum-repo/ovirt-release41.rpm
+
+==== nfs搭建 ====
+
+systemctl restart nfs
+
+mkdir /data
+chown -R vdsm:kvm /data
+
+echo &#34;/data *(rw,sync,no_subtree_check,all_squash,anonuid=36,anongid=36)&#34;|tee &gt; /etc/exports
+
+exportfs -r 
+
+showmount -e
+
+yum install ovirt-hosted-engine-setup
+
+hosted-engine --deploy</code></pre></div><h5 id="2在页面添加额外的host主机">2、在页面添加额外的host（主机）</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>先添加一个存储域
+
+主机 → 新建 → 承载的引擎 → 选择承载引擎部署操作 → 部署</code></pre></div><h2 id="八用户管理">八、用户管理</h2>
+<blockquote>
+<p>ovirt存在两种用户域：本地域和外部域。平台安装过程中会创建一个“internal domain”默认本地域和默认用户admin。在本地域创建的用户为本地用户，在外部域创建的为目录用户
+可以通过ovirt-aaa-jdbc-tool来创建和管理本地用户（aaa是Authentication, Authorization and Accounting的缩写）</p>
+</blockquote>
+<h5 id="1外部域">1、外部域</h5>
+<p>1、搭建Active Directory和DNS</p>
+<p>2、Active Directory 用户和计算机 → ad.com → Users → 右键（新建） → 用户</p>
+<blockquote>
+<p>注意： 1、非管理账户 2、时钟同步</p>
+</blockquote>
+<p>ovirt可以连接外部目录服务器添加外部域， 支持的目录服务器包括：</p>
+<ul>
+<li>389ds</li>
+<li>389ds RFC-2307 Schema</li>
+<li>Active Directory</li>
+<li>FreeIPA</li>
+<li>Red Hat Identity Management (IdM)</li>
+<li>Novell eDirectory RFC-2307 Schema</li>
+<li>OpenLDAP RFC-2307 Schema</li>
+<li>OpenLDAP Standard Schema</li>
+<li>Oracle Unified Directory RFC-2307 Schema</li>
+<li>RFC-2307 Schema (Generic)</li>
+<li>Red Hat Directory Server (RHDS)</li>
+<li>Red Hat Directory Server (RHDS) RFC-2307 Schema</li>
+<li>iPlanet</li>
+</ul>
+<blockquote>
+<p>ovirt使用插件ovirt-engine-extension-aaa-ldap来配置外部域。
+参考<a href="https://superlc320.gitbooks.io/samba-ldap-centos7/ldap_+_centos_7.html" rel="external" target="_blank">https://superlc320.gitbooks.io/samba-ldap-centos7/ldap_+_centos_7.html</a> 配置OpenLDAP服务。
+运行</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ovirt-engine-extension-aaa-ldap-setup</code></pre></div><p>开启配置向导</p>
+<blockquote>
+<p>参考 &lt;https://gi thub.com/oVirt/ovirt-engine-extension-aaa-ldap&gt;
+将/ad/. (Active Directory) 或者 examples/simple/. 下的文件复制到 /etc/ovirt-engine 并更改文件名和配置中的vars.* (用户名及密码等)
+登录测试</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code># ovirt-engine-extensions-tool aaa login-user \
+        --profile=@PROFILE@ --user-name=@USER@
+
+   Replace:
+    - @PROFILE@ with authn ovirt.engine.aaa.authn.profile.name.
+    - @USER@ with user you want to test.</code></pre></div><h5 id="2本地域">2、本地域</h5>
+<blockquote>
+<p>ovirt使用插件ovirt-engine-extension-aaa-jdbc来添加和配置本地域。当自己添加aaa-jdbc文件时需要配置postgresql作为aaa-jdbc插件的数据库。
+参考 <a href="https://github.com/oVirt/ovirt-engine-extension-aaa-jdbc" rel="external" target="_blank">https://github.com/oVirt/ovirt-engine-extension-aaa-jdbc</a></p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>1.    su - postgres -c &#34;psql -d template1 &lt;&lt; __EOF__
+    create user DB_USER password &#39;DB_PASSWORD&#39;;
+    create database DB_NAME owner DB_USER template template0
+        encoding &#39;UTF8&#39; lc_collate &#39;en_US.UTF-8&#39; lc_ctype &#39;en_US.UTF-8&#39;;
+   __EOF__
+   &#34;
+2.   vi /var/lib/pgsql/data/pg_hba.conf (please
+   replace DB_NAME and DB_USER with real values):添加
+
+     host    DB_NAME    DB_USER    0.0.0.0/0       md5
+     host    DB_NAME    DB_USER    ::0/0           md5
+
+   These line must be located prior to following lines:
+
+     host    all        all        127.0.0.1/32    ident
+     host    all        all        ::1/128         ident
+重启postgresql
+
+3. PGPASSWORD=&#34;DB_PASSWORD&#34; \
+       /usr/share/ovirt-engine-extension-aaa-jdbc/dbscripts/schema.sh \
+       -s DB_HOST \
+       -p DB_PORT \
+       -d DB_NAME \
+       -u DB_USER \
+       -c apply
+
+4. Setup AAA profile
+   cp /usr/share/ovirt-engine-extension-aaa-jdbc/examples/extension.d/authn.properties        /etc/ovirt-engine/extensions.d/PROFILE-authn.properties
+  cp /usr/share/ovirt-engine-extension-aaa-jdbc/examples/extension.d/authz.properties        /etc/ovirt-engine/extensions.d/PROFILE-authz.properties
+  cp /usr/share/ovirt-engine-extension-aaa-jdbc/examples/aaa/profile.properties        /etc/ovirt-engine/aaa/PROFILE.properties
+并编辑这三个配置文件中的变量
+重启ovirt-engine
+
+5. 添加和管理用户
+ovirt-aaa-jdbc-tool --db-config=/etc/ovirt-engine/aaa/PROFILE.properties</code></pre></div><p>ovirt 通过ovirt-aaa-jdbc-tool创建和管理本地用户/组</p>
+<p><a href="https://access.redhat.com/documentation/zh-cn/red_hat_virtualization/4.1/html/administration_guide/sect-administering_user_tasks_from_the_commandline" rel="external" target="_blank">https://access.redhat.com/documentation/zh-cn/red_hat_virtualization/4.1/html/administration_guide/sect-administering_user_tasks_from_the_commandline</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>创建一个新用户账户 ovirt-aaa-jdbc-tool user add test1 –attribute=firstName=John –attribute=lastName=Doe
+
+设置密码 ovirt-aaa-jdbc-tool user password-reset test1 –password-valid-to=“2025-08-01 12:00:00-0800”
+
+查看用户信息 ovirt-aaa-jdbc-tool user show test1
+
+编辑用户信息 ovirt-aaa-jdbc-tool user edit test1 –attribute=email=jdoe@example.com
+
+删除用户 ovirt-aaa-jdbc-tool user delete test1
+
+为内部管理员用户重设密码 ovirt-aaa-jdbc-tool user password-reset admin –password-valid-to=“2025-08-01 12:00:00Z”
+
+禁用内部管理员用户,禁用默认的 admin 用户 ovirt-aaa-jdbc-tool user edit admin –flag=+disabled
+
+要启用一个已禁用的用户，运行 ovirt-aaa-jdbc-tool user edit username –flag=-disabled
+
+管理组： 创建一个新组 ovirt-aaa-jdbc-tool group add group1
+
+为组添加用户。这些用户需要已存在。 ovirt-aaa-jdbc-tool group-manage useradd group1 –user=test1
+
+查看组账户详情 ovirt-aaa-jdbc-tool group show group1
+
+列出所有用户或组账户的信息 ovirt-aaa-jdbc-tool query –what=user ovirt-aaa-jdbc-tool query –what=group
+
+列出名字以字母 j 开头的用户账户信息 ovirt-aaa-jdbc-tool query –what=user –pattern=“name=j*”
+
+列出部门属性被设置为 marketing 的组的信息 ovirt-aaa-jdbc-tool query –what=group –pattern=“department=marketing”
+
+运行以下命令显示所有设置 ovirt-aaa-jdbc-tool setting show
+
+以下命令把所有用户账户的默认登录会话时间改为 60 分钟。它的默认值时 10080 分钟 ovirt-aaa-jdbc-tool setting set –name=MAX_LOGIN_MINUTES –value=60
+
+以下命令更新了把用户账户被锁定前可以进行登录操作的失败次数。它的默认值是 5 ovirt-aaa-jdbc-tool setting set –name=MAX_FAILURES_SINCE_SUCCESS –value=3</code></pre></div><h2 id="九配置cinder">九、配置cinder</h2>
+<h5 id="1配置cinder-provider">1.配置cinder provider</h5>
+<p>登录ovirt管理界面，点击Administration→providers，点击右上角的添加按钮，选择添加新的provider。 在名称栏填入ovirt-cinder(可修改),
+类型选择：Openstack Block Storage，
+供应商URL填写：<a href="http://http//192.168.21.100:8776" rel="external" target="_blank">http://http://192.168.21.100:8776</a> (此处为openstack cinder api服务IP地址)。
+用户名:cinder，
+密码：xxxxxxxx, 此处为cinder用户的密码，此密码从/etc/kolla/passwords.yml 文件中的cinder_keystone_password 获取。
+租户名：service ,
+验证名： <a href="http://192.168.21.100:5000/v2.0" rel="external" target="_blank">http://192.168.21.100:5000/v2.0</a> ，此处为openstackkeystone服务的认证URL。
+编辑完成以后点击测试，当界面弹出测试成功，访问了供应商。则表示配置成功。</p>
+<p>2.配置验证密钥 配置完成provider常规配置以后，还需要配置provider的验证密钥。 点击当前界面的验证密钥选项的右上角新建按钮。 在弹出的规划框界面，UUID 填入cinder的UUID。此UUID从openstack服务器上的cinder.conf获取。</p>
+<p>rbd_user = cinder
+rbd_secret_uuid = UUID
+3.值：填入此UUID对应的值。此值从ceph获取。获取方法：
+ceph auth get client.cinder
+[client.cinder]</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>      key = AQAZjXBZclIhAhAAH41aSF0GjlXEA4LBHYTEOg== </code></pre></div><p>此处的key 就是我们需要的值。
+填写完成以后点击确定按钮。
+以上就是cinder provider的配置方法。</p>
+<p>FAQ:rbd无法map(rbd feature disable) 参考解决方法：<a href="http://www.zphj1987.com/2016/06/07/rbd%E6%97%A0%E6%B3%95map-rbd-feature-disable/" rel="external" target="_blank">http://www.zphj1987.com/2016/06/07/rbd%E6%97%A0%E6%B3%95map-rbd-feature-disable/</a></p>
+<h2 id="十backup--restore">十、backup &amp;&amp; restore</h2>
+<h3 id="environment">environment</h3>
+<p>ovirt version: 4.2.2</p>
+<p>在互联网系统中，由于数据量很大，数据对企业来说就是企业的生命，因此数据的安全性就是企业首先要考虑的，解决数据安全性的首要措施就是对数据进行备份，对于ovirt engine来说可以对ovirt整个服务器采取备份，此种备份方式安全性最高，但是耗费的资源也比较大。另外一种解决方式就是对ovirt关键的文件进行备份，比如ovirt数据库和配置文件等，接下来我们就介绍ovirt对关键数据和配置文件进行备份。</p>
+<h3 id="backup">Backup</h3>
+<p>ovirt 提供专门的备份命令engine-backup 供管理员使用，具体的参数信息，用户可以使用如下命令查看： engine-backup –help 备份示例如下：</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code> engine-backup --mode=backup --file=backup1 --log=backup1.log </code></pre></div><p>#mode:表示使用的模式，这里有两个参数选择：backup（备份），restore（还原）
+#file:如果mode=backup ，则此处的file是指生成的备份文件。如果mode=restore，则此处表示已经存在的供还原的文件。
+#log:备份过程中生成的日志文件。
+执行备份命令以后在当前目录会生成一个名为backup1 的备份文件。</p>
+<h3 id="restore">Restore</h3>
+<p>前提条件：
+\1. 一台干净的服务器;
+\2. 安装ovirt-engine 但是没有set-up
+\3. 主机的hostname必须与备份主机的hostname保持一致</p>
+<p>还原过程：
+\1. 执行 Restore
+\2. 执行 engine-setup
+我们在一台新安装的服务器上还原刚刚备份的backup1，使用示例如下：
+首先设置新服务器的网络，hostname等信息。将备份主机上生成的backup1文件和/opt/setup/answer 文件一起拷贝到新的主机。</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code> yum install ovirt-engine 
+ engine-backup --mode=restore --log=restore1.log --file=backup1 --provision-db --provision-dwh-db --no-restore-permissions 
+engine-setup --config-append=./answer --offline</code></pre></div><p>执行玩上述三条命令以后，我们可以通过网页访问还原的主机https:<em>{IP} 进入web界面我们可以看到此时还原的主机与之前备份的主机信息完全一致。 参考文档：https://ovirt.org/develop/release-management/features/integration/engine-backup/</em></p>
+<h2 id="十一qos">十一、QOS</h2>
+<p>ovirt 中的 qos 包括存储、VM网络、主机网络、CPU，通过配置 qos 可以对可访问的资源进行精细的控制，创建 qos 的位置是:</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>Compute --&gt; 数据中心 --&gt; 选择一个数据中心 --&gt; qos</code></pre></div><h5 id="存储">存储</h5>
+<p>存储服务质量定义了在一个存储域中的虚拟磁盘的最大吞吐级别和输入、输出操作的最大级别。为虚拟磁盘分配存储服务质量允许您对存储域的性能进行细化配置，并可以防止发生因为对一个虚拟磁盘的操作而影响到同一个存储域中的其它虚拟磁盘容量的问题。</p>
+<h5 id="创建-qos">创建 qos</h5>
+<ul>
+<li>吞吐量：每秒数据读写量</li>
+<li>iops：每秒读写次数</li>
+</ul>
+<p>使用 qos</p>
+<p>在创建磁盘的时候需要选择一个磁盘配置集，而磁盘配置集可以设置 qos 属性，磁盘配置集的创建以及 qos 的创建位置是:</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>Storage --&gt; Domains --&gt; 选择一个数据存储域 --&gt; 磁盘配置集 </code></pre></div><p>创建一个配置集</p>
+<h5 id="vm网络">VM网络</h5>
+<p>通过设置虚拟机网络服务质量，用户可以使用一个配置集来控制独立虚拟网络控制器的网络流量。它可以控制不同网络层上的带宽，并控制网络资源使用的情况。</p>
+<h5 id="创建-qos-1">创建 qos</h5>
+<ul>
+<li>转入的：这个设置对流入网络的流量进行控制。选择/取消转入的选项来启用/禁用这个设置。
+<ul>
+<li>平均值：流入网络流量的平均速度。</li>
+<li>高峰：流入网络流量的峰值速度。</li>
+<li>Burst：burst 发生时的流入网络流量的速度。</li>
+</ul>
+</li>
+<li>转出的：这个设置对流出网络的流量进行控制。选择/取消转出的选项来启用/禁用这个设置。
+<ul>
+<li>平均值：流入网络流量的平均速度。</li>
+<li>高峰：流入网络流量的峰值速度。</li>
+<li>Burst：burst 发生时的流入网络流量的速度。</li>
+</ul>
+</li>
+</ul>
+<h5 id="使用-qos">使用 qos</h5>
+<p>创建虚拟机的时候需要选择一个 vnic 配置集，而 vnic 配置集可以设置 qos 属性，创建 vnic 配置集的位置是:</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>Network --&gt; vNIC Profiles</code></pre></div><h5 id="主机网络">主机网络</h5>
+<p>主机网络服务器质量配置主机上的网络来控制通过物理接口的网络流量。使用主机网络服务质量可以通过控制在相同的物理网络接口控制器中的网络资源使用情况来对网络性能进行微调。这可以防止，因为物理网络上的一个网络有太多的网络数据造成同一个物理网络上的其它网络无法正常工作的情况出现。通过配置主机网络服务质量，可以使在同一个物理网络上的不同网络都正常工作。</p>
+<p>创建 qos</p>
+<ul>
+<li>转出的：应用到转出的网络流量的设置。
+<ul>
+<li>加权重的共享：指定一个特定网络应该被分配的逻辑连接的容量（相对于连接到同一个逻辑连接的其它网络）。准确的共享取决于在这个连接上的所有网络共享的总和。在默认情况下，它的值在 1 到 100 之间。</li>
+<li>速率限制 [Mbps]：一个网络可以使用的最大带宽。</li>
+<li>实现的速率 [Mbps]：一个网络所需的最小带宽。实现的速率并不一定可以被保证，它取决于网络的架构以及同一个逻辑连接上的其它网络的“实现的速率”设置。</li>
+</ul>
+</li>
+</ul>
+<h5 id="使用-qos-1">使用 qos</h5>
+<p>主机网络的 qos 的使用是在创建网络的属性中进行设置的，具体的位置是:</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>Network --&gt; 新建</code></pre></div><p>CPU</p>
+<p>CPU 服务质量定义了一个集群中的虚拟机可以从运行它的主机上获得的最大计算处理能力（以所占主机的所有计算处理能力的百分比表示）。通过为一个虚拟机关联一个 CPU 服务质量，可以防止因为集群中的一个虚拟机的负载占用太多计算处理资源而影响到同一集群中其它虚拟机可以使用的资源。</p>
+<h5 id="创建-qos-2">创建 qos</h5>
+<ul>
+<li>限制：指所允许的最大处理能力（以百分比的形式，但不要包括 % 符号）</li>
+</ul>
+<h5 id="使用-qos-2">使用 qos</h5>
+<p>在创建虚拟机或者编辑虚拟机的资源分配一项中可以设置 cpu 配置集，而 cpu 配置集可以设置 cpu qos 属性，创建 cpu 配置集的位置是:</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>Compute --&gt; Cluster --&gt; 选择一个 cluster --&gt; CPU 配置集</code></pre></div><p>新建一个配置集</p>
+<h2 id="十二使用nat网络">十二、使用nat网络</h2>
+<p>/etc/libvirt/qemu/networks/</p>
+<h5 id="1创建nat网络配置文件etclibvirtqemunetworksnatxml内容如下">1、创建NAT网络配置文件/etc/libvirt/qemu/networks/nat.xml,内容如下</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>&lt;network&gt;
+        &lt;name&gt;nat&lt;/name&gt;
+        &lt;uuid&gt;b09d09a8-ebbd-476d-9045-e66012c9e83d&lt;/uuid&gt;
+        &lt;forward mode=&#39;nat&#39;/&gt;
+        &lt;bridge name=&#39;natbr0&#39; stp=&#39;on&#39; delay=&#39;0&#39; /&gt;
+        &lt;mac address=&#39;52:54:00:9D:82:DE&#39;/&gt;
+        &lt;ip address=&#39;192.168.1.1&#39; netmask=&#39;255.255.255.0&#39;&gt;
+            &lt;dhcp&gt;
+                &lt;range start=&#39;192.168.1.2&#39; end=&#39;192.168.1.250&#39; /&gt;
+            &lt;/dhcp&gt;
+        &lt;/ip&gt;
+    &lt;/network&gt;</code></pre></div><h5 id="2通过libvirtvirsh创建nat网络">2、通过libvirt/virsh创建NAT网络</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[root@ovirthost01 ~]# cat /etc/pki/vdsm/keys/libvirt_password 
+    shibboleth</code></pre></div><pre><code>[root@ovirthost01 ~]# virsh
+
+Welcome to virsh, the virtualization interactive terminal.
+
+Type:  'help' for help with commands
+       'quit' to quit
+
+virsh # connect qemu:///system
+Please enter your authentication name: vdsm@ovirt
+Please enter your password: shibboleth
+
+virsh # net-list
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ ;vdsmdummy;          active     no            no
+ vdsm-ovirtmgmt       active     yes           yes
+
+virsh # net-define /etc/libvirt/qemu/networks/nat.xml
+Network nat defined from /etc/libvirt/qemu/networks/nat.xml
+
+virsh # net-autostart nat
+Network nat marked as autostarted
+
+virsh # net-start nat
+Network nat started
+
+virsh # net-list --all
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ ;vdsmdummy;          active     no            no
+ nat                  active     yes           yes
+ vdsm-ovirtmgmt       active     yes           yes
+
+以上操作将创建nat功能的网桥，如下
+[root@ovirthost01 ~]# brctl show
+bridge name     bridge id               STP enabled     interfaces
+;vdsmdummy;             8000.000000000000       no
+natbr0          8000.5254009d82de       yes             natbr0-nic
+ovirtmgmt               8000.b083fea27fed       no              p4p1
+</code></pre>
+<h5 id="3安装vdsm-hook-extnet">3、安装vdsm-hook-extnet</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[root@ovirthost01 ~]# yum install -y vdsm-hook-extnet</code></pre></div><blockquote>
+<p>注：此处将下载extnet的hooks文件并存放到以下两目录</p>
+</blockquote>
+<pre><code>[root@ovirthost01 ~]# ll /usr/libexec/vdsm/hooks/before_device_create
+total 4
+-rwxr-xr-x. 1 root root 1925 Jun  5 01:47 50_extnet
+[root@ovirthost01 ~]# ll /usr/libexec/vdsm/hooks/before_nic_hotplug
+total 4
+-rwxr-xr-x. 1 root root 1925 Jun  5 01:47 50_extnet
+</code></pre>
+<h5 id="4添加自定义设备属性extnet">4、添加自定义设备属性extnet</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[root@ovirthost01 ~]# engine-config -s CustomDeviceProperties=&#39;{type=interface;prop={extnet=^[a-zA-Z0-9_ ---]+$}}&#39;
+    Please select a version:
+    1. 3.0
+    2. 3.1
+    3. 3.2
+    4. 3.3
+    5. 3.4
+    6. 3.5
+    6</code></pre></div><pre><code>[root@ovirthost01 ~]# engine-config -g CustomDeviceProperties
+CustomDeviceProperties:  version: 3.0
+CustomDeviceProperties:  version: 3.1
+CustomDeviceProperties:  version: 3.2
+CustomDeviceProperties:  version: 3.3
+CustomDeviceProperties: {type=interface;prop={SecurityGroups=^(?:(?:[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}, *)*[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}|)$}} version: 3.4
+CustomDeviceProperties: {type=interface;prop={extnet=^[a-zA-Z0-9_ ---]+$}} version: 3.5
+
+[root@ovirthost01 ~]# systemctl restart ovirt-engine
+</code></pre>
+<h2 id="十三ovirt-shell">十三、ovirt-shell</h2>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.1/html/rhevm_shell_guide/chap-using_the_cli" rel="external" target="_blank">https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.1/html/rhevm_shell_guide/chap-using_the_cli</a></p>
+<p><a href="https://www.ovirt.org/develop/release-management/features/infra/cli/" rel="external" target="_blank">https://www.ovirt.org/develop/release-management/features/infra/cli/</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install ovirt-engine-cli
+pip install ovirt-shell
+
+vim .ovirtshellrc
+
+[cli]
+autoconnect = True
+autopage = True
+[ovirt-shell]
+username = admin@internal
+renew_session = False
+timeout = -1
+extended_prompt = False
+url = https://192.168.21.12/ovirt-engine/api
+insecure = True
+kerberos = False
+filter = False
+session_timeout = None
+ca_file = /etc/pki/ovirt-engine/ca.pem
+dont_validate_cert_chain = False
+key_file = None
+password = qwe
+cert_file = None</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>ovirt-shell -E &#39;help&#39;
+
+连接
+ovirt-shell -c -l &#34;https://192.168.21.12/ovirt-engine/api&#34; -P 443 -u admin@internal -I
+
+列出资源
+list vms
+list vms --show-all
+
+使用过滤查询列出资源
+list vms --query &#34;name=centos*&#34;
+list vms --kwargs &#34;memory=1073741824&#34;
+
+列出子资源
+list disks --vm-identifier nfs_desktop
+list nics --vm-identifier demo	
+list disks --vm-identifier nfs_desktop --kwargs &#34;name=Disk 3&#34;
+list vms --kwargs &#34;usb-enabled=True&#34;
+
+查看资源详细信息
+show vm centos7
+show vm --name nfs_desktop
+show vm --id f4a51ae1-4f31-45ee-ab6d-d5965e3bcf71
+
+查看子资源详细信息
+show nic nic1 --vm-identifier demo
+
+添加资源
+add vm --name demo2 --template-name iscsi_desktop_tmpl --cluster-name Default_iscsi
+add datacenter --name mydc --storage_type nfs --version-major 3 --version-minor 1
+
+添加子资源
+add nic --vm-identifier demo2 --network-name engine --name mynic
+
+移除资源
+remove vm aa
+
+移除子资源
+remove disk &#34;Disk 1&#34; --vm-identifier demo2
+
+更新资源
+update vm iscsi_desktop --description iscsi_desktop_desc
+update vm iscsi_desktop --display-monitors 2 --description test1
+
+更新子资源
+update nic nic1 --vm-identifier demo --interface virtio
+
+处理
+action vm demo start --vm-display-type vnc --async true
+
+移除子资源
+action nic bond0 attach --host-identifier grey-vdsa
+
+控制台
+console &#39;my_vm&#39;
+console &#39;7dff8517-7007-42cd-9cf7-b7a13a9d96b7&#39;
+
+action vm centos7 stop
+
+创建数据中心
+add datacenter --name test --comment &#34;test&#34; --description &#34;test&#34; --storage_type nfs --version-major 3 --version-minor 3
+
+创建集群
+add cluster --data_center-name test --name test --comment &#34;test&#34; 
+
+添加主机到数据中心
+list hosts --query &#34;status=maintenance&#34;
+update host node-123 --cluster-name test
+
+添加存储
+# add storagedomain --name test --storage-type nfs --storage_format v3 --type data --host-name node-123 --storage-address 192.168.3.157 --storage-path /home/ovirt/nfs-test
+add storagedomain --name test --datacenter-identifier test
+
+添加ISO
+add storagedomain --name iso --datacenter-identifier test
+
+创建虚拟机
+add vm --name test --template-name Blank --cluster-name test
+
+给虚拟机新分配一个磁盘
+add disk --name test_disk --size 10737418240 --interface virtio
+list disks --query &#34;alias=test_disk&#34; | grep id
+add disk --id 4357a838-2a99-4a05-a0b9-be6ee6ec5eaa --vm-identifier test
+
+给虚拟机新分配一个网卡
+add nic --vm-identifier test --name test --network-name ovirtmgmt
+
+启动虚拟机
+先列出 ISO 域名里可用的的镜像.
+list files --storagedomain-identifier isoid 
+给虚拟机增加一个 CDROM 设备.
+add cdrom --vm-identifier test --file-id CentOS-6.5-x86_64-minimal.iso
+启动虚拟机, 以 CDROM 作为启动设备
+action vm test start --vm-stateless true --vm-os-boot &#34;boot.dev=cdrom&#34; --vm-display-ty
+
+访问虚拟机
+action vm test ticket --ticket-value &#34;abc123&#34;
+show vm test | grep displaydisplay-address 
+可以用 vnc 客户端打开 192.168.3.123:5900 加上上面设置的临时密码来访问该虚拟机了
+
+脚本
+
+    less /home/mpastern/script
+    --------------------------
+     
+    list vms
+    show vm test | grep status
+    list vms --query &#34;name=test*&#34; --show-all | grep status
+    list clusters
+    list datacenters
+    ...
+
+执行脚本
+From linux shell
+     [mpastern@lp /]#  ovirt-shell -f /home/mpastern/script
+From ovirt shell
+    [oVirt shell (connected)]# file /home/mpastern/script</code></pre></div><p>sdk</p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install gcc libxml2-devel python-devel
+yum -y install ovirt-engine-cli
+
+
+import logging
+import ovirtsdk4 as sdk
+import ovirtsdk4.types as types
+
+logging.basicConfig(level=logging.DEBUG, filename=&#39;example.log&#39;)
+
+connection = sdk.Connection(
+    url=&#39;https://alpha/ovirt-engine/api&#39;,
+    username=&#39;admin@internal&#39;,
+    password=&#39;qwe&#39;,
+    ca_file=&#39;/etc/pki/ovirt-engine/ca.pem&#39;,
+    debug=True,
+    log=logging.getLogger(),
+)
+vms_service = connection.system_service().vms_service()
+vms = vms_service.list()
+for vm in vms:
+  print(&#34;%s: %s&#34; % (vm.name, vm.id))
+connection.close()
+
+url=&#34;https://alpha/ovirt-engine/api&#34;
+user=&#34;admin@internal&#34;
+password=&#34;qwe&#34;
+vmid=&#34;5e2bf5a7-3e59-47d8-9f86-472a3d51a06e&#34;
+
+curl -X POST \
+--insecure \
+--header &#34;Accept: application/xml&#34; \
+--header &#34;Content-type: application/xml&#34; \
+--user &#34;${user}:${password}&#34; \
+-d &#34;&lt;action&gt;&lt;/action&gt;&#34; \
+&#34;${url}/vms/${vmid}/shutdown&#34;</code></pre></div><p>rest api</p>
+<p><a href="https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_virtualization/3.6/html/rest_api_guide/" rel="external" target="_blank">https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_virtualization/3.6/html/rest_api_guide/</a></p>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.0/html-single/rest_api_guide/index" rel="external" target="_blank">https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.0/html-single/rest_api_guide/index</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>url=&#34;https://engine.example.com/ovirt-engine/api&#34;
+user=&#34;admin@internal&#34;
+password=&#34;...&#34;
+curl \
+--verbose \
+--cacert /etc/pki/ovirt-engine/ca.pem \
+--user &#34;${user}:${password}&#34; \
+--request POST \
+--header &#34;Version: 4&#34; \
+--header &#34;Content-Type: application/xml&#34; \
+--header &#34;Accept: application/xml&#34; \
+--data &#39;
+&lt;vm&gt;
+  &lt;name&gt;myvm&lt;/name&gt;
+  &lt;template&gt;
+    &lt;name&gt;Blank&lt;/name&gt;
+  &lt;/template&gt;
+  &lt;cluster&gt;
+    &lt;name&gt;mycluster&lt;/name&gt;
+  &lt;/cluster&gt;
+&lt;/vm&gt;
+&#39; \
+&#34;${url}/vms&#34;
+
+POST /ovirt-engine/api/vms/123/migrate
+
+&lt;action&gt;
+  &lt;host id=&#34;2ab5e1da-b726-4274-bbf7-0a42b16a0fc3&#34;/&gt;
+&lt;/action&gt;
+
+  &lt;migration&gt;
+    &lt;auto_converge&gt;inherit&lt;/auto_converge&gt;
+    &lt;bandwidth&gt;
+      &lt;assignment_method&gt;auto&lt;/assignment_method&gt;
+    &lt;/bandwidth&gt;
+    &lt;compressed&gt;inherit&lt;/compressed&gt;
+  &lt;/migration&gt;</code></pre></div><h2 id="十四其他问题">十四、其他问题</h2>
+<h5 id="1the-client-is-not-authorized-to-request-an-authorization-its-required-to-access-the-system-using-fqdn">1、The client is not authorized to request an authorization. It&rsquo;s required to access the system using FQDN.</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>/etc/ovirt-engine/engine.conf.d/11-setup-sso.conf
+
+SSO_ALTERNATE_ENGINE_FQDNS
+
+systemctl restart ovirt-engine.service</code></pre></div><h5 id="2跨域">2、跨域</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>$ ssh root@[ENGINE_FQDN] # log as `root` user in the oVirt engine machine
+# engine-config -s CORSSupport=true # to turn on the CORS support for REST API
+# engine-config -s CORSAllowDefaultOrigins=true # to allow CORS for all configured hosts
+# systemctl restart ovirt-engine # to take effect
+engine-config -s CORSAllowedOrigins=*
+engine-config -s CORSSupport=true
+engine-config -l |grep CORS
+engine-config -g CORSAllowedOrigins</code></pre></div><h5 id="3迁移bug">3、迁移bug</h5>
+<blockquote>
+<p>迁移时，未完全开始就迁移，虚拟机状态可能会一直是migrate to，正常应该为Powering Up到Up</p>
+</blockquote>
+<h5 id="4v2v">4、v2v</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install virt-v2v
+
+virsh list --all
+vdsm@ovirt
+shibboleth
+
+虚拟机需要关机
+
+转换并导出到导出域（需要保证虚拟机是正常的）
+
+virt-v2v -i libvirt -o rhev -os 192.168.21.12:/ovirt_export --network ovirtmgmt hl_v2v_test
+
+在导入域中导入虚拟机
+
+p2v
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/v2v_guide/chap-v2v_guide-p2v_migration_converting_physical_machines_to_virtual_machines
+http://blog.csdn.net/lbwlh/article/details/51003595</code></pre></div><h5 id="5node-注册">5、node 注册</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vdsm-tool register --engine-fqdn IP_ADDRESS --check-fqdn false</code></pre></div><h5 id="6创建用户">6、创建用户</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ovirt-aaa-jdbc-tool user add hl
+ovirt-aaa-jdbc-tool user password-reset hl --password-valid-to=&#34;2025-01-01 00:00:00-0800&#34;</code></pre></div><h2 id="十五ovirt-virsh">十五、ovirt virsh</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vdsm@ovirt #yes
+shibboleth</code></pre></div>
+            <footer class="footline">
+            </footer>
+          </article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <style>
+            #R-logo svg,
+            #R-logo svg * {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              fill: #282828 !important;
+              fill: var(--MENU-SECTIONS-BG-color) !important;
+              opacity: .945;
+            }
+            a#R-logo {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+              font-size: 1.875rem;
+              font-weight: 300;
+              margin-top: -.8125rem;
+              max-width: 60%;
+              text-transform: uppercase;
+              width: 14.125rem;
+              white-space: nowrap;
+            }
+            a#R-logo:hover {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+            }
+            #R-logo svg {
+              margin-bottom: -1.25rem;
+              margin-inline-start: -1.47rem;
+              margin-inline-end: .5rem;
+              width: 40.5%;
+            }
+            @media only all and (max-width: 59.999rem) {
+              a#R-logo {
+                font-size: 1.5625rem;
+                margin-top: -.1875rem;
+              }
+              #R-logo svg {
+                margin-bottom: -.75rem;
+                margin-inline-start: -1.47rem;
+                margin-inline-end: .5rem;
+              }
+            }
+            @media all and (-ms-high-contrast:none) {
+              /* IE11s understanding of positioning is weird at best */
+              a#R-logo {
+                margin-top: -3.625rem;
+              }
+              #R-logo svg {
+                margin-bottom: -3.875rem;
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+            @media only all and (-ms-high-contrast:none) and (max-width: 59.999rem) {
+              #R-logo svg {
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+          </style>
+          <a id="R-logo" href="/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.044 64.044">
+              <path d="M46.103 136.34c-.642-.394-1.222-2.242-1.98-2.358-.76-.117-1.353.506-1.618 1.519-.266 1.012-.446 4.188.173 5.538.213.435.482.787 1.03.845.547.057.967-.504 1.45-1.027.482-.523.437-.9 1.142-.612.705.289 1.051.4 1.586 1.229.535.828 1.085 4.043.868 5.598-.241 1.458-.531 2.8-.59 4.088.26.075.517.148.772.217 2.68.724 5.373 1.037 7.873.02.001-.028.01-.105.008-.11-.048-.165-.18-.41-.36-.698-.18-.29-.414-.645-.586-1.114a3.212 3.212 0 0 1-.125-1.735c.056-.21.153-.342.249-.475 1.237-1.193 2.932-1.373 4.244-1.384.557-.004 1.389.016 2.198.255.809.239 1.706.724 2.068 1.843.187.578.114 1.17-.043 1.623-.153.438-.369.783-.545 1.091-.178.31-.329.6-.401.821-.007.02-.003.071-.005.094 2.256 1.008 4.716.91 7.189.398.55-.114 1.11-.247 1.673-.377.344-1.085.678-2.145.852-3.208.124-.752.158-2.311-.078-3.538-.118-.613-.306-1.15-.52-1.489-.221-.349-.413-.501-.747-.538-.243-.027-.51.013-.796.098-.67.223-1.33.606-1.966.76l-.008.002-.109.032c-.556.152-1.233.158-1.797-.36-.556-.51-.89-1.367-1.117-2.596-.283-1.528-.075-3.279.89-4.518l.071-.09h.07c.65-.71 1.485-.802 2.16-.599.706.213 1.333.629 1.772.84.736.354 1.185.319 1.475.171.291-.148.5-.439.668-.955.332-1.017.301-2.819.022-4.106-.148-.684-.13-1.292-.13-1.883-1.558-.463-3.067-.982-4.574-1.208-1.128-.169-2.263-.173-3.298.164-.13.046-.256.095-.38.15-.373.164-.633.342-.805.52-.077.098-.081.105-.087.21-.004.068.031.289.13.571.1.282.256.634.467 1.03.279.524.448 1.063.431 1.618a2.12 2.12 0 0 1-.499 1.309 1.757 1.757 0 0 1-.62.51h-.002c-.515.291-1.107.404-1.723.464-.86.083-1.787.026-2.598-.097-.806-.123-1.47-.28-1.948-.555-.444-.256-.79-.547-1.037-.925a2.273 2.273 0 0 1-.356-1.301c.029-.837.403-1.437.625-1.897.111-.23.191-.433.236-.583.045-.15.044-.25.046-.24-.005-.029-.127-.355-1.015-.741-1.138-.495-2.322-.673-3.533-.668h-.015a9.711 9.711 0 0 0-.521.016h-.002c-1.163.057-2.35.308-3.541.569.383 1.531.79 2.753.818 4.502-.096 1.297.158 2.114-1.03 2.935-.85.588-1.508.729-2.15.335" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:1.03763;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M61.472 101.34v.002c-.3-.003-.603.01-.894.04-.544.055-1.39.165-1.778.306-1.238.364.13 2.344.41 2.913.28.569.285 2.03.14 2.134-.144.103-.375.261-.934.345-.56.084.03-.037-1.589.086-1.62.122-5.506.29-8.265.248-.022.26-.036.521-.097.808-.309 1.442-.63 3.163-.494 4.074.071.473.168.65.414.8.23.14.737.235 1.62-.004.834-.227 1.3-.442 1.887-.456.595-.016 1.555.472 1.965.717.411.245-.03-.008.002 0s.128.05.176.102c.049.053-.276-.523.104.199.379.721.72 3.256.002 4.68-.46.913-1.01 1.49-1.64 1.711-.63.22-1.229.067-1.734-.135-.881-.353-1.584-.7-2.205-.647-1.199 1.94-1.186 4.17-.6 6.602.097.397.212.814.327 1.23 2.68-.556 5.542-1.016 8.337.132 1.064.437 1.73 1.015 1.902 1.857.169.831-.193 1.508-.438 1.986-.122.238-.23.46-.307.642-.07.164-.096.28-.104.324.069.429.309.723.686.945.385.227.89.355 1.35.423.723.104 1.567.152 2.287.086.693-.064 1.032-.338 1.241-.544a2.447 2.447 0 0 0 .303-.437.175.175 0 0 0 .013-.035c-.004-.066-.037-.246-.195-.527-.46-.816-.87-1.595-.817-2.51.028-.476.218-.938.529-1.288.304-.343.698-.586 1.186-.79 1.442-.606 2.96-.609 4.372-.409 1.525.216 2.963.679 4.378 1.083.226-2.09.784-3.9.592-5.77-.058-.565-.287-1.333-.598-1.827-.32-.508-.59-.717-1.036-.642-.648.11-1.472.935-2.707 1.078-.791.092-1.494-.267-1.95-.86-.45-.583-.678-1.335-.78-2.101-.202-1.525.031-3.229.89-4.27.615-.747 1.45-.887 2.15-.74.687.145 1.307.492 1.857.745v-.002c.546.252 1.033.388 1.281.344a.547.547 0 0 0 .353-.188c.113-.124.242-.35.384-.75.604-1.712.206-3.68-.303-5.654-.667.145-1.336.293-2.018.413-1.341.236-2.73.392-4.136.273-.656-.055-1.695-.085-2.58-.476-.442-.195-.903-.514-1.157-1.093-.259-.591-.205-1.313.08-2.014.223-.64 1.082-2.178.692-2.585-.391-.407-1.651-.56-2.554-.571z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.992837;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M83.128 98.116c-.484 1.875-1.057 3.757-2.486 5.033-.638.57-1.13.666-1.483.548-.401-.134-.715-.506-1.058-.973-.338-.461-.655-.97-1.076-1.332-.192-.165-.404-.315-.683-.38-.279-.066-.599-.02-.9.102-.489.196-.89.58-1.28 1.047a6.1 6.1 0 0 0-.985 1.632c-.234.591-.356 1.174-.277 1.713.072.487.392.977.905 1.185.463.187.926.156 1.36.154.433 0 .843.01 1.242.147.55.189.79.736.822 1.368.034.66-.145 1.412-.393 1.988l-.008.021c-.74 1.705-1.946 2.893-3.004 4.349l-.664.915.979.099c.924.092 1.788.26 2.468.675.46.281 1.806 1.205 2.794 2.222.497.513.888 1.031 1.047 1.502.078.231.095.422.05.6a.93.93 0 0 1-.345.474c-.301.223-.606.395-.864.532l-.354.186c-.107.058-.189.087-.345.228a.637.637 0 0 1 .062-.045l-.064.041-.209.236-.103.343s.003.126.007.152c.003.017.003.007.004.015v.002c.016.195.061.307.133.476a4.1 4.1 0 0 0 .32.596 5.7 5.7 0 0 0 2.8 2.258c.284.108.908.321 1.548.36.33.02.59.015.912-.13h.002c.08-.037.228-.095.382-.281.153-.186.19-.355.212-.445l.019-.075.003-.078c.023-.585-.037-1.296.072-1.899.153-.657.435-.956 1.009-.909 2.771.239 4.74 1.955 6.693 3.83l.742.714.279-1.155c.55-2.29 1.093-4.464 2.928-5.977.692-.57 1.184-.642 1.527-.509.39.151.676.536.996.995.319.458.605.926 1.07 1.212.194.119.464.232.784.209.32-.024.638-.163.988-.384 1.022-.645 1.778-1.756 2.086-2.942.136-.522.102-.991-.046-1.301-.158-.334-.433-.553-.754-.707-.653-.314-1.468-.373-2.094-.486-.825-.15-1.22-.475-1.345-.878-.13-.417 0-.953.335-1.61.6-1.173 1.887-2.602 3.13-3.911l.498-.526-.449-.432c-1.545-1.49-3.163-3.01-5.252-3.715h-.002c-.473-.16-1.097-.413-1.73-.424h-.003c-.311-.004-.596.04-.883.24v.002c-.22.155-.483.537-.583.937l-.008.036-.006.038c-.116.773-.06 1.467-.217 1.995-.063.212-.198.418-.359.507-.202.111-.492.153-.976.072-.582-.097-1.978-.69-3.021-1.503-.523-.407-.934-.85-1.117-1.3a1.153 1.153 0 0 1-.083-.63c.03-.184.1-.477.308-.593.21-.116.941-.32 1.377-.642h.002c.192-.141.403-.367.518-.64.114-.275.127-.526.123-.774-.006-.142-.036-.192-.08-.3a8.417 8.417 0 0 0-3-3.027c-1.226-.725-2.585-1.135-3.927-1.539-.434-.12-.844-.111-1.02.466zm.912.947c1.186.364 2.357.718 3.345 1.303 1.035.612 1.864 1.488 2.507 2.528-.514.263-1.095.5-1.44.79-.345.29-.729.914-.815 1.434-.084.509 0 .968.155 1.347.301.74.85 1.276 1.44 1.735 1.18.92 2.554 1.545 3.47 1.698.604.1 1.186.088 1.739-.216.594-.327.935-.911 1.088-1.427.264-.884.193-1.664.262-2.17h.1c.3.006.926.206 1.417.371 1.646.554 3.044 1.773 4.431 3.089-1.102 1.174-2.222 2.423-2.888 3.73-.42.823-.73 1.789-.453 2.687.283.913 1.1 1.415 2.138 1.603.691.126 1.472.226 1.84.403.19.091.258.182.278.223.03.064.058.075-.023.387-.21.804-.761 1.598-1.413 2.01-.247.155-.365.183-.407.187-.042.003-.061.002-.172-.066-.144-.088-.455-.473-.772-.929-.317-.454-.714-1.07-1.452-1.356-.783-.304-1.776-.022-2.713.75-1.942 1.6-2.626 3.764-3.146 5.8-1.802-1.676-3.772-3.138-6.589-3.517h-.002c-.346-.095-1.013-.031-1.293.143-.735.501-1.005 1.132-1.168 2.007-.125.69-.082 1.216-.074 1.659-.055.006-.046.01-.104.006-.42-.026-1.035-.215-1.244-.295-.947-.361-1.774-1.006-2.314-1.857-.054-.085-.072-.132-.109-.2l.027-.016c.284-.15.656-.36 1.045-.648.44-.327.789-.798.93-1.35a2.4 2.4 0 0 0-.068-1.379c-.254-.751-.753-1.353-1.295-1.911-1.09-1.124-2.452-2.049-2.99-2.378-.609-.372-1.303-.44-1.981-.56.875-1.094 1.878-2.251 2.596-3.921.294-.823.543-1.907.513-2.658-.049-.97-.489-2.013-1.52-2.367-.579-.2-1.131-.204-1.58-.203-.45.002-.786-.006-.97-.08h-.002c-.264-.107-.236-.108-.268-.33-.025-.17.021-.553.183-.962a4.67 4.67 0 0 1 .725-1.192c.29-.348.617-.59.705-.626.142-.057.176-.05.22-.04.045.011.127.052.263.17.235.201.56.671.92 1.161.354.484.791 1.08 1.543 1.33.8.267 1.784-.052 2.671-.846 1.594-1.424 2.235-3.317 2.714-5.051zm11.705 7.023c-.02.014.042-.002.042 0l-.008.035c.05-.2-.028-.04-.034-.035zM79.472 122.45a.198.198 0 0 1 .005.023v.014c-.002-.01-.003-.03-.005-.037zm-.29.732-.006.01-.044.027c.016-.01.033-.024.05-.036z" style="color:#000;fill:#282828;stroke-width:1.02352;-inkscape-stroke:none" transform="translate(-40.698 -95.175)"/>
+              <path d="M76.694 128.845c-.85-.012-1.668.253-2.434.67-.01.592-.015 1.17.109 1.772.323 1.573.422 3.553-.07 5.147-.247.804-.684 1.535-1.347 1.891-.663.356-1.467.296-2.362-.159-.522-.266-1.059-.62-1.487-.757-.223-.072-.392-.096-.522-.069-.13.027-.232.094-.362.27-.53.719-.681 1.823-.497 2.876.177 1.012.418 1.438.543 1.56.143.137.26.154.604.055.548-.158 1.523-.857 2.573-.972l.02-.002.5.058c.686.081 1.247.562 1.622 1.19.372.62.591 1.37.73 2.136.279 1.532.25 3.16.083 4.232-.14.91-.394 1.72-.632 2.53 1.719-.385 3.485-.692 5.307-.36 1.174.214 2.749.574 3.762 1.977l.088.122.046.159c.162.551.16 1.114.024 1.578-.13.45-.348.772-.533 1.023-.181.246-.336.444-.437.606-.102.16-.141.275-.145.336-.01.17 0 .197.07.315.057.1.186.242.39.366.408.246 1.106.414 1.843.45a7.842 7.842 0 0 0 2.174-.21 4.28 4.28 0 0 0 .822-.296c.218-.106.385-.242.377-.233l.029-.031c.025-.035.05-.072.05-.068 0-.004 0-.017-.003-.05a2.733 2.733 0 0 0-.21-.579c-.26-.548-.839-1.333-.822-2.46.01-.657.27-1.21.598-1.576.32-.357.696-.575 1.074-.736.759-.323 1.57-.418 2.054-.458 1.653-.136 3.252.296 4.755.765.457.142.905.29 1.352.434.325-2.258.902-4.247.598-6.217-.071-.46-.25-1.169-.486-1.684-.238-.518-.495-.762-.675-.779-.351-.032-.716.14-1.174.418-.457.277-1.005.665-1.695.742-.745.082-1.406-.291-1.84-.908-.428-.608-.653-1.394-.754-2.196-.203-1.596.016-3.377.794-4.493.568-.813 1.358-.984 2.024-.835.65.146 1.243.51 1.769.779.524.267.99.413 1.237.365a.527.527 0 0 0 .346-.2c.11-.132.235-.373.37-.798.612-1.918.27-3.894-.246-6.054-2.815-.851-5.49-1.534-8.089-.267a.727.727 0 0 0-.223.148c-.024.028-.018.021-.026.056.001-.003-.01.178.07.44.162.522.611 1.29.911 1.978l.004.009.029.063.024.084V133c.162.635.016 1.297-.274 1.727-.272.404-.618.636-.952.81-.675.353-1.399.484-1.724.533a5.888 5.888 0 0 1-3.973-.795c-.512-.311-.876-.594-1.133-1.02-.282-.466-.318-1.084-.172-1.557.252-.814.715-1.266.971-1.89a.663.663 0 0 0 .047-.14c.001-.013 0-.006-.007-.037a.761.761 0 0 0-.184-.268c-.264-.267-.865-.595-1.54-.826-1.356-.462-3.07-.659-3.583-.686-.062-.002-.121-.006-.178-.006z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.991342;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+            </svg>Relearn
+          </a>
+        </div>
+
+        <search>
+          <div class="searchbox default-animation">
+            <i class="fas fa-search" title="Search (CTRL+ALT+f)"></i>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1716876879" defer></script>
+        <script src="/js/lunr/lunr.min.js?1716876879" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1716876879" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1716876879" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1716876879" defer></script>
+        <script src="/js/search.js?1716876879" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-topics">
+          <ul class="enlarge morespace collapsible-menu">
+          <li data-nav-id="/ceph/index.html" class=""><a class="padding" href="/ceph/index.html">Cephs</a><ul id="R-subsections-fd10f71351f87e0d2cf3e598548366c8" class="morespace collapsible-menu">
+          <li data-nav-id="/ceph/first/index.html" class=""><a class="padding" href="/ceph/first/index.html">First</a></li>
+          <li data-nav-id="/ceph/ceph_dashboard-hl/index.html" class=""><a class="padding" href="/ceph/ceph_dashboard-hl/index.html">Ceph 启用 Dashboard</a></li>
+          <li data-nav-id="/ceph/ceph_deploy-hl/index.html" class=""><a class="padding" href="/ceph/ceph_deploy-hl/index.html">Ceph 相关</a></li>
+          <li data-nav-id="/ceph/ceph_optimize-hl/index.html" class=""><a class="padding" href="/ceph/ceph_optimize-hl/index.html">Ceph 调优参考</a></li>
+          <li data-nav-id="/ceph/cephconf-hl/index.html" class=""><a class="padding" href="/ceph/cephconf-hl/index.html">ceph.conf</a></li>
+          <li data-nav-id="/ceph/crushmap-hl/index.html" class=""><a class="padding" href="/ceph/crushmap-hl/index.html">crushmap</a></li></ul></li>
+          <li data-nav-id="/python/index.html" class=""><a class="padding" href="/python/index.html">Pythons</a><ul id="R-subsections-36a3ed262b315ff04085d7b53a448994" class="morespace collapsible-menu">
+          <li data-nav-id="/python/first/index.html" class=""><a class="padding" href="/python/first/index.html">First</a></li>
+          <li data-nav-id="/python/django-hl/index.html" class=""><a class="padding" href="/python/django-hl/index.html">Django 相关</a></li>
+          <li data-nav-id="/python/flask-hl/index.html" class=""><a class="padding" href="/python/flask-hl/index.html">Flask 相关</a></li>
+          <li data-nav-id="/python/jinja2-hl/index.html" class=""><a class="padding" href="/python/jinja2-hl/index.html">Jinja2 相关</a></li>
+          <li data-nav-id="/python/python_logging-hl/index.html" class=""><a class="padding" href="/python/python_logging-hl/index.html">Python logging模块</a></li>
+          <li data-nav-id="/python/sqlalchemy-hl/index.html" class=""><a class="padding" href="/python/sqlalchemy-hl/index.html">Python Sqlalchemy</a></li>
+          <li data-nav-id="/python/python_obfuscated_code-hl/index.html" class=""><a class="padding" href="/python/python_obfuscated_code-hl/index.html">Python 代码混淆</a></li>
+          <li data-nav-id="/python/python_code_standards-hl/index.html" class=""><a class="padding" href="/python/python_code_standards-hl/index.html">Python 代码规范</a></li>
+          <li data-nav-id="/python/python_file-hl/index.html" class=""><a class="padding" href="/python/python_file-hl/index.html">Python 文件操作</a></li>
+          <li data-nav-id="/python/python-hl/index.html" class=""><a class="padding" href="/python/python-hl/index.html">Python 相关</a></li>
+          <li data-nav-id="/python/python_decorators-hl/index.html" class=""><a class="padding" href="/python/python_decorators-hl/index.html">Python 装饰器</a></li>
+          <li data-nav-id="/python/scrapy-hl/index.html" class=""><a class="padding" href="/python/scrapy-hl/index.html">scrapy 爬虫</a></li>
+          <li data-nav-id="/python/urllib2-hl/index.html" class=""><a class="padding" href="/python/urllib2-hl/index.html">urllib2 爬虫</a></li>
+          <li data-nav-id="/python/xpath-hl/index.html" class=""><a class="padding" href="/python/xpath-hl/index.html">xpath 相关</a></li>
+          <li data-nav-id="/python/yield-hl/index.html" class=""><a class="padding" href="/python/yield-hl/index.html">yield</a></li>
+          <li data-nav-id="/python/regular_expression-hl/index.html" class=""><a class="padding" href="/python/regular_expression-hl/index.html">正则表达式相关</a></li></ul></li>
+          <li data-nav-id="/proxy/index.html" class=""><a class="padding" href="/proxy/index.html">Proxy</a><ul id="R-subsections-7af45055f134bf4d7ad1ff39a99c084b" class="morespace collapsible-menu">
+          <li data-nav-id="/proxy/proxy/index.html" class=""><a class="padding" href="/proxy/proxy/index.html">Proxy相关</a></li></ul></li>
+          <li data-nav-id="/other/index.html" class="parent "><a class="padding" href="/other/index.html">Other</a><ul id="R-subsections-dd17f32865650128ca32bc9ce5ee4fdf" class="morespace collapsible-menu">
+          <li data-nav-id="/other/anaconda-hl/index.html" class=""><a class="padding" href="/other/anaconda-hl/index.html">anaconda 相关</a></li>
+          <li data-nav-id="/other/apidoc-hl/index.html" class=""><a class="padding" href="/other/apidoc-hl/index.html">apidoc 相关</a></li>
+          <li data-nav-id="/other/build_atlas-hl/index.html" class=""><a class="padding" href="/other/build_atlas-hl/index.html">Atlas 驱动构建</a></li>
+          <li data-nav-id="/other/cloudfoundry-hl/index.html" class=""><a class="padding" href="/other/cloudfoundry-hl/index.html">cloudfoundry 相关</a></li>
+          <li data-nav-id="/other/github_pages-hl/index.html" class=""><a class="padding" href="/other/github_pages-hl/index.html">github pages</a></li>
+          <li data-nav-id="/other/ionic_cordova-hl/index.html" class=""><a class="padding" href="/other/ionic_cordova-hl/index.html">ionic 、cordova 编译 andriod</a></li>
+          <li data-nav-id="/other/java-hl/index.html" class=""><a class="padding" href="/other/java-hl/index.html">Java 相关</a></li>
+          <li data-nav-id="/other/jupyter-hl/index.html" class=""><a class="padding" href="/other/jupyter-hl/index.html">jupyter 相关</a></li>
+          <li data-nav-id="/other/kafka-hl/index.html" class=""><a class="padding" href="/other/kafka-hl/index.html">Kafka 相关</a></li>
+          <li data-nav-id="/other/keepalived-hl/index.html" class=""><a class="padding" href="/other/keepalived-hl/index.html">keepalived 相关</a></li>
+          <li data-nav-id="/other/linux_desktop_rdp-hl/index.html" class=""><a class="padding" href="/other/linux_desktop_rdp-hl/index.html">Linux Desktop rdp 相关</a></li>
+          <li data-nav-id="/other/mqtt-hl/index.html" class=""><a class="padding" href="/other/mqtt-hl/index.html">MQTT 相关</a></li>
+          <li data-nav-id="/other/nativefier-hl/index.html" class=""><a class="padding" href="/other/nativefier-hl/index.html">Nativefier 相关</a></li>
+          <li data-nav-id="/other/ovirt-hl/index.html" class="active"><a class="padding" href="/other/ovirt-hl/index.html">Ovirt 相关</a></li>
+          <li data-nav-id="/other/ptp-hl/index.html" class=""><a class="padding" href="/other/ptp-hl/index.html">ptp 相关</a></li>
+          <li data-nav-id="/other/pyqt5-hl/index.html" class=""><a class="padding" href="/other/pyqt5-hl/index.html">PyQt5 相关</a></li>
+          <li data-nav-id="/other/stratos_ui-hl/index.html" class=""><a class="padding" href="/other/stratos_ui-hl/index.html">stratos-ui 相关</a></li>
+          <li data-nav-id="/other/svn-hl/index.html" class=""><a class="padding" href="/other/svn-hl/index.html">svn 相关</a></li>
+          <li data-nav-id="/other/web-hl/index.html" class=""><a class="padding" href="/other/web-hl/index.html">Web 相关</a></li>
+          <li data-nav-id="/other/webdriver-hl/index.html" class=""><a class="padding" href="/other/webdriver-hl/index.html">webdriver 相关</a></li>
+          <li data-nav-id="/other/websocket-hl/index.html" class=""><a class="padding" href="/other/websocket-hl/index.html">websocket 相关</a></li>
+          <li data-nav-id="/other/xenserver-hl/index.html" class=""><a class="padding" href="/other/xenserver-hl/index.html">xenserver 相关</a></li>
+          <li data-nav-id="/other/gitbook-hl/index.html" class=""><a class="padding" href="/other/gitbook-hl/index.html">一、gitbook 相关</a></li>
+          <li data-nav-id="/other/computer_network_foundation-hl/index.html" class=""><a class="padding" href="/other/computer_network_foundation-hl/index.html">计算机网络基础</a></li>
+          <li data-nav-id="/other/be_mined-hl/index.html" class=""><a class="padding" href="/other/be_mined-hl/index.html">记一次被挖矿</a></li></ul></li>
+          <li data-nav-id="/question/index.html" class=""><a class="padding" href="/question/index.html">Question</a></li>
+          <li data-nav-id="/database/index.html" class=""><a class="padding" href="/database/index.html">Database</a></li>
+          <li data-nav-id="/istio/index.html" class=""><a class="padding" href="/istio/index.html">Istio</a></li>
+          <li data-nav-id="/k8s/index.html" class=""><a class="padding" href="/k8s/index.html">K8s</a></li>
+          <li data-nav-id="/openstack/index.html" class=""><a class="padding" href="/openstack/index.html">Openstack</a><ul id="R-subsections-9bba764a9f110e94af4bc7a89f9db759" class="morespace collapsible-menu">
+          <li data-nav-id="/openstack/devstack-hl/index.html" class=""><a class="padding" href="/openstack/devstack-hl/index.html">devstack相关</a></li>
+          <li data-nav-id="/openstack/heat-hl/index.html" class=""><a class="padding" href="/openstack/heat-hl/index.html">heat相关</a></li>
+          <li data-nav-id="/openstack/kolla_network-hl/index.html" class=""><a class="padding" href="/openstack/kolla_network-hl/index.html">kolla网络规划</a></li>
+          <li data-nav-id="/openstack/kolla_deploy-hl/index.html" class=""><a class="padding" href="/openstack/kolla_deploy-hl/index.html">kolla部署相关</a></li>
+          <li data-nav-id="/openstack/kolla_image_build-hl/index.html" class=""><a class="padding" href="/openstack/kolla_image_build-hl/index.html">kolla镜像构建</a></li>
+          <li data-nav-id="/openstack/lsf_install_openstack-hl/index.html" class=""><a class="padding" href="/openstack/lsf_install_openstack-hl/index.html">Lfs上安装OpenStack</a></li>
+          <li data-nav-id="/openstack/openstack_win_vm_diaplay-hl/index.html" class=""><a class="padding" href="/openstack/openstack_win_vm_diaplay-hl/index.html">openstack windows虚拟机分辨率问题</a></li>
+          <li data-nav-id="/openstack/openstack-hl/index.html" class=""><a class="padding" href="/openstack/openstack-hl/index.html">OpenStack 相关</a></li>
+          <li data-nav-id="/openstack/openstack_faq-hl/index.html" class=""><a class="padding" href="/openstack/openstack_faq-hl/index.html">openstack中遇到的问题</a></li>
+          <li data-nav-id="/openstack/openstack_hygon_patch-hl/index.html" class=""><a class="padding" href="/openstack/openstack_hygon_patch-hl/index.html">OpenStack对hygon的兼容</a></li>
+          <li data-nav-id="/openstack/ovs-hl/index.html" class=""><a class="padding" href="/openstack/ovs-hl/index.html">OVS 相关</a></li>
+          <li data-nav-id="/openstack/qemu_make-hl/index.html" class=""><a class="padding" href="/openstack/qemu_make-hl/index.html">QEMU 源码编译</a></li>
+          <li data-nav-id="/openstack/qga-hl/index.html" class=""><a class="padding" href="/openstack/qga-hl/index.html">qemu-guest-agent 相关</a></li>
+          <li data-nav-id="/openstack/delete_cinder_volume-hl/index.html" class=""><a class="padding" href="/openstack/delete_cinder_volume-hl/index.html">删除cinder僵尸实例</a></li>
+          <li data-nav-id="/openstack/make_openstack_image-hl/index.html" class=""><a class="padding" href="/openstack/make_openstack_image-hl/index.html">制作openstack镜像</a></li>
+          <li data-nav-id="/openstack/add_nic_to_vm-hl/index.html" class=""><a class="padding" href="/openstack/add_nic_to_vm-hl/index.html">给虚拟机添加网卡</a></li>
+          <li data-nav-id="/openstack/migrate_to_other_platform-hl/index.html" class=""><a class="padding" href="/openstack/migrate_to_other_platform-hl/index.html">迁移虚拟机到其他平台</a></li></ul></li>
+          <li data-nav-id="/golang/index.html" class=""><a class="padding" href="/golang/index.html">Golang</a><ul id="R-subsections-9846d6388830934b21e07a0f7d630c6c" class="morespace collapsible-menu">
+          <li data-nav-id="/golang/go_athens-hl/index.html" class=""><a class="padding" href="/golang/go_athens-hl/index.html">Go Authens</a></li>
+          <li data-nav-id="/golang/go-hl/index.html" class=""><a class="padding" href="/golang/go-hl/index.html">Go 语言相关</a></li></ul></li>
+          <li data-nav-id="/docker/index.html" class=""><a class="padding" href="/docker/index.html">Docker</a><ul id="R-subsections-37ef7d0ce1cc039dbba9ad71298a0daf" class="morespace collapsible-menu">
+          <li data-nav-id="/docker/buildah-hl/index.html" class=""><a class="padding" href="/docker/buildah-hl/index.html">Buildah</a></li>
+          <li data-nav-id="/docker/chartmuseum-hl/index.html" class=""><a class="padding" href="/docker/chartmuseum-hl/index.html">chartmuseum 相关</a></li>
+          <li data-nav-id="/docker/containerd-hl/index.html" class=""><a class="padding" href="/docker/containerd-hl/index.html">Containerd</a></li>
+          <li data-nav-id="/docker/docker_compose-hl/index.html" class=""><a class="padding" href="/docker/docker_compose-hl/index.html">docker compose 相关</a></li>
+          <li data-nav-id="/docker/docker_registry-hl/index.html" class=""><a class="padding" href="/docker/docker_registry-hl/index.html">docker registry 相关</a></li>
+          <li data-nav-id="/docker/docker_swarm-hl/index.html" class=""><a class="padding" href="/docker/docker_swarm-hl/index.html">docker swarm 相关</a></li>
+          <li data-nav-id="/docker/docker-hl/index.html" class=""><a class="padding" href="/docker/docker-hl/index.html">docker 相关</a></li>
+          <li data-nav-id="/docker/docker_net-hl/index.html" class=""><a class="padding" href="/docker/docker_net-hl/index.html">docker 网络相关</a></li>
+          <li data-nav-id="/docker/harbor-hl/index.html" class=""><a class="padding" href="/docker/harbor-hl/index.html">harbor 相关</a></li>
+          <li data-nav-id="/docker/helm-hl/index.html" class=""><a class="padding" href="/docker/helm-hl/index.html">helm 相关</a></li>
+          <li data-nav-id="/docker/k3s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k3s_deploy-hl/index.html">k3s 安装与使用</a></li>
+          <li data-nav-id="/docker/k3s_make-hl/index.html" class=""><a class="padding" href="/docker/k3s_make-hl/index.html">k3s 源码编译</a></li>
+          <li data-nav-id="/docker/k8s_use-hl/index.html" class=""><a class="padding" href="/docker/k8s_use-hl/index.html">k8s 使用</a></li>
+          <li data-nav-id="/docker/k8s_ceph-hl/index.html" class=""><a class="padding" href="/docker/k8s_ceph-hl/index.html">k8s 使用 ceph 储存</a></li>
+          <li data-nav-id="/docker/k8s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k8s_deploy-hl/index.html">k8s 安装部署</a></li>
+          <li data-nav-id="/docker/k8s-hl/index.html" class=""><a class="padding" href="/docker/k8s-hl/index.html">k8s 相关</a></li>
+          <li data-nav-id="/docker/kubebuilder-hl/index.html" class=""><a class="padding" href="/docker/kubebuilder-hl/index.html">kubebuilder</a></li>
+          <li data-nav-id="/docker/kubeedge-hl/index.html" class=""><a class="padding" href="/docker/kubeedge-hl/index.html">kubeedge</a></li>
+          <li data-nav-id="/docker/openshift-hl/index.html" class=""><a class="padding" href="/docker/openshift-hl/index.html">openshift 相关</a></li>
+          <li data-nav-id="/docker/overlay2-hl/index.html" class=""><a class="padding" href="/docker/overlay2-hl/index.html">overlay2</a></li>
+          <li data-nav-id="/docker/rancher-hl/index.html" class=""><a class="padding" href="/docker/rancher-hl/index.html">rancher 相关</a></li>
+          <li data-nav-id="/docker/multiarch-hl/index.html" class=""><a class="padding" href="/docker/multiarch-hl/index.html">容器交叉编译</a></li>
+          <li data-nav-id="/docker/debootstrap-hl/index.html" class=""><a class="padding" href="/docker/debootstrap-hl/index.html">容器基础镜像构建</a></li>
+          <li data-nav-id="/docker/convert_iso_to_docker_img-hl/index.html" class=""><a class="padding" href="/docker/convert_iso_to_docker_img-hl/index.html">将ISO镜像转换为docker镜像</a></li>
+          <li data-nav-id="/docker/usual_software-hl/index.html" class=""><a class="padding" href="/docker/usual_software-hl/index.html">常用软件安装</a></li>
+          <li data-nav-id="/docker/mount_usb_to_docker-hl/index.html" class=""><a class="padding" href="/docker/mount_usb_to_docker-hl/index.html">挂载USB到docker容器</a></li></ul></li>
+          <li data-nav-id="/linux/index.html" class=""><a class="padding" href="/linux/index.html">Linux</a><ul id="R-subsections-9e5aaccdf48687824ccd3b3097af8e41" class="morespace collapsible-menu">
+          <li data-nav-id="/linux/libvirt-hl/index.html" class=""><a class="padding" href="/linux/libvirt-hl/index.html">[libvirt 相关](/etc/sysconfig/libvirtd )</a></li>
+          <li data-nav-id="/linux/abd-hl/index.html" class=""><a class="padding" href="/linux/abd-hl/index.html">abd</a></li>
+          <li data-nav-id="/linux/ansible-hl/index.html" class=""><a class="padding" href="/linux/ansible-hl/index.html">ansible 相关</a></li>
+          <li data-nav-id="/linux/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/linux/apache_multi_ports-hl/index.html">apache 多端口</a></li>
+          <li data-nav-id="/linux/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/linux/diy_centos_iso-hl/index.html">CentOS iso 镜像定制</a></li>
+          <li data-nav-id="/linux/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/linux/change_centos_boot_kernel-hl/index.html">CentOS 修改默认启动内核</a></li>
+          <li data-nav-id="/linux/cobbler-hl/index.html" class=""><a class="padding" href="/linux/cobbler-hl/index.html">cobbler 相关</a></li>
+          <li data-nav-id="/linux/crontabs-hl/index.html" class=""><a class="padding" href="/linux/crontabs-hl/index.html">crontabs 计划任务相关</a></li>
+          <li data-nav-id="/linux/dd-hl/index.html" class=""><a class="padding" href="/linux/dd-hl/index.html">dd 相关</a></li>
+          <li data-nav-id="/linux/etcd-hl/index.html" class=""><a class="padding" href="/linux/etcd-hl/index.html">ETCD 相关</a></li>
+          <li data-nav-id="/linux/frp-hl/index.html" class=""><a class="padding" href="/linux/frp-hl/index.html">frp 相关</a></li>
+          <li data-nav-id="/linux/ftp-hl/index.html" class=""><a class="padding" href="/linux/ftp-hl/index.html">ftp 相关</a></li>
+          <li data-nav-id="/linux/gitlab-hl/index.html" class=""><a class="padding" href="/linux/gitlab-hl/index.html">GitLab</a></li>
+          <li data-nav-id="/linux/guestfish-hl/index.html" class=""><a class="padding" href="/linux/guestfish-hl/index.html">guestfish 相关</a></li>
+          <li data-nav-id="/linux/haproxy-hl/index.html" class=""><a class="padding" href="/linux/haproxy-hl/index.html">haproxy 相关</a></li>
+          <li data-nav-id="/linux/iscsi-hl/index.html" class=""><a class="padding" href="/linux/iscsi-hl/index.html">iscsi 相关</a></li>
+          <li data-nav-id="/linux/kernel_make-hl/index.html" class=""><a class="padding" href="/linux/kernel_make-hl/index.html">kernel 内核编译</a></li>
+          <li data-nav-id="/linux/linux_u-hl/index.html" class=""><a class="padding" href="/linux/linux_u-hl/index.html">Linux U盘占用</a></li>
+          <li data-nav-id="/linux/linux_source-hl/index.html" class=""><a class="padding" href="/linux/linux_source-hl/index.html">Linux 源制作</a></li>
+          <li data-nav-id="/linux/linux-hl/index.html" class=""><a class="padding" href="/linux/linux-hl/index.html">Linux 相关</a></li>
+          <li data-nav-id="/linux/linux_network-hl/index.html" class=""><a class="padding" href="/linux/linux_network-hl/index.html">linux 网络配置</a></li>
+          <li data-nav-id="/linux/lvm-hl/index.html" class=""><a class="padding" href="/linux/lvm-hl/index.html">LVM 逻辑卷相关</a></li>
+          <li data-nav-id="/linux/mysql-hl/index.html" class=""><a class="padding" href="/linux/mysql-hl/index.html">mysql 相关</a></li>
+          <li data-nav-id="/linux/nginx-hl/index.html" class=""><a class="padding" href="/linux/nginx-hl/index.html">nginx 相关</a></li>
+          <li data-nav-id="/linux/pypi_local_source-hl/index.html" class=""><a class="padding" href="/linux/pypi_local_source-hl/index.html">pip 本地源</a></li>
+          <li data-nav-id="/linux/proxychains_ng-hl/index.html" class=""><a class="padding" href="/linux/proxychains_ng-hl/index.html">proxychains-ng 代理工具</a></li>
+          <li data-nav-id="/linux/rpm_build-hl/index.html" class=""><a class="padding" href="/linux/rpm_build-hl/index.html">Python rpm编译</a></li>
+          <li data-nav-id="/linux/qemu_img-hl/index.html" class=""><a class="padding" href="/linux/qemu_img-hl/index.html">qemu-img</a></li>
+          <li data-nav-id="/linux/samba-hl/index.html" class=""><a class="padding" href="/linux/samba-hl/index.html">Samba 相关</a></li>
+          <li data-nav-id="/linux/ssh-hl/index.html" class=""><a class="padding" href="/linux/ssh-hl/index.html">ssh 相关</a></li>
+          <li data-nav-id="/linux/ssh_interval-hl/index.html" class=""><a class="padding" href="/linux/ssh_interval-hl/index.html">ssh 自动断开</a></li>
+          <li data-nav-id="/linux/ssh_forwading-hl/index.html" class=""><a class="padding" href="/linux/ssh_forwading-hl/index.html">ssh 转发</a></li>
+          <li data-nav-id="/linux/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/linux/ssr_privoxy-hl/index.html">ssr privoxy 相关</a></li>
+          <li data-nav-id="/linux/synology-hl/index.html" class=""><a class="padding" href="/linux/synology-hl/index.html">Synology</a></li>
+          <li data-nav-id="/linux/systemd-hl/index.html" class=""><a class="padding" href="/linux/systemd-hl/index.html">systemd</a></li>
+          <li data-nav-id="/linux/tcpdump-hl/index.html" class=""><a class="padding" href="/linux/tcpdump-hl/index.html">tcpdump 相关</a></li>
+          <li data-nav-id="/linux/uboot-hl/index.html" class=""><a class="padding" href="/linux/uboot-hl/index.html">uboot</a></li>
+          <li data-nav-id="/linux/vim-hl/index.html" class=""><a class="padding" href="/linux/vim-hl/index.html">Vim 常用命令</a></li>
+          <li data-nav-id="/linux/virt_manager-hl/index.html" class=""><a class="padding" href="/linux/virt_manager-hl/index.html">virt-manager 相关</a></li>
+          <li data-nav-id="/linux/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/linux/yum_install_conf_conflict-hl/index.html">yum 安装时文件冲突</a></li>
+          <li data-nav-id="/linux/net_bridge-hl/index.html" class=""><a class="padding" href="/linux/net_bridge-hl/index.html">创建网桥</a></li>
+          <li data-nav-id="/linux/build_pypi-hl/index.html" class=""><a class="padding" href="/linux/build_pypi-hl/index.html">发布pypi软件包</a></li>
+          <li data-nav-id="/linux/root_extend-hl/index.html" class=""><a class="padding" href="/linux/root_extend-hl/index.html">将 home 目录空间扩容到根目录</a></li>
+          <li data-nav-id="/linux/vm_to_router-hl/index.html" class=""><a class="padding" href="/linux/vm_to_router-hl/index.html">将虚拟机作为router</a></li>
+          <li data-nav-id="/linux/nested-hl/index.html" class=""><a class="padding" href="/linux/nested-hl/index.html">嵌套虚拟化</a></li>
+          <li data-nav-id="/linux/dns-hl/index.html" class=""><a class="padding" href="/linux/dns-hl/index.html">搭建本地 dns 服务器</a></li>
+          <li data-nav-id="/linux/nic_bond-hl/index.html" class=""><a class="padding" href="/linux/nic_bond-hl/index.html">网络端口聚合绑定</a></li>
+          <li data-nav-id="/linux/ramdisk-hl/index.html" class=""><a class="padding" href="/linux/ramdisk-hl/index.html">虚拟内存盘</a></li>
+          <li data-nav-id="/linux/mdadm-hl/index.html" class=""><a class="padding" href="/linux/mdadm-hl/index.html">软 raid</a></li></ul></li>
+          </ul>
+        </div>
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/other/ovirt-hl/index.html" lang="zh_CN" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.variants && variants.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.variants && variants.markSelectedVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+	    <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1716876880" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1716876880" defer></script>
+    <script src="/js/theme.js?1716876880" defer></script>
+  </body>
+</html>

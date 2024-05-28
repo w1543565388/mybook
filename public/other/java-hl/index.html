@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh_CN" dir="ltr">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.126.1">
+    <meta name="generator" content="Relearn 5.27.0+tip">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Java 相关 :: My New Hugo Site">
+    <meta name="twitter:description" content="数据结构 算法题 Java基础 Java高级 三大框架 数据库 操作系统 计算机网络 分布式，集群等高级主题 技术开放题 题目参考 解答参考 数据结构 讲一下 HashMap 中 put 方法过程？ 对 Key 求 Hash 值，然后再计算 下标。 如果没有碰撞，直接放入桶中， 如果碰撞了，以链表的方式链接到后面， 如果链表长度超过阀值（TREEIFY_THRESHOLD == 8），就把链表转成红黑树。 如果节点已经存在就替换旧值 如果桶满了（容量 * 加载因子），就需要 resize。 HashMap 中 hash 函数怎么是是实现的？ 还有哪些 hash 的实现方式？ 高 16bit 不变，低 16bit 和高 16bit 做了一个异或 （n - 1） &amp; hash &ndash;&gt; 得到下标 还有哪些 Hash 实现方式：可以参考之前的博客 Effective Java 学习笔记 &ndash; hashCode() HashMap 怎样解决冲突，讲一下扩容过程，假如一个值在原数组中，现在移动了新数组，位置肯定改变了，那是什么定位到在这个值新数组中的位置， 将新节点加到链表后， 容量扩充为原来的两倍，然后对每个节点重新计算哈希值。 这个值只可能在两个地方，一个是原下标的位置，另一种是在下标为 &lt;原下标&#43;原容量&gt; 的位置。 抛开 HashMap，hash 冲突有那些解决办法？ 开放定址，链地址法 针对 HashMap 中某个 Entry 链太长，查找的时间复杂度可能达到 O(n)，怎么优化？ 将链表转为红黑树， JDK1.">
+    <meta property="og:url" content="http://ip:1313/other/java-hl/index.html">
+    <meta property="og:site_name" content="My New Hugo Site">
+    <meta property="og:title" content="Java 相关 :: My New Hugo Site">
+    <meta property="og:description" content="数据结构 算法题 Java基础 Java高级 三大框架 数据库 操作系统 计算机网络 分布式，集群等高级主题 技术开放题 题目参考 解答参考 数据结构 讲一下 HashMap 中 put 方法过程？ 对 Key 求 Hash 值，然后再计算 下标。 如果没有碰撞，直接放入桶中， 如果碰撞了，以链表的方式链接到后面， 如果链表长度超过阀值（TREEIFY_THRESHOLD == 8），就把链表转成红黑树。 如果节点已经存在就替换旧值 如果桶满了（容量 * 加载因子），就需要 resize。 HashMap 中 hash 函数怎么是是实现的？ 还有哪些 hash 的实现方式？ 高 16bit 不变，低 16bit 和高 16bit 做了一个异或 （n - 1） &amp;amp; hash &amp;ndash;&amp;gt; 得到下标 还有哪些 Hash 实现方式：可以参考之前的博客 Effective Java 学习笔记 &amp;ndash; hashCode() HashMap 怎样解决冲突，讲一下扩容过程，假如一个值在原数组中，现在移动了新数组，位置肯定改变了，那是什么定位到在这个值新数组中的位置， 将新节点加到链表后， 容量扩充为原来的两倍，然后对每个节点重新计算哈希值。 这个值只可能在两个地方，一个是原下标的位置，另一种是在下标为 &amp;lt;原下标&#43;原容量&amp;gt; 的位置。 抛开 HashMap，hash 冲突有那些解决办法？ 开放定址，链地址法 针对 HashMap 中某个 Entry 链太长，查找的时间复杂度可能达到 O(n)，怎么优化？ 将链表转为红黑树， JDK1.">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="Other :: My New Hugo Site">
+    <meta property="article:published_time" content="2024-04-12T09:39:39+00:00">
+    <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
+    <title>Java 相关 :: My New Hugo Site</title>
+    <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
+    <link href="/css/fontawesome-all.min.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716876879" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1716876879" rel="stylesheet">
+    <link href="/css/auto-complete.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716876879" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1716876879" rel="stylesheet">
+    <link href="/css/fonts.css?1716876879" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716876879" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1716876879" rel="stylesheet">
+    <link href="/css/theme-auto.css?1716876879" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1716876879" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1716876879" rel="stylesheet">
+    <link href="/css/print.css?1716876879" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1716876879" rel="stylesheet">
+    <script src="/js/url.js?1716876879"></script>
+    <script src="/js/variant.js?1716876879"></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/ip:1313';
+      // variant stuff
+      window.relearn.themeVariantModifier='';
+      window.variants && variants.init( [ 'auto' ] );
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/other/java-hl/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"><nav class="TableOfContents">
+  <ul>
+    <li><a href="#数据结构">数据结构</a></li>
+    <li><a href="#算法题">算法题</a></li>
+    <li><a href="#java-基础">Java 基础</a></li>
+    <li><a href="#java-高级">Java 高级</a></li>
+    <li><a href="#cmsconcurrent-mark-sweep并发收集低停顿">CMS（concurrent mark sweep）并发收集、低停顿</a></li>
+    <li><a href="#g1">G1</a></li>
+    <li><a href="#g1-vs-cms">G1 vs CMS</a></li>
+    <li><a href="#g1-vs-cms-1">G1 vs CMS</a></li>
+    <li><a href="#java-内存模型">Java 内存模型</a></li>
+    <li><a href="#问-jvm-内存分代机制会问分为那几个代各个代特点分代回收的优点这个问了很多次">问 JVM 内存分代机制（会问分为那几个代，各个代特点），分代回收的优点（这个问了很多次）。</a></li>
+    <li><a href="#java-虚拟机类加载机制双亲委派模型">Java 虚拟机类加载机制，双亲委派模型</a></li>
+    <li><a href="#gc-roots-不可达的对象是可以回收的">GC roots 不可达的对象是可以回收的。</a></li>
+    <li><a href="#介绍一下-java-的强软弱虚四种引用问什么时候使用软引用">介绍一下 Java 的强软弱虚四种引用，问什么时候使用软引用</a></li>
+    <li><a href="#rpc-原理">RPC 原理</a></li>
+    <li><a href="#三大框架">三大框架</a></li>
+    <li><a href="#数据库">数据库</a></li>
+    <li><a href="#操作系统">操作系统</a></li>
+    <li><a href="#计算机网络">计算机网络</a></li>
+    <li><a href="#分布式集群等高级主题">分布式/集群等高级主题</a></li>
+    <li><a href="#技术开放题">技术开放题</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/other/index.html"><span itemprop="name">Other</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><span itemprop="name">Java 相关</span><meta itemprop="position" content="2"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/other/ionic_cordova-hl/index.html" title="ionic 、cordova 编译 andriod (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/other/jupyter-hl/index.html" title="jupyter 相关 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable default" tabindex="-1">
+        <div class="flex-block-wrapper">
+          <article class="default">
+            <header class="headline">
+            </header>
+
+<h1 id="java-相关">Java 相关</h1>
+
+<ul>
+<li>数据结构</li>
+<li>算法题</li>
+<li>Java基础</li>
+<li>Java高级</li>
+<li>三大框架</li>
+<li>数据库</li>
+<li>操作系统</li>
+<li>计算机网络</li>
+<li>分布式，集群等高级主题</li>
+<li>技术开放题</li>
+<li>题目参考</li>
+<li>解答参考</li>
+</ul>
+<h2 id="数据结构">数据结构</h2>
+<ol>
+<li>讲一下 HashMap 中 put 方法过程？</li>
+<li>对 Key 求 Hash 值，然后再计算 下标。</li>
+<li>如果没有碰撞，直接放入桶中，</li>
+<li>如果碰撞了，以链表的方式链接到后面，</li>
+<li>如果链表长度超过阀值（TREEIFY_THRESHOLD == 8），就把链表转成红黑树。</li>
+<li>如果节点已经存在就替换旧值</li>
+<li>如果桶满了（容量 * 加载因子），就需要 resize。</li>
+<li>HashMap 中 hash 函数怎么是是实现的？ 还有哪些 hash 的实现方式？</li>
+<li>高 16bit 不变，低 16bit 和高 16bit 做了一个异或</li>
+<li>（n - 1） &amp; hash &ndash;&gt; 得到下标</li>
+<li>还有哪些 Hash 实现方式：可以参考之前的博客 Effective Java 学习笔记 &ndash; hashCode()</li>
+<li>HashMap 怎样解决冲突，讲一下扩容过程，假如一个值在原数组中，现在移动了新数组，位置肯定改变了，那是什么定位到在这个值新数组中的位置，</li>
+<li>将新节点加到链表后，</li>
+<li>容量扩充为原来的两倍，然后对每个节点重新计算哈希值。</li>
+<li>这个值只可能在两个地方，一个是原下标的位置，另一种是在下标为 &lt;原下标+原容量&gt; 的位置。</li>
+<li>抛开 HashMap，hash 冲突有那些解决办法？</li>
+<li>开放定址，链地址法</li>
+<li>针对 HashMap 中某个 Entry 链太长，查找的时间复杂度可能达到 O(n)，怎么优化？</li>
+<li>将链表转为红黑树， JDK1.8 已经实现了。</li>
+<li>数组和 ArrayList 的区别；</li>
+<li>数组可以包含基本类型和对象类型，ArrayList 只能包含对象类型</li>
+<li>数组大小固定，ArrayList 大小可以动态变化</li>
+<li>ArrayList 提供了更多的特性（addAll、removeAll）。</li>
+<li>Arraylist 如何实现排序</li>
+<li>Collections.sort(List<!-- raw HTML omitted --> list);</li>
+<li>sort(List<!-- raw HTML omitted --> list, Comparator&lt;? super T&gt; c);</li>
+<li>HashMap</li>
+<li>数组 + 链表方式存储</li>
+<li>默认容量： 16(2^n 为宜,若定义的初始容量不是 2^n，容量会定义为大于该初始容量的最小 2^n)</li>
+<li>例如：初始容量为 13，则真正的容量是 16.</li>
+<li>put:</li>
+<li>索引计算 : ((key.hashCode() ^ (key.hashCode() &raquo;&gt; 16)) &amp; (table.length - 1))</li>
+<li>在链表中查找，并记录链表长度，若链表长度达到了 TREEIFY_THRESHOLD(8)，则将该链转成红黑树。</li>
+<li>若在链表中找到了，则替换旧值，若未找到则继续</li>
+<li>当总元素个数超过容量*加载因子时，扩容为原来 2 倍并重新散列</li>
+<li>(元素的下标要么不变，要么变为【原下标+原容量】)。</li>
+<li>将新元素加到链表尾部</li>
+<li>线程不安全</li>
+<li>HashTable</li>
+<li>数组 + 链表方式存储</li>
+<li>默认容量： 11(质数 为宜)</li>
+<li>put:</li>
+<li>索引计算 : （key.hashCode() &amp; 0x7FFFFFFF）% table.length</li>
+<li>若在链表中找到了，则替换旧值，若未找到则继续</li>
+<li>当总元素个数超过容量*加载因子时，扩容为原来 2 倍并重新散列。</li>
+<li>将新元素加到链表头部</li>
+<li>对修改 Hashtable 内部共享数据的方法添加了 synchronized，保证线程安全。</li>
+<li>HashMap ，HashTable 区别</li>
+<li>默认容量不同。</li>
+<li>索引计算方式不同。</li>
+<li>HashMap 特有的将过长链表转换为红黑树。</li>
+<li>新元素的位置不同。</li>
+<li>线程安全性</li>
+<li>HashMap、ConcurrentHashMap 区别。</li>
+<li>索引计算消除了最高位的影响</li>
+<li>默认容量： 16(若定义了初始容量(c)，容量会定义为大于(c + (c &raquo;&gt; 1) +1) 的最小 2^n)</li>
+<li>例如：初始容量为 13，则真正的容量是 32.</li>
+<li>线程安全，并发性能较好</li>
+<li>并发性能好的原因是 ConcurrentHashMap 并不是定义 synchronized 方法，而是在链表头上同步，不同的链表之间是互不影响的。</li>
+<li>ConcurrentHashMap 原理</li>
+<li>最大特点是引入了 CAS（借助 Unsafe 来实现【native code】）</li>
+<li>CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。</li>
+<li>Unsafe 借助 CPU 指令 cmpxchg 来实现</li>
+<li>使用实例：</li>
+<li>对 sizeCtl 的控制都是用 CAS 来实现的</li>
+<li>sizeCtl ：默认为0，用来控制 table 的初始化和扩容操作。</li>
+<li>-1 代表table正在初始化</li>
+<li>N 表示有 -N-1 个线程正在进行扩容操作</li>
+<li>如果table未初始化，表示table需要初始化的大小。</li>
+<li>如果table初始化完成，表示table的容量，默认是table大小的0.75倍，居然用这个公式算0.75（n - (n &raquo;&gt; 2)）。</li>
+<li>CAS 会出现的问题：ABA</li>
+<li>对变量增加一个版本号，每次修改，版本号加 1，比较的时候比较版本号。</li>
+<li>TreeMap 和 TreeSet 区别和实现原理</li>
+<li>TreeSet 底层是 TreeMap，TreeMap 是基于红黑树来实现的。</li>
+<li>如果想实现一个线程安全的队列，可以怎么实现？</li>
+<li>知道 LRU 吗，20分钟基于 HashMap 实现一个 LRU 算法，面试官给个地址，进去写代码，面试官远程看</li>
+<li>如何设计实现一个LRU Cache？</li>
+<li>二叉树的遍历方式，前序、中序、后序和层序</li>
+<li>可以再写一篇了。。</li>
+<li>常见的排序算法时间复杂度（排序算法实现也要重点掌握）</li>
+<li>常见排序算法实现(Java)</li>
+<li>B+树的了解</li>
+<li>多分支结构有效降低了树的高度</li>
+<li>B 树的各种操作能使 B 树保持较低的高度，从而达到有效避免磁盘过于频繁的查找存取操作，从而有效提高查找效率</li>
+</ol>
+<h2 id="算法题">算法题</h2>
+<ol>
+<li>怎么查询一个单向链表的倒数第五个节点</li>
+<li>判断链表是否成环</li>
+<li>两条相交的单向链表，如何求他们的第一个公共节点</li>
+<li>在无序数组中找最大的K个数?</li>
+<li>给定n个数，寻找第k小的数，同时给出时间复杂度</li>
+<li>找一个数组中的第三大数</li>
+<li>找出数组中第一个出现2次的数，</li>
+<li>求 1-N 中数字 1 的个数。</li>
+<li>判断一个数是不是丑数；</li>
+<li>求第 K 个丑数；</li>
+<li>10w行数据，每行一个单词，统计出现次数出现最多的前100个。</li>
+<li>一个文本文件，给你一个单词，判断单词是否出现。</li>
+<li>一进去要求敲代码二叉排序树的插入、删除及查找</li>
+<li>某海量用户网站，用户拥有积分，积分可能会在使用过程中随时更新。现在要为该网站设计一种算法，在每次用户登录时显示其当前积分排名。用户最大规模为2 亿；积分为非负整数，且小于 100 万；</li>
+<li>判断一棵二叉树是否是 BST。</li>
+<li>一副扑克 54 张牌，现在分成 3 份，每份 18 张，问大小王出现在同一份中的概率是多少；</li>
+<li>50个白球50个红球，两个盒子，怎么放让人随机在一个盒子里抽到红球概率最高。。。这个就是一个盒子放一个红球，另一个盒子放99个球。</li>
+<li>logN 查找一个有序数组移动后类似 4 5 6 7 1 2 3里面的一个数</li>
+<li>0 ~ n 连续 n + 1 数，现在有一个长度为 n 的数组存放了上面 n + 1 个数的其中 n 个，找出哪一个数没有被放进数组</li>
+<li>将M个平均长度为N的有序队列组合成一个有序队列</li>
+<li>10亿条短信，找出前一万条重复率高的</li>
+<li>对一万条数据排序，你认为最好的方式是什么</li>
+<li>假如有100万个玩家，需要对这100W个玩家的积分中前100名的积分，按照顺序显示在网站中，要求是实时更新的。积分可能由做的任务和获得的金钱决定。问如何对着100万个玩家前100名的积分进行实时更新？</li>
+</ol>
+<ul>
+<li>除了前100名，后100W-100名玩家的积分，让变化的积分跟第100名比较，如果比第100名高，那就替换的原则。</li>
+</ul>
+<h2 id="java-基础">Java 基础</h2>
+<ol>
+<li>Java 的优势</li>
+<li>语法简单</li>
+<li>跨平台</li>
+<li>当开发规模膨胀到一定程度，Java在规范、协作和性能调优上还是占有很大优势,在大型应用，尤其是企业应用上，Java的地位仍然难以撼动</li>
+<li>boolean 占几个字节</li>
+<li>如果 boolean 变量在栈上，那么它占用一个栈单元（32-bits）</li>
+<li>如果在堆上，那么就跟 JVM 的实现有关了</li>
+<li>在 Oracle 的 JVM 实现，boolean[] 中每个元素占用一个字节（8-bits）</li>
+<li>Java 访问修饰符权限的区别；</li>
+<li>public 所有类都可访问</li>
+<li>protected 只允许包内、子类访问。</li>
+<li>默认 只允许包内访问</li>
+<li>private 只允许类内访问</li>
+<li>String 是否可以继承， “+” 怎样实现?</li>
+<li>String 是 final 类，不可继承。</li>
+<li>+ 是通过 StringBuilder（或 StringBuffer） 类，和 append 方法实现</li>
+<li>String，StringBuffer，StringBuilder，区别，项目中那里用到了 StringBuffer 或者 StringBuilder</li>
+<li>String 不可变</li>
+<li>StringBuffer，可变，线程安全</li>
+<li>Stringbuilder，可变，线程不安全</li>
+<li>String为啥不可变，在内存中的具体形态？</li>
+<li>String 使用 final char value[] 来存放字符序列。</li>
+<li>Comparable 接口和 Comparator 接口实现比较</li>
+<li>Comparable 是直接在&quot;被比较&quot;的类内部来实现的</li>
+<li>Comparator则是在被比较的类外部实现的</li>
+<li>Arrays 静态类如何实现排序的？</li>
+<li>双轴快排</li>
+<li>首先检查数组长度，如果比阀值（286）小，直接使用双轴快排</li>
+<li>否则先检查数组中数据的连续性，标记连续升序，反转连续降序，如果连续性好，使用 TimSort 算法（可以很好的利用数列中的原始顺序）</li>
+<li>否则使用双轴快排 + 成对插入排序</li>
+<li>Java 中异常怎么处理，什么时候抛出，什么时候捕获；</li>
+<li>一般原则是提早抛出，延迟捕获</li>
+<li>出现异常时，若当前无法处理则抛，否则捕获异常，尝试恢复。</li>
+<li>Java 锁机制</li>
+<li>重入锁、对象锁、类锁的关系</li>
+<li>哪些方法实现线程安全？</li>
+<li>Java 中的同步机制，synchronized 关键字，锁（重入锁）机制，其他解决同步的方 volatile 关键字 ThreadLocal 类的实现原理要懂。</li>
+<li>Synchronized 和 lock 区别</li>
+<li>锁的优化策略</li>
+<li>读写分离</li>
+<li>分段加锁</li>
+<li>减少锁持有的时间</li>
+<li>多个线程尽量以相同的顺序去获取资源</li>
+<li>Java线程阻塞调用 wait 函数和 sleep 区别和联系，还有函数 yield，notify 等的作用。</li>
+<li>sleep 时线程的方法（让出 CPU），wait 是对象的方法。</li>
+<li>谈谈的 Java 反射的理解，怎么通过反射访问某各类的私有属性</li>
+<li>通过反射，我们可以获取类的运行时内部结构。</li>
+<li>反射 API 中有个方法 getDeclaredFields()</li>
+<li>动态代理的原理</li>
+<li>动态代理基于反射实现，调用者通过代理对象来访问方法的时候，代理对象可以做相应的处理，然后通过反射调用被代理对象的方法。</li>
+<li>项目中都是用的框架，用过 Servlet 吗？ Servlet 是单例吗？多线程下 Servlet 怎么保证数据安全的？Servlet 的生命周期？</li>
+<li>Thread 状态有哪些</li>
+</ol>
+<h2 id="java-高级">Java 高级</h2>
+<ol>
+<li>GC 算法，除了常见的复制算法，标记整理，标记清除算法，还有哪些？</li>
+<li>增量算法。主要思想是垃圾收集线程与用户线程交替执行。也可以说一边执行垃圾回收一遍执行用户代码。但是这种方法会造成系统吞吐量下降。</li>
+<li>分代收集。这种方法没有使用新算法，只是根据对象的特点将堆分为年轻代和老年代，年轻代使用复制算法，老年代使用标记整理算法。</li>
+<li>垃圾收集器</li>
+<li>收集器收集算法收集区域线程停顿特点serial复制算法新生代单线程收集时必须停顿其他所有工作线程简单高效serial old标记整理老年代单线程收集时必须停顿其他所有工作线程PerNew复制算法新生代多线程serial 的多线程版本Server 模式下首选parallel Scavenge复制算法新生代多线程收集时必须停顿其他所有工作线程注重吞吐量，适合后台计算多parallel old标记整理老年代多线程收集时必须停顿其他所有工作线程同 parallel Scavenge</li>
+</ol>
+<h2 id="cmsconcurrent-mark-sweep并发收集低停顿">CMS（concurrent mark sweep）并发收集、低停顿</h2>
+<ol>
+<li>初始标记（CMS initial mark）：仅仅只是标记一下GC Roots能直接关联到的对象，速度很快，需要“Stop The World”。</li>
+<li>并发标记（CMS concurrent mark）：进行GC Roots Tracing的过程，在整个过程中耗时最长。</li>
+<li>重新标记（CMS remark）：为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段稍长一些，但远比并发标记的时间短。此阶段也需要“Stop The World”。</li>
+<li>并发清除（CMS concurrent sweep）</li>
+</ol>
+<h2 id="g1">G1</h2>
+<ol>
+<li>
+<p>将整个Java堆划分为多个大小相等的独立区域（Region），虽然还保留新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，而都是一部分Region（不需要连续）的集合。</p>
+</li>
+<li>
+<p>整体使用标记整理，局部使用复制算法。</p>
+</li>
+<li>
+<p>初始标记（Initial Marking） 仅仅只是标记一下GC Roots 能直接关联到的对象，并且修改TAMS（Nest Top Mark Start）的值，让下一阶段用户程序并发运行时，能在正确可以的Region中创建对象，此阶段需要停顿线程，但耗时很短。</p>
+</li>
+<li>
+<p>并发标记（Concurrent Marking） 从GC Root 开始对堆中对象进行可达性分析，找到存活对象，此阶段耗时较长，但可与用户程序并发执行。</p>
+</li>
+<li>
+<p>最终标记（Final Marking） 为了修正在并发标记期间因用户程序继续运作而导致标记产生变动的那一部分标记记录，虚拟机将这段时间对象变化记录在线程的Remembered Set Logs里面，最终标记阶段需要把Remembered Set Logs的数据合并到Remembered Set中，这阶段需要停顿线程，但是可并行执行。</p>
+</li>
+<li>
+<p>筛选回收（Live Data Counting and Evacuation） 首先对各个Region中的回收价值和成本进行排序，根据用户所期望的GC 停顿是时间来制定回收计划。此阶段其实也可以做到与用户程序一起并发执行，但是因为只回收一部分Region，时间是用户可控制的，而且停顿用户线程将大幅度提高收集效率。</p>
+</li>
+</ol>
+<h2 id="g1-vs-cms">G1 vs CMS</h2>
+<p>我们选择哪个收集器是由我们垃圾回收的目标来决定的，主要考虑以下几点：</p>
+<ol>
+<li>吞吐量</li>
+<li>停顿时间</li>
+<li>堆容量</li>
+</ol>
+<h2 id="g1-vs-cms-1">G1 vs CMS</h2>
+<ol>
+<li>G1 基本不用配置，低停顿，用于大容量的堆。但是他牺牲了应用程序的吞吐量和部分堆空间。</li>
+<li>CMS 配置比较复杂，合理的低停顿，用于中等或更小的堆。</li>
+<li>所以当你觉得配置 CMS 太难了，或你的堆在 2 G 以上，或你想要显式的指定停顿时间那么你可以使用 G1。否则使用 CMS</li>
+</ol>
+<h2 id="java-内存模型">Java 内存模型</h2>
+<ol>
+<li>深入理解 Java 虚拟机</li>
+</ol>
+<h2 id="问-jvm-内存分代机制会问分为那几个代各个代特点分代回收的优点这个问了很多次">问 JVM 内存分代机制（会问分为那几个代，各个代特点），分代回收的优点（这个问了很多次）。</h2>
+<ol>
+<li>分为年轻代和老年代，年轻代中的对象生命周期短，基本是朝生夕死，所以需要频繁的回收；老年代中的对象一般都能熬过多次 GC 所以他们不需要频繁回收。分代收集利用了这种特点，年轻代使用复制算法，老年代使用标记整理算法，所以总的来说分代收集的效率相对还是不错的。</li>
+</ol>
+<h2 id="java-虚拟机类加载机制双亲委派模型">Java 虚拟机类加载机制，双亲委派模型</h2>
+<ol>
+<li>深入理解 Java 虚拟机</li>
+</ol>
+<h2 id="gc-roots-不可达的对象是可以回收的">GC roots 不可达的对象是可以回收的。</h2>
+<ol>
+<li>栈中的引用的对象</li>
+<li>方法区常量引用的对象</li>
+<li>方法区静态域引用的对象</li>
+</ol>
+<h2 id="介绍一下-java-的强软弱虚四种引用问什么时候使用软引用">介绍一下 Java 的强软弱虚四种引用，问什么时候使用软引用</h2>
+<ol>
+<li>一般 new 出来的对象都是强引用，GC 不会回收强引用的对象</li>
+<li>软引用：软引用的对象不那么重要，当内存不足时可以被回收。非常适合于创建缓存。</li>
+<li>弱引用：只是引用一个对象，若一个对象的所有引用都是弱引用的话，下次 GC 会回收该对象。一般用在集合类中，特别是哈希表。</li>
+<li>虚引用：一般用于对实现比较精细的内存使用控制。对于移动设备来说比较有意义</li>
+</ol>
+<h2 id="rpc-原理">RPC 原理</h2>
+<ol>
+<li>你应该知道的 RPC 原理</li>
+</ol>
+<h2 id="三大框架">三大框架</h2>
+<ol>
+<li>Spring 主要思想是什么，回答 IOC 和AOP，怎么自己实现 AOP ？</li>
+<li>IOC 的好处：阿里一面总结 12 题</li>
+<li>使用基于反射的动态代理</li>
+<li>SpringAOP 用的哪一种代理</li>
+<li>JDK 动态代理，这种是一般意义上的动态代理；用一个代理类来间接调用目标类的方法。目标类如果实现了接口那就用这种方式代理。</li>
+<li>cglib 动态代理。通过框架转换字节码生成目标类的子类，并覆盖其中的方法实现增强，因为采用的是继承，所以不能对 final 类进行代理。目标类没有实现任何接口，就使用这种方法</li>
+<li>spring bean 初始化过程</li>
+<li>读取 XML 资源，并解析，最终注册到 Bean Factory 中</li>
+<li>spring bean 对象的生命周期</li>
+<li>当一个 bean 被实例化时，它需要执行一些初始化(init-method)使它转换成可用状态。同样，当 bean 不再需要，并且从容器中移除时，需要做一些清除工作(destroy-method)</li>
+<li>讲讲 Spring 中 ApplicationContext 初始化过程。</li>
+<li>SpringMVC 处理请求的流程</li>
+<li>收到用户请求</li>
+<li>dispatcher Servlet 将请求转发到相应的 Controller</li>
+<li>通过 View Resolver 进行视图解析</li>
+<li>返回给用户</li>
+</ol>
+<p>7.SpringMVC 的设计模式</p>
+<p>8.Spring 的 annotation 如何实现</p>
+<p>9.Spring拦截器怎么使用，Controller是单例吗</p>
+<ol>
+<li>
+<p>基于 XML 配置文件</p>
+</li>
+<li>
+<p>基于注解</p>
+</li>
+<li>
+<p>基于 Spring 定义的 MethodInterceptor 接口</p>
+</li>
+</ol>
+<h2 id="数据库">数据库</h2>
+<p>1.SQL 优化方案
+2. 根据我目前的知识水平，大概分为两类：
+3. 多表连接时不直接连接表，而是先用 where 筛选出符合条件的记录然后进行连接。一般情况下，筛选一次会除去相当多的无效记录，这会极大的提高效率。
+4. 当前的 SQL 是否合理的使用了索引。如果设置的索引没有使用的话，会导致全表扫描。效率上会差很多。没有利用索引的情况一般有以下几种：
+5以“%”开头的LIKE语句，模糊匹配
+6. OR 语句前后没有同时使用索引
+7. 数据类型出现隐式转化（如varchar不加单引号的话可能会自动转换为int型）
+8. where 子句中对字段进行表达式操作
+9. 在where子句中对字段进行函数操作
+10. 索引有哪分别有什么特点？
+11. 从数据结构来划分的话，主要有两种：一种是基于 B+ 树的索引，一种是基于哈希表的索引。基于哈希表的索引在等值查询上有绝对的优势，但其他方面就不是很好了。B+ 树是一种多分支的树结构，相比二叉树来说高度降低了很多，能够有效的减少磁盘 IO，所以我们平时使用的都是基于 B+ 树的索引
+12. 索引为什么用 B不用二叉树，有什么好处？
+13. 基于 B 索引实现，降低了树的高度，减少了磁盘 IO 的次数。
+14. 数据库索引优点和缺点
+15. 优点：有效查询；
+16. 缺点：操作数据时需要对索引进行更新，效率上稍微差一点；索引需要占用一定的空间。
+17. 数据库事务的四个隔离，MySql 在哪一个级别</p>
+<blockquote>
+<p>MyL 默认隔离级别为 Repeatable read</p>
+</blockquote>
+<h2 id="操作系统">操作系统</h2>
+<ol>
+<li>进程和线程的区别. 进程是拥有资基本单位，线程是 CPU 调度的基本单位</li>
+<li>进程拥有独立的地址空间，同一个进程的线程共享该进程的地址空间</li>
+<li>进程上下文切换相对线程上下文切换会消耗更多的资源</li>
+<li>一个进程必须至少拥有一个线程</li>
+<li>一个线程死掉就等于整个进程死掉，所以多进程的程序相对于多线程的程序来说会更健壮</li>
+<li>通信方式不同，线程通过进程内的资源进行通信，进程的通信有多种方式，包括管道、共享内存、消息等等。</li>
+<li>进程间通信
+9.道（Pip及有名管道（named pipe）：管道可用于具有亲缘关系进程间的通信，有名管道克服了管道没有名字的限制，因此，除具有管道所具有的功能外，它还允许无亲缘关系进程间的通信；</li>
+<li>信号（Signal）：信号是比较复杂的通信方式，用于通知接受进程有某种事件发生，除了用于进程间通信外，进程还可以发送信号给进程本身；</li>
+<li>报文（Message）队列（消息队列）：消息队列是消息的链接表。有足够权限的进程可以向队列中添加消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承载无格式字节流以及缓冲区大小受限等缺点。</li>
+<li>共享内存：使得多个进程可以访问同一块内存空间，是最快的可用IPC形式。是针对其他通信机制运行效率较低而设计的。往往与其它通信机制，如信号量结合使用，来达到进程间的同步及互斥。</li>
+<li>信号量（semaphore）：主要作为进程间以及同一进程不同线程之间的同步手段。</li>
+<li>套接口（Socket）：更为一般的进程间通信机制，可用于不同机器之间的进程间通信。</li>
+<li>在共享内存中如何使用utex</li>
+<li>selt 和 ell</li>
+<li>操作系哪几部分组进程结构</li>
+<li>多进程线程的区别</li>
+<li>什么时用多线程，时候使用多进程</li>
+<li>Jav多线程与操统线程的关系</li>
+<li>一般线守护线程的</li>
+<li>多线程线程的实现</li>
+<li>死锁的，死锁避免*</li>
+<li>互斥条件
+. 占有和等待条件</li>
+<li>不剥夺条件</li>
+<li>循环等待</li>
+<li>linux中如何查看等命令</li>
+<li>不同进开了同一个，那么这两个进程得到的文件描述符（fd）相同吗</li>
+<li>不一定，因开文件有三个表，inode 表，系统文件描述符表，进程文件描述符表。不同进程的文件描述符的范围是一样的，有可能刚好相同，也有可能不相同</li>
+<li>两个线程如何同时监听端口。</li>
+<li>SO_REEPORT 参数。</li>
+</ol>
+<h2 id="计算机网络">计算机网络</h2>
+<ol>
+<li>HTTP 状态码有哪一一解释含义</li>
+<li>1xx
+3100 服务接收到部分请求，但是一旦服务器并没有拒绝该请求，客户端应该继续发送其余的请求。</li>
+<li>2xx 成功
+5200 OK求成功（其后是对GET和POST请求的应答文档。）</li>
+<li>3xx 重定向
+304 NoModified 未修改的文档。客户端有缓冲的文档并发出了一个条件性的请求（一般是提供If-Modified-Since头表示客户只想比指定日期更新的文档）。服务器告诉客户，原来缓冲的文档还可以继续使用。</li>
+<li>4xx: 客户端错误</li>
+<li>400 BaRequest 服务器未能理解请求。</li>
+<li>404 Not Found 服务器无法找到被请求的页面。</li>
+<li>5xx: 服务器错误</li>
+<li>500 Iernal Server Error 请求未完成。服务器遇到不可预知的情况。</li>
+<li>HTTP 请求头有哪介绍平时见过的，怎么利用这些信息来进行前后端调试</li>
+<li>Host,求的域名</li>
+<li>User-Agent，用户的浏览器版本信息</li>
+<li>Accept，响应的内容类型</li>
+<li>Accept-Language, 接受的语言</li>
+<li>Accept-Encoding, 可接受的编码方式</li>
+<li>Cookie，本地的 Cookie 信息</li>
+<li>if-Modified-Since, 本地有缓存，如果在那之后没有做修改，则可以直接使用本地缓存。</li>
+<li>TCP 和 UDP 别</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">TCP</th>
+<th style="text-align:center">UDP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">是否连接</td>
+<td style="text-align:center">面向连接</td>
+<td style="text-align:center">面向非连接</td>
+</tr>
+<tr>
+<td style="text-align:center">传输可靠性</td>
+<td style="text-align:center">可靠性</td>
+<td style="text-align:center">不可靠</td>
+</tr>
+<tr>
+<td style="text-align:center">应用场合</td>
+<td style="text-align:center">传输大量数据</td>
+<td style="text-align:center">少量数据</td>
+</tr>
+<tr>
+<td style="text-align:center">速度</td>
+<td style="text-align:center">慢</td>
+<td style="text-align:center">快</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>HTTP1.0 和 1.1 的区别</li>
+<li>最主要的区别1.1 支持持久连接。Connection 请求头的值为 Keep-Alive 时，客户端通知服务器返回本次请求结果后保持连接；Connection 请求头的值为 close 时，客户端通知服务器返回本次请求结果后关闭连接。</li>
+<li>1.1 支持断点续传。RANGE:bytes=XXX 表示要求服务器从文件 XXX 字节处开始传送</li>
+<li>还有一些其他的改进，有兴趣可以自行查阅相关资料</li>
+<li>HTTP 和 HTT 的主要区别</li>
+<li>安全。HTT直接与 TCP 通信，而 HTTPS 是先与 SSL（加密） 通信，然后再由 SSL 和 TCP 通信</li>
+<li>滑动窗口算法
+8又称回退 N（go-back-N）,发送方的窗口滑动是由接收方是否已成功收到数据包来决定的。即接收方的窗口向前滑动后发送方的窗口才会向前滑动。//TODO</li>
+<li>域名解析详细过程0. IP 分为几类，都代表什么，私网是哪些</li>
+<li>A：前 1yte 为网络标识，剩下的是主机标识</li>
+<li>B：前 2 bytes 为网络标识</li>
+<li>C：前 3 bytes 为网络标识</li>
+<li>D：为多播地址，最高位为 1110</li>
+<li>E：特殊 IP。例如 0.0.0.0，127.0.0.1,255.255.255.255 等等</li>
+<li>IP 头组成；
+. 计算机中的同步和</li>
+<li>发现百不去，怎么*</li>
+<li>查看 DN解析是否正确。若有错误，删除本地 DNS 缓存</li>
+<li>若 DNS 没有问题，使用 traceroute 检测路径，若路径不通则说明网路阻塞，暂时就别上网了</li>
+<li>traceroute 没有问题，ping 也能通一般就是服务器端出问题了。</li>
+</ol>
+<h2 id="分布式集群等高级主题">分布式/集群等高级主题</h2>
+<ol>
+<li>负载均衡算法
+2随机：负载均法随机的把负载分配到各个可用的服务器上。</li>
+<li>轮询：按顺序将新的连接请求分配给下一个服务器</li>
+<li>加权轮询：每台服务器接受到的连接数按权重分配，一般是用在应用服务器的处理能力大小不同的情况下。</li>
+<li>最少连接：把新连接分配给当前连接最少的服务器</li>
+<li>BLABAL&hellip;</li>
+<li>分布式数据库
+8分布式数据库了原来集中式数据库不具备的高可用性和拓展能力</li>
+</ol>
+<h2 id="技术开放题">技术开放题</h2>
+<ol>
+<li>如何设计一个高并发的</li>
+<li>数据库的优化括合理的事务隔离级别、SQL语句优化、索引的优化</li>
+<li>使用缓存，尽量减少数据库 IO</li>
+<li>分布式数据库、分布式缓存</li>
+<li>服务器的负载均衡</li>
+<li>现在一个网页响应速度变慢了，假如我把这个任务交给你，你怎么处理这个问题</li>
+<li>负载均衡题，数千负载部署到机器上，要求对问题进行抽象，建模，提出解决方案。</li>
+<li>美团面试到一个城试应聘者，面试有三天，每天面试官上午可以面试三场，下午可以面试四场，怎么设计面试系统，面试者可以选择面试日期，面试时间和面试官。</li>
+<li>有一些爬P不断的美团网站，现在美团设定一个IP5分钟之内访问美团网站超过100次，就判定为爬虫IP，怎么设计这个程序？如果100改成10000，怎么设计？</li>
+<li>假设在时刻由几万发请求同时产生，请设计一个方案来处理这种情况。</li>
+<li>问我简学校 oj台这个项目怎么实现1000人并发?并发的性能瓶颈在哪?</li>
+<li>因为还没完现处于开发阶段，只跟面试官说了下自己的构想，nginx+tomcat集群，性能瓶颈可能出现在网络io和java gc上，然后说了下jvm gc的优化，如何实现session共享。最后我问了下面试官这样设计可以吗，他说这样设计不行可能有问题，没有告诉我问题出现在哪里。</li>
+</ol>
+
+            <footer class="footline">
+            </footer>
+          </article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <style>
+            #R-logo svg,
+            #R-logo svg * {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              fill: #282828 !important;
+              fill: var(--MENU-SECTIONS-BG-color) !important;
+              opacity: .945;
+            }
+            a#R-logo {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+              font-size: 1.875rem;
+              font-weight: 300;
+              margin-top: -.8125rem;
+              max-width: 60%;
+              text-transform: uppercase;
+              width: 14.125rem;
+              white-space: nowrap;
+            }
+            a#R-logo:hover {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+            }
+            #R-logo svg {
+              margin-bottom: -1.25rem;
+              margin-inline-start: -1.47rem;
+              margin-inline-end: .5rem;
+              width: 40.5%;
+            }
+            @media only all and (max-width: 59.999rem) {
+              a#R-logo {
+                font-size: 1.5625rem;
+                margin-top: -.1875rem;
+              }
+              #R-logo svg {
+                margin-bottom: -.75rem;
+                margin-inline-start: -1.47rem;
+                margin-inline-end: .5rem;
+              }
+            }
+            @media all and (-ms-high-contrast:none) {
+              /* IE11s understanding of positioning is weird at best */
+              a#R-logo {
+                margin-top: -3.625rem;
+              }
+              #R-logo svg {
+                margin-bottom: -3.875rem;
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+            @media only all and (-ms-high-contrast:none) and (max-width: 59.999rem) {
+              #R-logo svg {
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+          </style>
+          <a id="R-logo" href="/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.044 64.044">
+              <path d="M46.103 136.34c-.642-.394-1.222-2.242-1.98-2.358-.76-.117-1.353.506-1.618 1.519-.266 1.012-.446 4.188.173 5.538.213.435.482.787 1.03.845.547.057.967-.504 1.45-1.027.482-.523.437-.9 1.142-.612.705.289 1.051.4 1.586 1.229.535.828 1.085 4.043.868 5.598-.241 1.458-.531 2.8-.59 4.088.26.075.517.148.772.217 2.68.724 5.373 1.037 7.873.02.001-.028.01-.105.008-.11-.048-.165-.18-.41-.36-.698-.18-.29-.414-.645-.586-1.114a3.212 3.212 0 0 1-.125-1.735c.056-.21.153-.342.249-.475 1.237-1.193 2.932-1.373 4.244-1.384.557-.004 1.389.016 2.198.255.809.239 1.706.724 2.068 1.843.187.578.114 1.17-.043 1.623-.153.438-.369.783-.545 1.091-.178.31-.329.6-.401.821-.007.02-.003.071-.005.094 2.256 1.008 4.716.91 7.189.398.55-.114 1.11-.247 1.673-.377.344-1.085.678-2.145.852-3.208.124-.752.158-2.311-.078-3.538-.118-.613-.306-1.15-.52-1.489-.221-.349-.413-.501-.747-.538-.243-.027-.51.013-.796.098-.67.223-1.33.606-1.966.76l-.008.002-.109.032c-.556.152-1.233.158-1.797-.36-.556-.51-.89-1.367-1.117-2.596-.283-1.528-.075-3.279.89-4.518l.071-.09h.07c.65-.71 1.485-.802 2.16-.599.706.213 1.333.629 1.772.84.736.354 1.185.319 1.475.171.291-.148.5-.439.668-.955.332-1.017.301-2.819.022-4.106-.148-.684-.13-1.292-.13-1.883-1.558-.463-3.067-.982-4.574-1.208-1.128-.169-2.263-.173-3.298.164-.13.046-.256.095-.38.15-.373.164-.633.342-.805.52-.077.098-.081.105-.087.21-.004.068.031.289.13.571.1.282.256.634.467 1.03.279.524.448 1.063.431 1.618a2.12 2.12 0 0 1-.499 1.309 1.757 1.757 0 0 1-.62.51h-.002c-.515.291-1.107.404-1.723.464-.86.083-1.787.026-2.598-.097-.806-.123-1.47-.28-1.948-.555-.444-.256-.79-.547-1.037-.925a2.273 2.273 0 0 1-.356-1.301c.029-.837.403-1.437.625-1.897.111-.23.191-.433.236-.583.045-.15.044-.25.046-.24-.005-.029-.127-.355-1.015-.741-1.138-.495-2.322-.673-3.533-.668h-.015a9.711 9.711 0 0 0-.521.016h-.002c-1.163.057-2.35.308-3.541.569.383 1.531.79 2.753.818 4.502-.096 1.297.158 2.114-1.03 2.935-.85.588-1.508.729-2.15.335" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:1.03763;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M61.472 101.34v.002c-.3-.003-.603.01-.894.04-.544.055-1.39.165-1.778.306-1.238.364.13 2.344.41 2.913.28.569.285 2.03.14 2.134-.144.103-.375.261-.934.345-.56.084.03-.037-1.589.086-1.62.122-5.506.29-8.265.248-.022.26-.036.521-.097.808-.309 1.442-.63 3.163-.494 4.074.071.473.168.65.414.8.23.14.737.235 1.62-.004.834-.227 1.3-.442 1.887-.456.595-.016 1.555.472 1.965.717.411.245-.03-.008.002 0s.128.05.176.102c.049.053-.276-.523.104.199.379.721.72 3.256.002 4.68-.46.913-1.01 1.49-1.64 1.711-.63.22-1.229.067-1.734-.135-.881-.353-1.584-.7-2.205-.647-1.199 1.94-1.186 4.17-.6 6.602.097.397.212.814.327 1.23 2.68-.556 5.542-1.016 8.337.132 1.064.437 1.73 1.015 1.902 1.857.169.831-.193 1.508-.438 1.986-.122.238-.23.46-.307.642-.07.164-.096.28-.104.324.069.429.309.723.686.945.385.227.89.355 1.35.423.723.104 1.567.152 2.287.086.693-.064 1.032-.338 1.241-.544a2.447 2.447 0 0 0 .303-.437.175.175 0 0 0 .013-.035c-.004-.066-.037-.246-.195-.527-.46-.816-.87-1.595-.817-2.51.028-.476.218-.938.529-1.288.304-.343.698-.586 1.186-.79 1.442-.606 2.96-.609 4.372-.409 1.525.216 2.963.679 4.378 1.083.226-2.09.784-3.9.592-5.77-.058-.565-.287-1.333-.598-1.827-.32-.508-.59-.717-1.036-.642-.648.11-1.472.935-2.707 1.078-.791.092-1.494-.267-1.95-.86-.45-.583-.678-1.335-.78-2.101-.202-1.525.031-3.229.89-4.27.615-.747 1.45-.887 2.15-.74.687.145 1.307.492 1.857.745v-.002c.546.252 1.033.388 1.281.344a.547.547 0 0 0 .353-.188c.113-.124.242-.35.384-.75.604-1.712.206-3.68-.303-5.654-.667.145-1.336.293-2.018.413-1.341.236-2.73.392-4.136.273-.656-.055-1.695-.085-2.58-.476-.442-.195-.903-.514-1.157-1.093-.259-.591-.205-1.313.08-2.014.223-.64 1.082-2.178.692-2.585-.391-.407-1.651-.56-2.554-.571z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.992837;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M83.128 98.116c-.484 1.875-1.057 3.757-2.486 5.033-.638.57-1.13.666-1.483.548-.401-.134-.715-.506-1.058-.973-.338-.461-.655-.97-1.076-1.332-.192-.165-.404-.315-.683-.38-.279-.066-.599-.02-.9.102-.489.196-.89.58-1.28 1.047a6.1 6.1 0 0 0-.985 1.632c-.234.591-.356 1.174-.277 1.713.072.487.392.977.905 1.185.463.187.926.156 1.36.154.433 0 .843.01 1.242.147.55.189.79.736.822 1.368.034.66-.145 1.412-.393 1.988l-.008.021c-.74 1.705-1.946 2.893-3.004 4.349l-.664.915.979.099c.924.092 1.788.26 2.468.675.46.281 1.806 1.205 2.794 2.222.497.513.888 1.031 1.047 1.502.078.231.095.422.05.6a.93.93 0 0 1-.345.474c-.301.223-.606.395-.864.532l-.354.186c-.107.058-.189.087-.345.228a.637.637 0 0 1 .062-.045l-.064.041-.209.236-.103.343s.003.126.007.152c.003.017.003.007.004.015v.002c.016.195.061.307.133.476a4.1 4.1 0 0 0 .32.596 5.7 5.7 0 0 0 2.8 2.258c.284.108.908.321 1.548.36.33.02.59.015.912-.13h.002c.08-.037.228-.095.382-.281.153-.186.19-.355.212-.445l.019-.075.003-.078c.023-.585-.037-1.296.072-1.899.153-.657.435-.956 1.009-.909 2.771.239 4.74 1.955 6.693 3.83l.742.714.279-1.155c.55-2.29 1.093-4.464 2.928-5.977.692-.57 1.184-.642 1.527-.509.39.151.676.536.996.995.319.458.605.926 1.07 1.212.194.119.464.232.784.209.32-.024.638-.163.988-.384 1.022-.645 1.778-1.756 2.086-2.942.136-.522.102-.991-.046-1.301-.158-.334-.433-.553-.754-.707-.653-.314-1.468-.373-2.094-.486-.825-.15-1.22-.475-1.345-.878-.13-.417 0-.953.335-1.61.6-1.173 1.887-2.602 3.13-3.911l.498-.526-.449-.432c-1.545-1.49-3.163-3.01-5.252-3.715h-.002c-.473-.16-1.097-.413-1.73-.424h-.003c-.311-.004-.596.04-.883.24v.002c-.22.155-.483.537-.583.937l-.008.036-.006.038c-.116.773-.06 1.467-.217 1.995-.063.212-.198.418-.359.507-.202.111-.492.153-.976.072-.582-.097-1.978-.69-3.021-1.503-.523-.407-.934-.85-1.117-1.3a1.153 1.153 0 0 1-.083-.63c.03-.184.1-.477.308-.593.21-.116.941-.32 1.377-.642h.002c.192-.141.403-.367.518-.64.114-.275.127-.526.123-.774-.006-.142-.036-.192-.08-.3a8.417 8.417 0 0 0-3-3.027c-1.226-.725-2.585-1.135-3.927-1.539-.434-.12-.844-.111-1.02.466zm.912.947c1.186.364 2.357.718 3.345 1.303 1.035.612 1.864 1.488 2.507 2.528-.514.263-1.095.5-1.44.79-.345.29-.729.914-.815 1.434-.084.509 0 .968.155 1.347.301.74.85 1.276 1.44 1.735 1.18.92 2.554 1.545 3.47 1.698.604.1 1.186.088 1.739-.216.594-.327.935-.911 1.088-1.427.264-.884.193-1.664.262-2.17h.1c.3.006.926.206 1.417.371 1.646.554 3.044 1.773 4.431 3.089-1.102 1.174-2.222 2.423-2.888 3.73-.42.823-.73 1.789-.453 2.687.283.913 1.1 1.415 2.138 1.603.691.126 1.472.226 1.84.403.19.091.258.182.278.223.03.064.058.075-.023.387-.21.804-.761 1.598-1.413 2.01-.247.155-.365.183-.407.187-.042.003-.061.002-.172-.066-.144-.088-.455-.473-.772-.929-.317-.454-.714-1.07-1.452-1.356-.783-.304-1.776-.022-2.713.75-1.942 1.6-2.626 3.764-3.146 5.8-1.802-1.676-3.772-3.138-6.589-3.517h-.002c-.346-.095-1.013-.031-1.293.143-.735.501-1.005 1.132-1.168 2.007-.125.69-.082 1.216-.074 1.659-.055.006-.046.01-.104.006-.42-.026-1.035-.215-1.244-.295-.947-.361-1.774-1.006-2.314-1.857-.054-.085-.072-.132-.109-.2l.027-.016c.284-.15.656-.36 1.045-.648.44-.327.789-.798.93-1.35a2.4 2.4 0 0 0-.068-1.379c-.254-.751-.753-1.353-1.295-1.911-1.09-1.124-2.452-2.049-2.99-2.378-.609-.372-1.303-.44-1.981-.56.875-1.094 1.878-2.251 2.596-3.921.294-.823.543-1.907.513-2.658-.049-.97-.489-2.013-1.52-2.367-.579-.2-1.131-.204-1.58-.203-.45.002-.786-.006-.97-.08h-.002c-.264-.107-.236-.108-.268-.33-.025-.17.021-.553.183-.962a4.67 4.67 0 0 1 .725-1.192c.29-.348.617-.59.705-.626.142-.057.176-.05.22-.04.045.011.127.052.263.17.235.201.56.671.92 1.161.354.484.791 1.08 1.543 1.33.8.267 1.784-.052 2.671-.846 1.594-1.424 2.235-3.317 2.714-5.051zm11.705 7.023c-.02.014.042-.002.042 0l-.008.035c.05-.2-.028-.04-.034-.035zM79.472 122.45a.198.198 0 0 1 .005.023v.014c-.002-.01-.003-.03-.005-.037zm-.29.732-.006.01-.044.027c.016-.01.033-.024.05-.036z" style="color:#000;fill:#282828;stroke-width:1.02352;-inkscape-stroke:none" transform="translate(-40.698 -95.175)"/>
+              <path d="M76.694 128.845c-.85-.012-1.668.253-2.434.67-.01.592-.015 1.17.109 1.772.323 1.573.422 3.553-.07 5.147-.247.804-.684 1.535-1.347 1.891-.663.356-1.467.296-2.362-.159-.522-.266-1.059-.62-1.487-.757-.223-.072-.392-.096-.522-.069-.13.027-.232.094-.362.27-.53.719-.681 1.823-.497 2.876.177 1.012.418 1.438.543 1.56.143.137.26.154.604.055.548-.158 1.523-.857 2.573-.972l.02-.002.5.058c.686.081 1.247.562 1.622 1.19.372.62.591 1.37.73 2.136.279 1.532.25 3.16.083 4.232-.14.91-.394 1.72-.632 2.53 1.719-.385 3.485-.692 5.307-.36 1.174.214 2.749.574 3.762 1.977l.088.122.046.159c.162.551.16 1.114.024 1.578-.13.45-.348.772-.533 1.023-.181.246-.336.444-.437.606-.102.16-.141.275-.145.336-.01.17 0 .197.07.315.057.1.186.242.39.366.408.246 1.106.414 1.843.45a7.842 7.842 0 0 0 2.174-.21 4.28 4.28 0 0 0 .822-.296c.218-.106.385-.242.377-.233l.029-.031c.025-.035.05-.072.05-.068 0-.004 0-.017-.003-.05a2.733 2.733 0 0 0-.21-.579c-.26-.548-.839-1.333-.822-2.46.01-.657.27-1.21.598-1.576.32-.357.696-.575 1.074-.736.759-.323 1.57-.418 2.054-.458 1.653-.136 3.252.296 4.755.765.457.142.905.29 1.352.434.325-2.258.902-4.247.598-6.217-.071-.46-.25-1.169-.486-1.684-.238-.518-.495-.762-.675-.779-.351-.032-.716.14-1.174.418-.457.277-1.005.665-1.695.742-.745.082-1.406-.291-1.84-.908-.428-.608-.653-1.394-.754-2.196-.203-1.596.016-3.377.794-4.493.568-.813 1.358-.984 2.024-.835.65.146 1.243.51 1.769.779.524.267.99.413 1.237.365a.527.527 0 0 0 .346-.2c.11-.132.235-.373.37-.798.612-1.918.27-3.894-.246-6.054-2.815-.851-5.49-1.534-8.089-.267a.727.727 0 0 0-.223.148c-.024.028-.018.021-.026.056.001-.003-.01.178.07.44.162.522.611 1.29.911 1.978l.004.009.029.063.024.084V133c.162.635.016 1.297-.274 1.727-.272.404-.618.636-.952.81-.675.353-1.399.484-1.724.533a5.888 5.888 0 0 1-3.973-.795c-.512-.311-.876-.594-1.133-1.02-.282-.466-.318-1.084-.172-1.557.252-.814.715-1.266.971-1.89a.663.663 0 0 0 .047-.14c.001-.013 0-.006-.007-.037a.761.761 0 0 0-.184-.268c-.264-.267-.865-.595-1.54-.826-1.356-.462-3.07-.659-3.583-.686-.062-.002-.121-.006-.178-.006z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.991342;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+            </svg>Relearn
+          </a>
+        </div>
+
+        <search>
+          <div class="searchbox default-animation">
+            <i class="fas fa-search" title="Search (CTRL+ALT+f)"></i>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1716876879" defer></script>
+        <script src="/js/lunr/lunr.min.js?1716876879" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1716876879" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1716876879" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1716876879" defer></script>
+        <script src="/js/search.js?1716876879" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-topics">
+          <ul class="enlarge morespace collapsible-menu">
+          <li data-nav-id="/ceph/index.html" class=""><a class="padding" href="/ceph/index.html">Cephs</a><ul id="R-subsections-fd10f71351f87e0d2cf3e598548366c8" class="morespace collapsible-menu">
+          <li data-nav-id="/ceph/first/index.html" class=""><a class="padding" href="/ceph/first/index.html">First</a></li>
+          <li data-nav-id="/ceph/ceph_dashboard-hl/index.html" class=""><a class="padding" href="/ceph/ceph_dashboard-hl/index.html">Ceph 启用 Dashboard</a></li>
+          <li data-nav-id="/ceph/ceph_deploy-hl/index.html" class=""><a class="padding" href="/ceph/ceph_deploy-hl/index.html">Ceph 相关</a></li>
+          <li data-nav-id="/ceph/ceph_optimize-hl/index.html" class=""><a class="padding" href="/ceph/ceph_optimize-hl/index.html">Ceph 调优参考</a></li>
+          <li data-nav-id="/ceph/cephconf-hl/index.html" class=""><a class="padding" href="/ceph/cephconf-hl/index.html">ceph.conf</a></li>
+          <li data-nav-id="/ceph/crushmap-hl/index.html" class=""><a class="padding" href="/ceph/crushmap-hl/index.html">crushmap</a></li></ul></li>
+          <li data-nav-id="/python/index.html" class=""><a class="padding" href="/python/index.html">Pythons</a><ul id="R-subsections-36a3ed262b315ff04085d7b53a448994" class="morespace collapsible-menu">
+          <li data-nav-id="/python/first/index.html" class=""><a class="padding" href="/python/first/index.html">First</a></li>
+          <li data-nav-id="/python/django-hl/index.html" class=""><a class="padding" href="/python/django-hl/index.html">Django 相关</a></li>
+          <li data-nav-id="/python/flask-hl/index.html" class=""><a class="padding" href="/python/flask-hl/index.html">Flask 相关</a></li>
+          <li data-nav-id="/python/jinja2-hl/index.html" class=""><a class="padding" href="/python/jinja2-hl/index.html">Jinja2 相关</a></li>
+          <li data-nav-id="/python/python_logging-hl/index.html" class=""><a class="padding" href="/python/python_logging-hl/index.html">Python logging模块</a></li>
+          <li data-nav-id="/python/sqlalchemy-hl/index.html" class=""><a class="padding" href="/python/sqlalchemy-hl/index.html">Python Sqlalchemy</a></li>
+          <li data-nav-id="/python/python_obfuscated_code-hl/index.html" class=""><a class="padding" href="/python/python_obfuscated_code-hl/index.html">Python 代码混淆</a></li>
+          <li data-nav-id="/python/python_code_standards-hl/index.html" class=""><a class="padding" href="/python/python_code_standards-hl/index.html">Python 代码规范</a></li>
+          <li data-nav-id="/python/python_file-hl/index.html" class=""><a class="padding" href="/python/python_file-hl/index.html">Python 文件操作</a></li>
+          <li data-nav-id="/python/python-hl/index.html" class=""><a class="padding" href="/python/python-hl/index.html">Python 相关</a></li>
+          <li data-nav-id="/python/python_decorators-hl/index.html" class=""><a class="padding" href="/python/python_decorators-hl/index.html">Python 装饰器</a></li>
+          <li data-nav-id="/python/scrapy-hl/index.html" class=""><a class="padding" href="/python/scrapy-hl/index.html">scrapy 爬虫</a></li>
+          <li data-nav-id="/python/urllib2-hl/index.html" class=""><a class="padding" href="/python/urllib2-hl/index.html">urllib2 爬虫</a></li>
+          <li data-nav-id="/python/xpath-hl/index.html" class=""><a class="padding" href="/python/xpath-hl/index.html">xpath 相关</a></li>
+          <li data-nav-id="/python/yield-hl/index.html" class=""><a class="padding" href="/python/yield-hl/index.html">yield</a></li>
+          <li data-nav-id="/python/regular_expression-hl/index.html" class=""><a class="padding" href="/python/regular_expression-hl/index.html">正则表达式相关</a></li></ul></li>
+          <li data-nav-id="/proxy/index.html" class=""><a class="padding" href="/proxy/index.html">Proxy</a><ul id="R-subsections-7af45055f134bf4d7ad1ff39a99c084b" class="morespace collapsible-menu">
+          <li data-nav-id="/proxy/proxy/index.html" class=""><a class="padding" href="/proxy/proxy/index.html">Proxy相关</a></li></ul></li>
+          <li data-nav-id="/other/index.html" class="parent "><a class="padding" href="/other/index.html">Other</a><ul id="R-subsections-dd17f32865650128ca32bc9ce5ee4fdf" class="morespace collapsible-menu">
+          <li data-nav-id="/other/anaconda-hl/index.html" class=""><a class="padding" href="/other/anaconda-hl/index.html">anaconda 相关</a></li>
+          <li data-nav-id="/other/apidoc-hl/index.html" class=""><a class="padding" href="/other/apidoc-hl/index.html">apidoc 相关</a></li>
+          <li data-nav-id="/other/build_atlas-hl/index.html" class=""><a class="padding" href="/other/build_atlas-hl/index.html">Atlas 驱动构建</a></li>
+          <li data-nav-id="/other/cloudfoundry-hl/index.html" class=""><a class="padding" href="/other/cloudfoundry-hl/index.html">cloudfoundry 相关</a></li>
+          <li data-nav-id="/other/github_pages-hl/index.html" class=""><a class="padding" href="/other/github_pages-hl/index.html">github pages</a></li>
+          <li data-nav-id="/other/ionic_cordova-hl/index.html" class=""><a class="padding" href="/other/ionic_cordova-hl/index.html">ionic 、cordova 编译 andriod</a></li>
+          <li data-nav-id="/other/java-hl/index.html" class="active"><a class="padding" href="/other/java-hl/index.html">Java 相关</a></li>
+          <li data-nav-id="/other/jupyter-hl/index.html" class=""><a class="padding" href="/other/jupyter-hl/index.html">jupyter 相关</a></li>
+          <li data-nav-id="/other/kafka-hl/index.html" class=""><a class="padding" href="/other/kafka-hl/index.html">Kafka 相关</a></li>
+          <li data-nav-id="/other/keepalived-hl/index.html" class=""><a class="padding" href="/other/keepalived-hl/index.html">keepalived 相关</a></li>
+          <li data-nav-id="/other/linux_desktop_rdp-hl/index.html" class=""><a class="padding" href="/other/linux_desktop_rdp-hl/index.html">Linux Desktop rdp 相关</a></li>
+          <li data-nav-id="/other/mqtt-hl/index.html" class=""><a class="padding" href="/other/mqtt-hl/index.html">MQTT 相关</a></li>
+          <li data-nav-id="/other/nativefier-hl/index.html" class=""><a class="padding" href="/other/nativefier-hl/index.html">Nativefier 相关</a></li>
+          <li data-nav-id="/other/ovirt-hl/index.html" class=""><a class="padding" href="/other/ovirt-hl/index.html">Ovirt 相关</a></li>
+          <li data-nav-id="/other/ptp-hl/index.html" class=""><a class="padding" href="/other/ptp-hl/index.html">ptp 相关</a></li>
+          <li data-nav-id="/other/pyqt5-hl/index.html" class=""><a class="padding" href="/other/pyqt5-hl/index.html">PyQt5 相关</a></li>
+          <li data-nav-id="/other/stratos_ui-hl/index.html" class=""><a class="padding" href="/other/stratos_ui-hl/index.html">stratos-ui 相关</a></li>
+          <li data-nav-id="/other/svn-hl/index.html" class=""><a class="padding" href="/other/svn-hl/index.html">svn 相关</a></li>
+          <li data-nav-id="/other/web-hl/index.html" class=""><a class="padding" href="/other/web-hl/index.html">Web 相关</a></li>
+          <li data-nav-id="/other/webdriver-hl/index.html" class=""><a class="padding" href="/other/webdriver-hl/index.html">webdriver 相关</a></li>
+          <li data-nav-id="/other/websocket-hl/index.html" class=""><a class="padding" href="/other/websocket-hl/index.html">websocket 相关</a></li>
+          <li data-nav-id="/other/xenserver-hl/index.html" class=""><a class="padding" href="/other/xenserver-hl/index.html">xenserver 相关</a></li>
+          <li data-nav-id="/other/gitbook-hl/index.html" class=""><a class="padding" href="/other/gitbook-hl/index.html">一、gitbook 相关</a></li>
+          <li data-nav-id="/other/computer_network_foundation-hl/index.html" class=""><a class="padding" href="/other/computer_network_foundation-hl/index.html">计算机网络基础</a></li>
+          <li data-nav-id="/other/be_mined-hl/index.html" class=""><a class="padding" href="/other/be_mined-hl/index.html">记一次被挖矿</a></li></ul></li>
+          <li data-nav-id="/question/index.html" class=""><a class="padding" href="/question/index.html">Question</a></li>
+          <li data-nav-id="/database/index.html" class=""><a class="padding" href="/database/index.html">Database</a></li>
+          <li data-nav-id="/istio/index.html" class=""><a class="padding" href="/istio/index.html">Istio</a></li>
+          <li data-nav-id="/k8s/index.html" class=""><a class="padding" href="/k8s/index.html">K8s</a></li>
+          <li data-nav-id="/openstack/index.html" class=""><a class="padding" href="/openstack/index.html">Openstack</a><ul id="R-subsections-9bba764a9f110e94af4bc7a89f9db759" class="morespace collapsible-menu">
+          <li data-nav-id="/openstack/devstack-hl/index.html" class=""><a class="padding" href="/openstack/devstack-hl/index.html">devstack相关</a></li>
+          <li data-nav-id="/openstack/heat-hl/index.html" class=""><a class="padding" href="/openstack/heat-hl/index.html">heat相关</a></li>
+          <li data-nav-id="/openstack/kolla_network-hl/index.html" class=""><a class="padding" href="/openstack/kolla_network-hl/index.html">kolla网络规划</a></li>
+          <li data-nav-id="/openstack/kolla_deploy-hl/index.html" class=""><a class="padding" href="/openstack/kolla_deploy-hl/index.html">kolla部署相关</a></li>
+          <li data-nav-id="/openstack/kolla_image_build-hl/index.html" class=""><a class="padding" href="/openstack/kolla_image_build-hl/index.html">kolla镜像构建</a></li>
+          <li data-nav-id="/openstack/lsf_install_openstack-hl/index.html" class=""><a class="padding" href="/openstack/lsf_install_openstack-hl/index.html">Lfs上安装OpenStack</a></li>
+          <li data-nav-id="/openstack/openstack_win_vm_diaplay-hl/index.html" class=""><a class="padding" href="/openstack/openstack_win_vm_diaplay-hl/index.html">openstack windows虚拟机分辨率问题</a></li>
+          <li data-nav-id="/openstack/openstack-hl/index.html" class=""><a class="padding" href="/openstack/openstack-hl/index.html">OpenStack 相关</a></li>
+          <li data-nav-id="/openstack/openstack_faq-hl/index.html" class=""><a class="padding" href="/openstack/openstack_faq-hl/index.html">openstack中遇到的问题</a></li>
+          <li data-nav-id="/openstack/openstack_hygon_patch-hl/index.html" class=""><a class="padding" href="/openstack/openstack_hygon_patch-hl/index.html">OpenStack对hygon的兼容</a></li>
+          <li data-nav-id="/openstack/ovs-hl/index.html" class=""><a class="padding" href="/openstack/ovs-hl/index.html">OVS 相关</a></li>
+          <li data-nav-id="/openstack/qemu_make-hl/index.html" class=""><a class="padding" href="/openstack/qemu_make-hl/index.html">QEMU 源码编译</a></li>
+          <li data-nav-id="/openstack/qga-hl/index.html" class=""><a class="padding" href="/openstack/qga-hl/index.html">qemu-guest-agent 相关</a></li>
+          <li data-nav-id="/openstack/delete_cinder_volume-hl/index.html" class=""><a class="padding" href="/openstack/delete_cinder_volume-hl/index.html">删除cinder僵尸实例</a></li>
+          <li data-nav-id="/openstack/make_openstack_image-hl/index.html" class=""><a class="padding" href="/openstack/make_openstack_image-hl/index.html">制作openstack镜像</a></li>
+          <li data-nav-id="/openstack/add_nic_to_vm-hl/index.html" class=""><a class="padding" href="/openstack/add_nic_to_vm-hl/index.html">给虚拟机添加网卡</a></li>
+          <li data-nav-id="/openstack/migrate_to_other_platform-hl/index.html" class=""><a class="padding" href="/openstack/migrate_to_other_platform-hl/index.html">迁移虚拟机到其他平台</a></li></ul></li>
+          <li data-nav-id="/golang/index.html" class=""><a class="padding" href="/golang/index.html">Golang</a><ul id="R-subsections-9846d6388830934b21e07a0f7d630c6c" class="morespace collapsible-menu">
+          <li data-nav-id="/golang/go_athens-hl/index.html" class=""><a class="padding" href="/golang/go_athens-hl/index.html">Go Authens</a></li>
+          <li data-nav-id="/golang/go-hl/index.html" class=""><a class="padding" href="/golang/go-hl/index.html">Go 语言相关</a></li></ul></li>
+          <li data-nav-id="/docker/index.html" class=""><a class="padding" href="/docker/index.html">Docker</a><ul id="R-subsections-37ef7d0ce1cc039dbba9ad71298a0daf" class="morespace collapsible-menu">
+          <li data-nav-id="/docker/buildah-hl/index.html" class=""><a class="padding" href="/docker/buildah-hl/index.html">Buildah</a></li>
+          <li data-nav-id="/docker/chartmuseum-hl/index.html" class=""><a class="padding" href="/docker/chartmuseum-hl/index.html">chartmuseum 相关</a></li>
+          <li data-nav-id="/docker/containerd-hl/index.html" class=""><a class="padding" href="/docker/containerd-hl/index.html">Containerd</a></li>
+          <li data-nav-id="/docker/docker_compose-hl/index.html" class=""><a class="padding" href="/docker/docker_compose-hl/index.html">docker compose 相关</a></li>
+          <li data-nav-id="/docker/docker_registry-hl/index.html" class=""><a class="padding" href="/docker/docker_registry-hl/index.html">docker registry 相关</a></li>
+          <li data-nav-id="/docker/docker_swarm-hl/index.html" class=""><a class="padding" href="/docker/docker_swarm-hl/index.html">docker swarm 相关</a></li>
+          <li data-nav-id="/docker/docker-hl/index.html" class=""><a class="padding" href="/docker/docker-hl/index.html">docker 相关</a></li>
+          <li data-nav-id="/docker/docker_net-hl/index.html" class=""><a class="padding" href="/docker/docker_net-hl/index.html">docker 网络相关</a></li>
+          <li data-nav-id="/docker/harbor-hl/index.html" class=""><a class="padding" href="/docker/harbor-hl/index.html">harbor 相关</a></li>
+          <li data-nav-id="/docker/helm-hl/index.html" class=""><a class="padding" href="/docker/helm-hl/index.html">helm 相关</a></li>
+          <li data-nav-id="/docker/k3s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k3s_deploy-hl/index.html">k3s 安装与使用</a></li>
+          <li data-nav-id="/docker/k3s_make-hl/index.html" class=""><a class="padding" href="/docker/k3s_make-hl/index.html">k3s 源码编译</a></li>
+          <li data-nav-id="/docker/k8s_use-hl/index.html" class=""><a class="padding" href="/docker/k8s_use-hl/index.html">k8s 使用</a></li>
+          <li data-nav-id="/docker/k8s_ceph-hl/index.html" class=""><a class="padding" href="/docker/k8s_ceph-hl/index.html">k8s 使用 ceph 储存</a></li>
+          <li data-nav-id="/docker/k8s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k8s_deploy-hl/index.html">k8s 安装部署</a></li>
+          <li data-nav-id="/docker/k8s-hl/index.html" class=""><a class="padding" href="/docker/k8s-hl/index.html">k8s 相关</a></li>
+          <li data-nav-id="/docker/kubebuilder-hl/index.html" class=""><a class="padding" href="/docker/kubebuilder-hl/index.html">kubebuilder</a></li>
+          <li data-nav-id="/docker/kubeedge-hl/index.html" class=""><a class="padding" href="/docker/kubeedge-hl/index.html">kubeedge</a></li>
+          <li data-nav-id="/docker/openshift-hl/index.html" class=""><a class="padding" href="/docker/openshift-hl/index.html">openshift 相关</a></li>
+          <li data-nav-id="/docker/overlay2-hl/index.html" class=""><a class="padding" href="/docker/overlay2-hl/index.html">overlay2</a></li>
+          <li data-nav-id="/docker/rancher-hl/index.html" class=""><a class="padding" href="/docker/rancher-hl/index.html">rancher 相关</a></li>
+          <li data-nav-id="/docker/multiarch-hl/index.html" class=""><a class="padding" href="/docker/multiarch-hl/index.html">容器交叉编译</a></li>
+          <li data-nav-id="/docker/debootstrap-hl/index.html" class=""><a class="padding" href="/docker/debootstrap-hl/index.html">容器基础镜像构建</a></li>
+          <li data-nav-id="/docker/convert_iso_to_docker_img-hl/index.html" class=""><a class="padding" href="/docker/convert_iso_to_docker_img-hl/index.html">将ISO镜像转换为docker镜像</a></li>
+          <li data-nav-id="/docker/usual_software-hl/index.html" class=""><a class="padding" href="/docker/usual_software-hl/index.html">常用软件安装</a></li>
+          <li data-nav-id="/docker/mount_usb_to_docker-hl/index.html" class=""><a class="padding" href="/docker/mount_usb_to_docker-hl/index.html">挂载USB到docker容器</a></li></ul></li>
+          <li data-nav-id="/linux/index.html" class=""><a class="padding" href="/linux/index.html">Linux</a><ul id="R-subsections-9e5aaccdf48687824ccd3b3097af8e41" class="morespace collapsible-menu">
+          <li data-nav-id="/linux/libvirt-hl/index.html" class=""><a class="padding" href="/linux/libvirt-hl/index.html">[libvirt 相关](/etc/sysconfig/libvirtd )</a></li>
+          <li data-nav-id="/linux/abd-hl/index.html" class=""><a class="padding" href="/linux/abd-hl/index.html">abd</a></li>
+          <li data-nav-id="/linux/ansible-hl/index.html" class=""><a class="padding" href="/linux/ansible-hl/index.html">ansible 相关</a></li>
+          <li data-nav-id="/linux/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/linux/apache_multi_ports-hl/index.html">apache 多端口</a></li>
+          <li data-nav-id="/linux/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/linux/diy_centos_iso-hl/index.html">CentOS iso 镜像定制</a></li>
+          <li data-nav-id="/linux/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/linux/change_centos_boot_kernel-hl/index.html">CentOS 修改默认启动内核</a></li>
+          <li data-nav-id="/linux/cobbler-hl/index.html" class=""><a class="padding" href="/linux/cobbler-hl/index.html">cobbler 相关</a></li>
+          <li data-nav-id="/linux/crontabs-hl/index.html" class=""><a class="padding" href="/linux/crontabs-hl/index.html">crontabs 计划任务相关</a></li>
+          <li data-nav-id="/linux/dd-hl/index.html" class=""><a class="padding" href="/linux/dd-hl/index.html">dd 相关</a></li>
+          <li data-nav-id="/linux/etcd-hl/index.html" class=""><a class="padding" href="/linux/etcd-hl/index.html">ETCD 相关</a></li>
+          <li data-nav-id="/linux/frp-hl/index.html" class=""><a class="padding" href="/linux/frp-hl/index.html">frp 相关</a></li>
+          <li data-nav-id="/linux/ftp-hl/index.html" class=""><a class="padding" href="/linux/ftp-hl/index.html">ftp 相关</a></li>
+          <li data-nav-id="/linux/gitlab-hl/index.html" class=""><a class="padding" href="/linux/gitlab-hl/index.html">GitLab</a></li>
+          <li data-nav-id="/linux/guestfish-hl/index.html" class=""><a class="padding" href="/linux/guestfish-hl/index.html">guestfish 相关</a></li>
+          <li data-nav-id="/linux/haproxy-hl/index.html" class=""><a class="padding" href="/linux/haproxy-hl/index.html">haproxy 相关</a></li>
+          <li data-nav-id="/linux/iscsi-hl/index.html" class=""><a class="padding" href="/linux/iscsi-hl/index.html">iscsi 相关</a></li>
+          <li data-nav-id="/linux/kernel_make-hl/index.html" class=""><a class="padding" href="/linux/kernel_make-hl/index.html">kernel 内核编译</a></li>
+          <li data-nav-id="/linux/linux_u-hl/index.html" class=""><a class="padding" href="/linux/linux_u-hl/index.html">Linux U盘占用</a></li>
+          <li data-nav-id="/linux/linux_source-hl/index.html" class=""><a class="padding" href="/linux/linux_source-hl/index.html">Linux 源制作</a></li>
+          <li data-nav-id="/linux/linux-hl/index.html" class=""><a class="padding" href="/linux/linux-hl/index.html">Linux 相关</a></li>
+          <li data-nav-id="/linux/linux_network-hl/index.html" class=""><a class="padding" href="/linux/linux_network-hl/index.html">linux 网络配置</a></li>
+          <li data-nav-id="/linux/lvm-hl/index.html" class=""><a class="padding" href="/linux/lvm-hl/index.html">LVM 逻辑卷相关</a></li>
+          <li data-nav-id="/linux/mysql-hl/index.html" class=""><a class="padding" href="/linux/mysql-hl/index.html">mysql 相关</a></li>
+          <li data-nav-id="/linux/nginx-hl/index.html" class=""><a class="padding" href="/linux/nginx-hl/index.html">nginx 相关</a></li>
+          <li data-nav-id="/linux/pypi_local_source-hl/index.html" class=""><a class="padding" href="/linux/pypi_local_source-hl/index.html">pip 本地源</a></li>
+          <li data-nav-id="/linux/proxychains_ng-hl/index.html" class=""><a class="padding" href="/linux/proxychains_ng-hl/index.html">proxychains-ng 代理工具</a></li>
+          <li data-nav-id="/linux/rpm_build-hl/index.html" class=""><a class="padding" href="/linux/rpm_build-hl/index.html">Python rpm编译</a></li>
+          <li data-nav-id="/linux/qemu_img-hl/index.html" class=""><a class="padding" href="/linux/qemu_img-hl/index.html">qemu-img</a></li>
+          <li data-nav-id="/linux/samba-hl/index.html" class=""><a class="padding" href="/linux/samba-hl/index.html">Samba 相关</a></li>
+          <li data-nav-id="/linux/ssh-hl/index.html" class=""><a class="padding" href="/linux/ssh-hl/index.html">ssh 相关</a></li>
+          <li data-nav-id="/linux/ssh_interval-hl/index.html" class=""><a class="padding" href="/linux/ssh_interval-hl/index.html">ssh 自动断开</a></li>
+          <li data-nav-id="/linux/ssh_forwading-hl/index.html" class=""><a class="padding" href="/linux/ssh_forwading-hl/index.html">ssh 转发</a></li>
+          <li data-nav-id="/linux/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/linux/ssr_privoxy-hl/index.html">ssr privoxy 相关</a></li>
+          <li data-nav-id="/linux/synology-hl/index.html" class=""><a class="padding" href="/linux/synology-hl/index.html">Synology</a></li>
+          <li data-nav-id="/linux/systemd-hl/index.html" class=""><a class="padding" href="/linux/systemd-hl/index.html">systemd</a></li>
+          <li data-nav-id="/linux/tcpdump-hl/index.html" class=""><a class="padding" href="/linux/tcpdump-hl/index.html">tcpdump 相关</a></li>
+          <li data-nav-id="/linux/uboot-hl/index.html" class=""><a class="padding" href="/linux/uboot-hl/index.html">uboot</a></li>
+          <li data-nav-id="/linux/vim-hl/index.html" class=""><a class="padding" href="/linux/vim-hl/index.html">Vim 常用命令</a></li>
+          <li data-nav-id="/linux/virt_manager-hl/index.html" class=""><a class="padding" href="/linux/virt_manager-hl/index.html">virt-manager 相关</a></li>
+          <li data-nav-id="/linux/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/linux/yum_install_conf_conflict-hl/index.html">yum 安装时文件冲突</a></li>
+          <li data-nav-id="/linux/net_bridge-hl/index.html" class=""><a class="padding" href="/linux/net_bridge-hl/index.html">创建网桥</a></li>
+          <li data-nav-id="/linux/build_pypi-hl/index.html" class=""><a class="padding" href="/linux/build_pypi-hl/index.html">发布pypi软件包</a></li>
+          <li data-nav-id="/linux/root_extend-hl/index.html" class=""><a class="padding" href="/linux/root_extend-hl/index.html">将 home 目录空间扩容到根目录</a></li>
+          <li data-nav-id="/linux/vm_to_router-hl/index.html" class=""><a class="padding" href="/linux/vm_to_router-hl/index.html">将虚拟机作为router</a></li>
+          <li data-nav-id="/linux/nested-hl/index.html" class=""><a class="padding" href="/linux/nested-hl/index.html">嵌套虚拟化</a></li>
+          <li data-nav-id="/linux/dns-hl/index.html" class=""><a class="padding" href="/linux/dns-hl/index.html">搭建本地 dns 服务器</a></li>
+          <li data-nav-id="/linux/nic_bond-hl/index.html" class=""><a class="padding" href="/linux/nic_bond-hl/index.html">网络端口聚合绑定</a></li>
+          <li data-nav-id="/linux/ramdisk-hl/index.html" class=""><a class="padding" href="/linux/ramdisk-hl/index.html">虚拟内存盘</a></li>
+          <li data-nav-id="/linux/mdadm-hl/index.html" class=""><a class="padding" href="/linux/mdadm-hl/index.html">软 raid</a></li></ul></li>
+          </ul>
+        </div>
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/other/java-hl/index.html" lang="zh_CN" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.variants && variants.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.variants && variants.markSelectedVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+	    <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1716876879" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1716876879" defer></script>
+    <script src="/js/theme.js?1716876879" defer></script>
+  </body>
+</html>

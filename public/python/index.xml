@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pythons on My New Hugo Site</title>
+    <link>http://ip:1313/python/index.html</link>
+    <description>Recent content in Pythons on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <lastBuildDate>Fri, 24 May 2024 08:33:14 +0000</lastBuildDate>
+    <atom:link href="http://ip:1313/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>First</title>
+      <link>http://ip:1313/python/first/index.html</link>
+      <pubDate>Fri, 24 May 2024 08:33:14 +0000</pubDate>
+      <guid>http://ip:1313/python/first/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Django 相关</title>
+      <link>http://ip:1313/python/django-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/django-hl/index.html</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Flask 相关</title>
+      <link>http://ip:1313/python/flask-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/flask-hl/index.html</guid>
+      <description>flask 官网文档&#xA;Flask 教程&#xA;一、准备 1、安装 pip install Flask2、测试 python -c &amp;#34;import flask&amp;#34; flask --version3、一般flask项目的目录结构 flask-demo/ ├ run.py # 应用启动程序 ├ config.py # 环境配置 ├ requirements.txt # 列出应用程序依赖的所有Python包 ├ tests/ # 测试代码包 │ ├ __init__.py │ └ test_*.py # 测试用例 └ myapp/ ├ admin/ # 蓝图目录 ├ static/ │ ├ css/ # css文件目录 │ ├ img/ # 图片文件目录 │ └ js/ # js文件目录 ├ templates/ # 模板文件目录 ├ __init__.py ├ forms.</description>
+    </item>
+    <item>
+      <title>Jinja2 相关</title>
+      <link>http://ip:1313/python/jinja2-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/jinja2-hl/index.html</guid>
+      <description>jinja2 是 Flask 作者开发的一个模板系统&#xA;jinja2 官网&#xA;一、安装 1、安装jinja2 pip install jinja22、测试是否安装成功 python -c &amp;#34;import jinja2&amp;#34;二、基本语法 控制结构 {% raw %}&#xA;​&#x9;{% %}&#xA;{% endraw %}&#xA;变量取值 {% raw %}&#xA;​&#x9;{{ }}&#xA;{% endraw %}&#xA;注释 {% raw %}&#xA;​&#x9;{# #}&#xA;{% endraw %}&#xA;例子：&#xA;{# This is jinja code {% for file in filenames %} ... {% endfor %} #} 可以看到，for循环的使用方式和Python比较类似，但是没有了句尾的冒号，另外需要使用endfor最为结尾，其实在jinja2中，if也是一样的，结尾需要使用endif。&#xA;1、变量 &amp;lt;p&amp;gt;this is a dicectory:{{ mydict[&amp;#39;key&amp;#39;] }} &amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;this is a list:{{ mylist[3] }} &amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;this is a object:{{ myobject.</description>
+    </item>
+    <item>
+      <title>Python logging模块</title>
+      <link>http://ip:1313/python/python_logging-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/python_logging-hl/index.html</guid>
+      <description>一、介绍 1、日志级别 日志一共分成5个等级，从低到高分别是：NOTSET &amp;lt; DEBUG &amp;lt; INFO &amp;lt; WARNING &amp;lt; ERROR &amp;lt; CRITICAL。&#xA;DEBUG：详细的信息，通常只出现在诊断问题上 INFO：确认一切按预期运行 WARNING：一个迹象表明，一些意想不到的事情发生了，或表明一些问题在不久的将来(例如：磁盘空间低)。这个软件还能按预期工作。 ERROR：更严重的问题，软件没能执行一些功能 CRITICAL：一个严重的错误,这表明程序本身可能无法继续运行 这5个等级，也分别对应5种打日志的方法： debug 、info 、warning 、error 、critical。默认的是WARNING，当在WARNING或之上时才被跟踪。&#xA;既要把日志输出到控制台， 还要写入日志文件 这就需要一个叫作Logger 的对象来帮忙，下面将对他进行详细介绍，现在这里先学习怎么实现把日志既要输出到控制台又要输出到文件的功能。&#xA;二、使用 1、第一步，创建一个logger import logging logger = logging.getLogger() logger.setLevel(logging.INFO) # Log等级总开关 2、第二步，创建一个handler，用于写入日志文件 logfile = &amp;#39;./log/logger.txt&amp;#39; fh = logging.FileHandler(logfile, mode=&amp;#39;w&amp;#39;) fh.setLevel(logging.DEBUG) # 输出到file的log等级的开关 3、第三步，再创建一个handler，用于输出到控制台 ch = logging.StreamHandler() ch.setLevel(logging.WARNING) # 输出到console的log等级的开关 4、第四步，定义handler的输出格式 formatter = logging.Formatter(&amp;#34;%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s&amp;#34;) fh.setFormatter(formatter) ch.setFormatter(formatter) 5、第五步，将logger添加到handler里面 logger.addHandler(fh) logger.addHandler(ch)]() 三、日志 logger.</description>
+    </item>
+    <item>
+      <title>Python Sqlalchemy</title>
+      <link>http://ip:1313/python/sqlalchemy-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/sqlalchemy-hl/index.html</guid>
+      <description>一、安装 pip install sqlalchemy1、安装mysql apt-get install mysql-server apt-get install mysql-client apt-get install libmysqlclient15-dev2、安装python-mysqldb apt-get install python-mysqldb3、easy_install wget http://peak.telecommunity.com/dist/ez_setup.py python ez_setup.py4、MySQL-python easy_install MySQL-Python5、SQLAlchemy easy_install SQLAlchemy6、导包测试 vim test.py from sqlalchemy import create_engine from sqlalchemy.orm import sessionmaker DB_CONNECT_STRING 连接数据库的路径，mysql+mysqldb 指定使用MySQL-Python来连接，“ooxx”是使用的数据库名（可省略），“charset”指定了连接时使用的字符集（可省略）。&#xA;DB_CONNECT_STRING = &amp;#39;mysql+mysqldb://root:123@localhost/ooxx?charset=utf8&amp;#39; create_engine() 会返回一个数据库引擎，echo 参数为 True 时，会显示每条执行的 SQL 语句，生产环境下可关闭。&#xA;engine = create_engine(DB_CONNECT_STRING, echo=True) sessionmaker() 会生成一个数据库会话类。这个类的实例可以当成一个数据库连接，它同时还记录了一些查询的数据，并决定什么时候执行 SQL 语句。由于 SQLAlchemy 自己维护了一个数据库连接池（默认 5 个连接），因此初始化一个会话的开销并不大。对 Tornado 而言，可以在 BaseHandler 的 initialize() 里初始化：&#xA;DB_Session = sessionmaker(bind=engine) session = DB_Session()代码如下:</description>
+    </item>
+    <item>
+      <title>Python 代码混淆</title>
+      <link>http://ip:1313/python/python_obfuscated_code-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/python_obfuscated_code-hl/index.html</guid>
+      <description>1、字符串加密 import base64 # 加密 a=base64.b64encode(b&amp;#39;cat /sys/class/dmi/id/product_uuid&amp;#39;） #解密 b=bytes.decode(base64.b64decode(&amp;#39;Y2F0IC9zeXMvY2xhc3MvZG1pL2lkL3Byb2R1Y3RfdXVpZA==&amp;#39;))2、在线方法，变量混淆 http://pyob.oxyry.com/&#xA;3、nuitka pip install nuitka nuitka3 --module register.py4、 Cython pip install Cython cat setup.py from distutils.core import setup from Cython.Build import cythonize setup( ext_modules=cythonize(&amp;#34;hello.py&amp;#34;) ) python setup.py build_ext --inplace5、变量混淆 pip install pyminifier pyminifier -O register.py6、python编译 python -m compileall controllers.</description>
+    </item>
+    <item>
+      <title>Python 代码规范</title>
+      <link>http://ip:1313/python/python_code_standards-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/python_code_standards-hl/index.html</guid>
+      <description>一、编码 如无特殊情况，文件一律使用 UTF-8 编码。 如无特殊情况，文件头部必须加入 # coding: utf-8 标识。 二、代码格式 1、缩进 统一使用4个空格进行缩进 2、行宽 每行代码尽量不超过80个字符，特殊情况下可以略微超过80，但最长不超过120。 理由：&#xA;方便查看 side-by-side 的 diff 方便在控制台查看代码 太长可能是设计缺陷 3、引号 自然语言使用双引号，机器标识使用单引号，因此代码里多数应该使用单引号。&#xA;自然语言使用双引号&amp;quot;&amp;quot;。例如：错误信息；unicode 信息，u&amp;quot;你好世界&amp;quot;。 机器标识使用单引号&amp;rsquo;&amp;rsquo;，例如：dict 里的 key。 正则表达式使用原生的双引号 r&amp;quot;&amp;hellip;&amp;quot;。 文档字符串（docstring）使用三引号&amp;quot;&amp;quot;&amp;quot;&amp;hellip;&amp;quot;&amp;quot;&amp;quot;。 4、空行 模块级函数和类定义之间空两行。 类成员函数之间空一行。 class A: def __init__(self): pass def hello(self): pass def main(): pass 可以使用多个空格分隔多组相关的函数。&#xA;函数中可以使用空行分隔出逻辑相关的代码。&#xA;python 支持括号内的换行，这时有两种情况&#xA;1）、第二行缩进到括号的起始处&#xA;foo = long_function_name(var_one, var_two, var_three, var_four)2）、第二行缩进4个空格，适用于起始括号就换行的情形&#xA;def long_function_name( var_one, var_two, var_three, var_four): print(var_one)使用反斜杠\换行，二元运算符+ .等应出现在行末；长字符串也可以用此法换行。&#xA;session.query(MyTable).\ filter_by(id=1).\ one() print &amp;#39;Hello, &amp;#39;\ &amp;#39;%s %s!</description>
+    </item>
+    <item>
+      <title>Python 文件操作</title>
+      <link>http://ip:1313/python/python_file-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/python_file-hl/index.html</guid>
+      <description>open(file, mode=&amp;lsquo;r&amp;rsquo;, buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)&#xA;1、参数说明 file: 必需，文件路径（相对或者绝对路径）。 mode: 可选，文件打开模式 buffering: 设置缓冲 encoding: 一般使用utf8 errors: 报错级别 newline: 区分换行符 closefd: 传入的file参数类型 opener: 2、mode参数 模式 描述 t 文本模式 (默认)。 x 写模式，新建一个文件，如果该文件已存在则会报错。 b 二进制模式。 + 打开一个文件进行更新(可读可写)。 U 通用换行模式（Python 3 不支持）。 r 以只读方式打开文件。文件的指针将会放在文件的开头。这是默认模式。 rb 以二进制格式打开一个文件用于只读。文件指针将会放在文件的开头。这是默认模式。一般用于非文本文件如图片等。 r+ 打开一个文件用于读写。文件指针将会放在文件的开头。 rb+ 以二进制格式打开一个文件用于读写。文件指针将会放在文件的开头。一般用于非文本文件如图片等。 w 打开一个文件只用于写入。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。 wb 以二进制格式打开一个文件只用于写入。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。一般用于非文本文件如图片等。 w+ 打开一个文件用于读写。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。 wb+ 以二进制格式打开一个文件用于读写。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。一般用于非文本文件如图片等。 a 打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。也就是说，新的内容将会被写入到已有内容之后。如果该文件不存在，创建新文件进行写入。 ab 以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。也就是说，新的内容将会被写入到已有内容之后。如果该文件不存在，创建新文件进行写入。 a+ 打开一个文件用于读写。如果该文件已存在，文件指针将会放在文件的结尾。文件打开时会是追加模式。如果该文件不存在，创建新文件用于读写。 ab+ 以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。如果该文件不存在，创建新文件用于读写。 3、常用方法 序号 方法 描述 1 file.</description>
+    </item>
+    <item>
+      <title>Python 相关</title>
+      <link>http://ip:1313/python/python-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/python-hl/index.html</guid>
+      <description>for i, v in enumerate([&amp;#39;tic&amp;#39;, &amp;#39;tac&amp;#39;, &amp;#39;toe&amp;#39;]): for q, a in zip(questions, answers): &amp;gt;&amp;gt;&amp;gt; for x in range(1, 11): ... print(repr(x).rjust(2), repr(x*x).rjust(3), end=&amp;#39; &amp;#39;) ... # 注意前一行 &amp;#39;end&amp;#39; 的使用 ... print(repr(x*x*x).rjust(4)) for x in range(1, 11): ... print(&amp;#39;{0:2d} {1:3d} {2:4d}&amp;#39;.format(x, x*x, x*x*x))</description>
+    </item>
+    <item>
+      <title>Python 装饰器</title>
+      <link>http://ip:1313/python/python_decorators-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/python_decorators-hl/index.html</guid>
+      <description>装饰器本质上是一个Python函数，它可以让其他函数在不需要做任何代码变动的前提下增加额外功能，装饰器的返回值也是一个函数对象。它经常用于有切面需求的场景，比如：插入日志、性能测试、事务处理、缓存、权限校验等场景。装饰器是解决这类问题的绝佳设计，有了装饰器，我们就可以抽离出大量与函数功能本身无关的雷同代码并继续重用。&#xA;https://www.cnblogs.com/cicaday/p/python-decorator.html&#xA;1、python 2.4之前实现，函数添加额外功能 def debug(func): def wrapper(): print &amp;#34;[DEBUG]: enter {}()&amp;#34;.format(func.__name__) return func() return wrapper def say_hello(): print &amp;#34;hello!&amp;#34; say_hello = debug(say_hello)2、支持@语法糖后 def debug(func): def wrapper(): print &amp;#34;[DEBUG]: enter {}()&amp;#34;.format(func.__name__) return func() return wrapper @debug def say_hello(): print &amp;#34;hello!&amp;#34;3、被装饰函数传入参数 def debug(func): def wrapper(something): # 指定一毛一样的参数 print &amp;#34;[DEBUG]: enter {}()&amp;#34;.format(func.__name__) return func(something) return wrapper # 返回包装过函数 @debug def say(something): print &amp;#34;hello {}!&amp;#34;.format(something)4、被装饰函数传入可变参数 def debug(func): def wrapper(*args, **kwargs): # 指定宇宙无敌参数 print &amp;#34;[DEBUG]: enter {}()&amp;#34;.</description>
+    </item>
+    <item>
+      <title>scrapy 爬虫</title>
+      <link>http://ip:1313/python/scrapy-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/scrapy-hl/index.html</guid>
+      <description>scrapy官网&#xA;scrapy.cfg: 项目的配置文件 tutorial/: 该项目的python模块。之后您将在此加入代码。 tutorial/items.py: 项目中的item文件. tutorial/pipelines.py: 项目中的pipelines文件. tutorial/settings.py: 项目的设置文件. tutorial/spiders/: 放置spider代码的目录. Item 是保存爬取到的数据的容器 Spider是用户编写用于从单个网站(或者一些网站)爬取数据的类 为了创建一个Spider，您必须继承 scrapy.Spider 类， 且定义以下三个属性: name: 用于区别Spider。 该名字必须是唯一的，您不可以为不同的Spider设定相同的名字。 start_urls: 包含了Spider在启动时进行爬取的url列表。 因此，第一个被获取到的页面将是其中之一。 后续的URL则从初始的URL获取到的数据中提取。 parse() 是spider的一个方法。 被调用时，每个初始URL完成下载后生成的 Response 对象将会作为唯一的参数传递给该函数。 该方法负责解析返回的数据(response data)，提取数据(生成item)以及生成需要进一步处理的URL的 Request 对象。 Selector有四个基本的方法(点击相应的方法可以看到详细的API文档): xpath(): 传入xpath表达式，返回该表达式所对应的所有节点的selector list列表 。 css(): 传入CSS表达式，返回该表达式所对应的所有节点的selector list列表。 extract(): 序列化该节点为unicode字符串并返回list。 re(): 根据传入的正则表达式对数据进行提取，返回unicode字符串list列表。 一、基本使用 1、安装 pip install scrapy2、查看所有命令 scrapy genspider -l3、查看模板命令 scrapy genspider -d 模板名称4、展示爬虫应用列表 scrapy list5、创建scrapy项目 scrapy startproject yani cd yani/6、生成 spider scrapy genspider hotel &amp;#34;https://hotels.</description>
+    </item>
+    <item>
+      <title>urllib2 爬虫</title>
+      <link>http://ip:1313/python/urllib2-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/urllib2-hl/index.html</guid>
+      <description>import urllib2 import re import os url = r&amp;#39;https://movie.douban.com/cinema/nowplaying/chengdu/&amp;#39; req = urllib2.Request(url, headers={&amp;#39;User-Agent&amp;#39;: &amp;#39;Magic Browser&amp;#39;}) webpage = urllib2.urlopen(req) html = webpage.read() # html.decode(&amp;#39;utf-8&amp;#39;) re_general = r&amp;#39;&amp;lt;div id=&amp;#34;nowplaying&amp;#34;&amp;gt;([\s\S]*?)&amp;lt;div id=&amp;#34;upcoming&amp;#34;&amp;gt;&amp;#39; general = re.findall(re_general, html)[0] tg_start = 0 tg_end = 0 names = [] rates = [] tg_start = general.count(&amp;#39;&amp;lt;ul class=&amp;#34;&amp;#34;&amp;gt;&amp;#39;) for i in range(34): tg_start = general.find(&amp;#39;&amp;lt;ul class=&amp;#34;&amp;#34;&amp;gt;&amp;#39;) # if tg_start == -1: # print(&amp;#34;not find start tag&amp;#34;) # os.exit() tmp = general[tg_start:-1] general = tmp[len(&amp;#39;&amp;lt;ul class=&amp;#34;&amp;#34;&amp;gt;&amp;#39;):-1] tg_end = tmp.</description>
+    </item>
+    <item>
+      <title>xpath 相关</title>
+      <link>http://ip:1313/python/xpath-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/xpath-hl/index.html</guid>
+      <description>XPath，全称 XML Path Language，既 XML 路径语言，它是一门在 XML 文档中查找信息的语言。同样适用于 HTML 文档内容的搜索。&#xA;官方文档&#xA;一、xpath 语法 1、常用规则 路径表达式 描述 nodename 选取此节点的所有子节点 / 从根节点选取 // 从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置 . 选取当前节点 .. 选取当前节点的父节点 @ 选取属性 2、xpath 运算符 运算符 描述 实例 返回值 or 或 age=18 or age=20 age=18：True；age=21：False and 与 age&amp;gt;18 and age&amp;lt;21 age=20：True；age=21：False mod 计算除法的余数 5 mod 2 1 | 计算两个节点集 //book | //cd 返回所有拥有 book 和 cd 元素的节点集 + 加法 5 + 3 8 - 减法 5 - 3 2 * 乘法 5 * 3 15 div 除法 8 div 4 2 = 等于 age=19 判断简单，不再赘述 !</description>
+    </item>
+    <item>
+      <title>yield</title>
+      <link>http://ip:1313/python/yield-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/yield-hl/index.html</guid>
+      <description>def fab(max): n, a, b, ret = 0, 0, 1,[0] while n &amp;lt; max: print(b) ret.append(b) a, b = b, a + b n += 1 return ret print(fab(10))class Fab(object): def __init__(self, max): self.max = max self.n, self.a, self.b = 0, 0, 1 def __iter__(self): return self def next(self): if self.n &amp;lt; self.max: r = self.b self.a, self.b = self.b, self.a + self.b self.n = self.n + 1 return r raise StopIteration() for i in Fab(5): print(i)def fab(max): n, a, b = 0, 0, 1 while n &amp;lt; max: yield b a, b = b, a + b n += 1 print([i for i in fab(5)]) print(type(fab(5))) print(fab(5).</description>
+    </item>
+    <item>
+      <title>正则表达式相关</title>
+      <link>http://ip:1313/python/regular_expression-hl/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/python/regular_expression-hl/index.html</guid>
+      <description>一、常用元字符和语法 语法 说明 实例 匹配结果 . 匹配任意除换行符&amp;quot;\n&amp;quot;外的所有字符。 a.c abc [..] 字符集，对应位置可以是字符集中任意字符。 a[bcd]e abeaceade \d 数字，[0-9] a\dc a1c \D 非数字，[^\d] a\Dc abc \s 空白字符，匹配任何空白字符，包括空格、制表符、换页符等等，[ \t\r\n\f\v] a\sc a c \S 非空白字符，[^\s] a\Sc abc \w 单词字符，[A-Za-z0-9] a\wc abc \W 非单词字符，[^\w] a\Wc a c * 匹配前一个字符0次或多次 abc* ababccc + 匹配前一个字符1次或多次 abc+ abcabccc ? 匹配前一个字符0次或1次 abc？ ababc {m} 匹配前一个字符m次 ab{2}c abbc {m,n} 匹配前一个字符m到n次。m和n可以省略，若省略m，则匹配0到n次；若省略n，则匹配m至多次 ab{1,2}c abcabbc ^ 匹配字符串开头。在多行时，匹配每一行开头。匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。 ^abc abc $ 匹配字符串末尾。在多行时，匹配每一行末尾。 abc$ abc \A 仅匹配字符串开头。 \Aabc abc \Z 仅匹配字符串末尾。 abc\Z abc \b 匹配\w和\W之间匹配一个单词边界，即字与空格间的位置。 a\b!</description>
+    </item>
+  </channel>
+</rss>

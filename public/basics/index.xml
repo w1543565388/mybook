@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Basics on My New Hugo Site</title>
+    <link>http://ip:1313/basics/index.html</link>
+    <description>Recent content in Basics on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <lastBuildDate>Fri, 12 Apr 2024 09:17:53 +0000</lastBuildDate>
+    <atom:link href="http://ip:1313/basics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Second Content</title>
+      <link>http://ip:1313/basics/second-content/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:17:53 +0000</pubDate>
+      <guid>http://ip:1313/basics/second-content/index.html</guid>
+      <description>bbb</description>
+    </item>
+    <item>
+      <title>First Content</title>
+      <link>http://ip:1313/basics/first-content/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:17:51 +0000</pubDate>
+      <guid>http://ip:1313/basics/first-content/index.html</guid>
+      <description>aaaaa</description>
+    </item>
+  </channel>
+</rss>

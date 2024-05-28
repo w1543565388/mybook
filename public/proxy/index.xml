@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Proxy on My New Hugo Site</title>
+    <link>http://ip:1313/proxy/index.html</link>
+    <description>Recent content in Proxy on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <lastBuildDate>Fri, 12 Apr 2024 09:39:39 +0000</lastBuildDate>
+    <atom:link href="http://ip:1313/proxy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proxy相关</title>
+      <link>http://ip:1313/proxy/proxy/index.html</link>
+      <pubDate>Fri, 12 Apr 2024 09:39:39 +0000</pubDate>
+      <guid>http://ip:1313/proxy/proxy/index.html</guid>
+      <description>一、linux 代理 HTTP_PROXY=192.168.0.127:1080 COMMANDexport https_proxy=http://127.0.0.1:33210 http_proxy=http://127.0.0.1:33210 all_proxy=socks5://127.0.0.1:33211export {http_proxy,https_proxy,all_proxy}=http://127.0.0.1:1080unset all_proxy https_proxy http_proxy二、curl 使用代理 curl -O XX --socks5 192.168.0.127:1080三、wget 使用代理 1、修改环境变量 export http_proxy=http://192.168.0.127:10802、修改 /etc/wgetrc 或 ~/.wgetrc #You can set the default proxies for Wget to use for http, https, and ftp. # They will override the value in the environment. https_proxy = http://192.168.0.127:1080/ http_proxy = http://192.168.0.127:1080/ ftp_proxy = http://192.168.0.127:1080/ # If you do not want to use proxy at all, set this to off.</description>
+    </item>
+  </channel>
+</rss>

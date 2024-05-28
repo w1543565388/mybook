@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh_CN" dir="ltr">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.124.1">
+    <meta name="generator" content="Relearn 5.27.0+tip">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Build :: My New Hugo Site">
+    <meta name="twitter:description" content="Linux 相关 一、pigz 1、安装 apt-get -y install pigz2、压缩 tar cvf - 目录名 | pigz -9 -p 24 &gt; file.tgz #pigz：用法-9是压缩比率比较大，-p是指定cpu的核数。 tar cvf - /opt/hadoop-2.7.3.tar.gz | pigz -9 -p 4 &gt;hadoop-2.7.3.tgz3、解压 pigz -d file.tgz tar -xf file #tar -xf --format=posix file二 、sed 1、ip地址匹配替换 sed -i s/presenter_server_ip=[0-9.]*/presenter_server_ip=${presenter_connect_ip}/g ${cur_path}/presenterserver/${app_name}/config/config.conf2、多段替换 sed -i -e s#apk -U#sed -i &#39;s&#43;https://dl-cdn.alpinelinux.org&#43;${NGINX}/alpine&#43;g&#39; /etc/apk/repositories \&amp;\&amp; apk -U#g -e s#https://github.com/aquasecurity/trivy/releases/download#${NGINX}/kymoc_build/trivy#g Dockerfile.dapper3、匹配行前插入 sed -i /# Usage:/i\\\cp -rf kymoc /usr/local/bin/kymoc test4、匹配行后追加 sed -i /# Usage:/a\INSTALL_KYMOC_SKIP_DOWNLOAD=true test5、最后一行后添加 sed $ahello 1.">
+    <meta property="og:url" content="http://ip:1313/%E5%AE%B9%E5%99%A8/linux-hl/index.html">
+    <meta property="og:site_name" content="My New Hugo Site">
+    <meta property="og:title" content="Build :: My New Hugo Site">
+    <meta property="og:description" content="Linux 相关 一、pigz 1、安装 apt-get -y install pigz2、压缩 tar cvf - 目录名 | pigz -9 -p 24 &amp;gt; file.tgz #pigz：用法-9是压缩比率比较大，-p是指定cpu的核数。 tar cvf - /opt/hadoop-2.7.3.tar.gz | pigz -9 -p 4 &amp;gt;hadoop-2.7.3.tgz3、解压 pigz -d file.tgz tar -xf file #tar -xf --format=posix file二 、sed 1、ip地址匹配替换 sed -i s/presenter_server_ip=[0-9.]*/presenter_server_ip=${presenter_connect_ip}/g ${cur_path}/presenterserver/${app_name}/config/config.conf2、多段替换 sed -i -e s#apk -U#sed -i &amp;#39;s&#43;https://dl-cdn.alpinelinux.org&#43;${NGINX}/alpine&#43;g&amp;#39; /etc/apk/repositories \&amp;amp;\&amp;amp; apk -U#g -e s#https://github.com/aquasecurity/trivy/releases/download#${NGINX}/kymoc_build/trivy#g Dockerfile.dapper3、匹配行前插入 sed -i /# Usage:/i\\\cp -rf kymoc /usr/local/bin/kymoc test4、匹配行后追加 sed -i /# Usage:/a\INSTALL_KYMOC_SKIP_DOWNLOAD=true test5、最后一行后添加 sed $ahello 1.">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="容器 :: My New Hugo Site">
+    <meta property="article:published_time" content="2024-04-12T09:39:39+00:00">
+    <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
+    <title>Build :: My New Hugo Site</title>
+    <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
+    <link href="/css/fontawesome-all.min.css?1712919601" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1712919601" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1712919601" rel="stylesheet">
+    <link href="/css/auto-complete.css?1712919601" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1712919601" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1712919601" rel="stylesheet">
+    <link href="/css/fonts.css?1712919601" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1712919601" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1712919601" rel="stylesheet">
+    <link href="/css/theme-auto.css?1712919601" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1712919601" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1712919601" rel="stylesheet">
+    <link href="/css/print.css?1712919601" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1712919601" rel="stylesheet">
+    <script src="/js/url.js?1712919601"></script>
+    <script src="/js/variant.js?1712919601"></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/ip:1313';
+      // variant stuff
+      window.relearn.themeVariantModifier='';
+      window.variants && variants.init( [ 'auto' ] );
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/%E5%AE%B9%E5%99%A8/linux-hl/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"><nav class="TableOfContents">
+  <ul>
+    <li><a href="#一pigz">一、pigz</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#二-sed">二 、sed</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#三dd命令">三、dd命令</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#四别名">四、别名</a></li>
+    <li><a href="#五">五、;,&amp;&amp;,||</a></li>
+    <li><a href="#六proc">六、/proc</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#七grep">七、grep</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#八tar-分卷压缩">八、tar 分卷压缩</a></li>
+    <li><a href="#九修改用户名密码">九、修改用户名、密码</a></li>
+    <li><a href="#十linux快捷键">十、linux快捷键</a></li>
+    <li><a href="#十一网络吞吐量测试">十一、网络吞吐量测试</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#十二python-环境切换">十二、Python 环境切换</a></li>
+    <li><a href="#十三永久修改-dns">十三、永久修改 DNS</a></li>
+    <li><a href="#十四内核模块自动加载">十四、内核模块自动加载</a></li>
+    <li><a href="#十五缺少stdioh头文件">十五、缺少stdio.h头文件</a></li>
+    <li><a href="#十六c-多线性">十六、C 多线性</a></li>
+    <li><a href="#十七tar-拆分">十七、tar 拆分</a></li>
+    <li><a href="#十八获取当前时间">十八、获取当前时间</a></li>
+    <li><a href="#十九tmux">十九、tmux</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/%E5%AE%B9%E5%99%A8/index.html"><span itemprop="name">容器</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><span itemprop="name">Build</span><meta itemprop="position" content="2"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/%E5%AE%B9%E5%99%A8/libvirt-hl/index.html" title="Build (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/%E5%AE%B9%E5%99%A8/linux_network-hl/index.html" title="Build (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable default" tabindex="-1">
+        <div class="flex-block-wrapper">
+          <article class="default">
+            <header class="headline">
+            </header>
+
+<h1 id="build">Build</h1>
+
+<h1 id="linux-相关">Linux 相关</h1>
+<h2 id="一pigz">一、pigz</h2>
+<h5 id="1安装">1、安装</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get -y install pigz</code></pre></div><h5 id="2压缩">2、压缩</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>tar cvf - 目录名 | pigz -9 -p 24 &gt; file.tgz
+#pigz：用法-9是压缩比率比较大，-p是指定cpu的核数。
+tar cvf - /opt/hadoop-2.7.3.tar.gz | pigz -9 -p 4 &gt;hadoop-2.7.3.tgz</code></pre></div><h5 id="3解压">3、解压</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>pigz -d file.tgz
+tar -xf file
+#tar -xf --format=posix file</code></pre></div><h2 id="二-sed">二 、sed</h2>
+<h5 id="1ip地址匹配替换">1、ip地址匹配替换</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed -i s/presenter_server_ip=[0-9.]*/presenter_server_ip=${presenter_connect_ip}/g ${cur_path}/presenterserver/${app_name}/config/config.conf</code></pre></div><h5 id="2多段替换">2、多段替换</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed -i -e s#apk -U#sed -i &#39;s+https://dl-cdn.alpinelinux.org+${NGINX}/alpine+g&#39; /etc/apk/repositories \&amp;\&amp; apk -U#g 
+    -e s#https://github.com/aquasecurity/trivy/releases/download#${NGINX}/kymoc_build/trivy#g Dockerfile.dapper</code></pre></div><h5 id="3匹配行前插入">3、匹配行前插入</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed -i /# Usage:/i\\\cp -rf kymoc /usr/local/bin/kymoc test</code></pre></div><h5 id="4匹配行后追加">4、匹配行后追加</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed -i /# Usage:/a\INSTALL_KYMOC_SKIP_DOWNLOAD=true test</code></pre></div><h5 id="5最后一行后添加">5、最后一行后添加</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed  $ahello  1.txt</code></pre></div><h5 id="6最后一行前插入">6、最后一行前插入</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed $ihello  1.txt</code></pre></div><h5 id="7删除文中行">7、删除文中行</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed  4d  1.txt    #删除第四行</code></pre></div><h5 id="8删除匹配行">8、删除匹配行</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed  /123/d   1.txt   #删除匹配123的行</code></pre></div><h5 id="9删除空行">9、删除空行</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>sed  /^$/d    1.txt    #删除空行</code></pre></div><h5 id="10获取磁盘大小">10、获取磁盘大小</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>lsblk -ndb -o SIZE /dev/sda
+blockdev --getsize64 /dev/sda</code></pre></div><h5 id="11shell-编译成二进制">11、shell 编译成二进制</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt install -y shc gcc
+shc -f a.sh
+gcc -static a.sh.x.c</code></pre></div><h5 id="12sshpass">12、sshpass</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apk add openssh sshpass
+sshpass -p qwe ssh -l root 192.168.0.33 cat /etc/hosts</code></pre></div><h5 id="13gcc-打包静态库去除静态库中符号调试和debug信息">13、gcc 打包静态库，去除静态库中符号、调试和debug信息</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>gcc hello.c -o hello -static
+strip hello</code></pre></div><h5 id="14每三小时执行一次定时任务">14、每三小时执行一次定时任务</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>crontab -l
+crontab -e
+0 */3 * * * docker restart samba</code></pre></div><h2 id="三dd命令">三、dd命令</h2>
+<h5 id="1参数">1、参数</h5>
+<ul>
+<li>if=文件名：输入文件名，缺省为标准输入。即指定源文件。</li>
+<li>of=文件名：输出文件名，缺省为标准输出。即指定目的文件。</li>
+<li>ibs=bytes：一次读入bytes个字节，即指定一个块大小为bytes个字节。
+obs=bytes：一次输出bytes个字节，即指定一个块大小为bytes个字节。
+bs=bytes：同时设置读入/输出的块大小为bytes个字节。</li>
+<li>cbs=bytes：一次转换bytes个字节，即指定转换缓冲区大小。</li>
+<li>skip=blocks：从输入文件开头跳过blocks个块后再开始复制。</li>
+<li>seek=blocks：从输出文件开头跳过blocks个块后再开始复制。</li>
+<li>count=blocks：仅拷贝blocks个块，块大小等于ibs指定的字节数。</li>
+<li>conv=&lt;关键字&gt;，关键字可以有以下11种：</li>
+<li>conversion：用指定的参数转换文件。</li>
+<li>ascii：转换ebcdic为ascii</li>
+<li>ebcdic：转换ascii为ebcdic</li>
+<li>ibm：转换ascii为alternate ebcdic</li>
+<li>block：把每一行转换为长度为cbs，不足部分用空格填充</li>
+<li>unblock：使每一行的长度都为cbs，不足部分用空格填充</li>
+<li>lcase：把大写字符转换为小写字符</li>
+<li>ucase：把小写字符转换为大写字符</li>
+<li>swab：交换输入的每对字节</li>
+<li>noerror：出错时不停止</li>
+<li>notrunc：不截短输出文件</li>
+<li>sync：将每个输入块填充到ibs个字节，不足部分用空（NUL）字符补齐。</li>
+<li>&ndash;help：显示帮助信息</li>
+<li>&ndash;version：显示版本信息</li>
+</ul>
+<h5 id="1将本地的devhdb整盘备份到devhdd">1、将本地的/dev/hdb整盘备份到/dev/hdd</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/hdb of=/dev/hdd</code></pre></div><h5 id="2将devhdb全盘数据备份到指定路径image文件">2、将/dev/hdb全盘数据备份到指定路径image文件</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/hdb of=/root/image</code></pre></div><h5 id="3见备份文件恢复到指定盘">3、见备份文件恢复到指定盘</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/root/image of=/dev/hdb</code></pre></div><h5 id="4备份devhdb全盘数据并利用gzip工具进行压缩保存到指定路径">4、备份/dev/hdb全盘数据，并利用gzip工具进行压缩。保存到指定路径</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/hdb | gzip &gt; /root/image.gz</code></pre></div><h5 id="5将压缩的备份文件恢复到指定盘">5、将压缩的备份文件恢复到指定盘</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>gzip -dc /root/image.gz | dd of=/dev/hdb</code></pre></div><h5 id="6备份与恢复mbr">6、备份与恢复MBR</h5>
+<blockquote>
+<p>备份磁盘开始的512个字节大小的MBR信息到指定文件</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/hda of=/root/image count=1 bs=512</code></pre></div><blockquote>
+<p>count=1指仅拷贝一个块，bs=512指块大小为512字节。
+恢复，将备份的MBR信息写到磁盘的开始部分</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/root/image of=/dev/hda</code></pre></div><h5 id="7备份软盘">7、备份软盘</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/fd0 of=disk.img count=1 bs=1440k</code></pre></div><h5 id="8拷贝内存内容到硬盘">8、拷贝内存内容到硬盘</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/mem of=/root/mem.bin bs=1024(块大小1k)</code></pre></div><h5 id="9拷贝光盘内容到指定文件夹并保存为cdiso文件">9、拷贝光盘内容到指定文件夹，并保存为cd.iso文件</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/cdrom of=/root/cs.iso</code></pre></div><h5 id="10增加swap分区文件大小">10、增加swap分区文件大小</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>1、创建一个大小为256M的文件
+dd if=/dev/zero of=/swapfile bs=1024 count=262144
+2、把这个文件变成swap文件
+mkswap /swapfile
+3、启用这个swap文件
+swapon /swapfile
+4、编辑/etc/fstab文件，使在每次开机时自动加载swap文件
+/swapfile swap swap default 0 0</code></pre></div><h5 id="11销毁磁盘数据利用随机数据填充硬盘">11、销毁磁盘数据(利用随机数据填充硬盘)</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/urandom of=/dev/hda1</code></pre></div><h5 id="12测试硬盘读写速度">12、测试硬盘读写速度</h5>
+<blockquote>
+<p>通过以下两个命令输出的命令执行时间，可以计算出硬盘的读写速度。</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/zero bs=1024 count=1000000 of=/root/1Gb.file
+dd if=/root/1Gb.file bs=64k | dd of=/dev/null</code></pre></div><h5 id="13devnull和devzero的区别">13、/dev/null和/dev/zero的区别</h5>
+<ul>
+<li>/dev/null：无底洞，是空设备，可以向它输入任何数据，通吃。</li>
+<li>/dev/zero：是一个输入设备，可以用它来初始化文件。该设备无穷尽的提供0，可以使用任何需要的数目。可以用于向设备或文件写入字符串0。</li>
+</ul>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/zero of=./test.txt bs=1k count=1
+#禁止标准输出
+rm -rf /proc/cpuinfo &gt;/dev/null
+#禁止标准错误
+rm -rf /proc/cpuinfo 2&gt;/dev/null
+#禁止标准输出和标准错误的输出
+rm -rf /proc/cpuinfo 2&gt;/dev/null &gt;/dev/null
+rm -rf /proc/cpuinfo &gt;/dev/null 2&gt;&amp;1</code></pre></div><h5 id="14dd测试磁盘io">14、dd测试磁盘io</h5>
+<p><a href="https://www.xiaomastack.com/2015/01/09/dd%E5%91%BD%E4%BB%A4%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98io/" rel="external" target="_blank">https://www.xiaomastack.com/2015/01/09/dd%E5%91%BD%E4%BB%A4%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98io/</a></p>
+<div class="highlight wrap-code"><pre tabindex="0"><code>dd if=/dev/zero of=out.file bs=512K count=2048 
+dd if=/dev/zero of=out.file bs=512K count=2048 oflag=direct 
+dd if=/dev/zero of=out.file bs=512K count=2048 oflag=dsync 
+dd if=/dev/zero of=out.file bs=512K count=2048 oflag=sync 
+dd if=/dev/zero of=out.file bs=512K count=2048 conv=fdatasync 
+dd if=/dev/zero of=out.file bs=512K count=2048 conv=fsync</code></pre></div><p>​	1、大多数文件系统的默认I/O操作都是缓存I/O，数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。dd命令不指定oflag或conv参数时默认使用缓存I/O
+​	2、用oflag=direct指定采用直接I/O操作。直接I/O的优点是通过减少操作系统内核缓冲区和应用程序地址空间的数据拷贝次数，降低了对文件读取和写入时所带来的CPU的使用以及内存带宽的占用。很明显，直接I/O会增加磁盘读写的次数
+​	3、用oflag=dsyns参数，dd在执行时每次都会进行同步写入操作，可能是最慢的一种方式了，因为基本上没有用到写缓存(write cache)
+​	4、用oflag=syns参数，与上者dsyns类似，但同时也对元数据（描述一个文件特征的系统数据，如访问权限、文件拥有者及文件数据块的分布信息等。）生效，dd在执行时每次都会进行数据和元数据的同步写入操作
+​	5、使用conv=fdatasync参数，dd命令执行到最后会真正执行一次“同步(sync)”操作，将所有还没有写入到磁盘的缓存内容写入磁盘，这样算出来的数度才是比较符合实际的
+​	6、使用conv=fsync参数，与上者fdatasync类似，但同时元数据也一同写入。 以上可以看出，因为测试数据还和当前的系统环境、系统负载、磁盘测试时磁盘已有的读写任务等有关，用dd命令测试磁盘时不一定是磁盘真实的读写速度。但是可以大致判断机器目前的磁盘读写速度</p>
+<h5 id="15磁盘修复">15、磁盘修复</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>fsck.ext4 -y /dev/sda1
+xfs_repair /dev/sda1</code></pre></div><h5 id="16扩容">16、扩容</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>xfs_growfs /dev/mapper/centos-root
+resize2fs /dev/myVG/myLV</code></pre></div><h2 id="四别名">四、别名</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>alias aming=pwd
+unalias aming</code></pre></div><h2 id="五">五、;,&amp;&amp;,||</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>使用 ”;” 时，不管command1是否执行成功都会执行command2；
+使用 “&amp;&amp;” 时，只有command1执行成功后，command2才会执行，否则command2不执行；
+使用 “||” 时，command1执行成功后command2 不执行，否则去执行command2，总之command1和command2总有一条命令会执行。</code></pre></div><h2 id="六proc">六、/proc</h2>
+<blockquote>
+<p>/proc 文件系统是一个伪的文件系统，就是说它是一个实际上不存在的目录，因而这是一
+个非常特殊的目录。它并不存在于某个磁盘上，而是由核心在内存中产生。这个目录用于提
+供关于系统的信息。下面说明一些最重要的文件和目录(/proc 文件系统在proc man页中有更详
+细的说明)。</p>
+</blockquote>
+<ol>
+<li>
+<h5 id="procx">/proc/x</h5>
+</li>
+</ol>
+<p>关于进程x的信息目录，这一x是这一进程的标识号。每个进程在/proc 下有一个名为自
+己进程号的目录。
+2. ##### /proc/cpuinfo
+存放处理器( c p u )的信息，如c p u的类型、制造商、型号和性能等。
+3. ##### /proc/devices
+当前运行的核心配置的设备驱动的列表。
+4. ##### /proc/dma
+显示当前使用的d m a通道。
+5. ##### /proc/filesystems
+核心配置的文件系统信息。
+6. ##### /proc/interrupts
+显示被占用的中断信息和占用者的信息，以及被占用的数量。
+7. ##### /proc/ioports
+当前使用的i / o端口。
+8. ##### /proc/kcore
+系统物理内存映像。与物理内存大小完全一样，然而实际上没有占用这么多内存；它仅仅是在程序访问它时才被创建。(注意：除非你把它拷贝到什么地方，否则/proc 下没有任何东西占用任何磁盘空间。)
+9. ##### /proc/kmsg
+核心输出的消息。也会被送到s y s l o g。
+10. ##### /proc/ksyms
+核心符号表。
+11. ##### /proc/loadavg
+系统“平均负载”； 3个没有意义的指示器指出系统当前的工作量。
+12. ##### /proc/meminfo
+各种存储器使用信息，包括物理内存和交换分区( s w a p )。
+13. ##### /proc/modules
+存放当前加载了哪些核心模块信息。
+14. ##### /proc/net
+网络协议状态信息。
+15. ##### /proc/self
+存放到查看/proc 的程序的进程目录的符号连接。当2个进程查看/proc 时，这将会是不同的连接。这主要便于程序得到它自己的进程目录。
+16. ##### /proc/stat
+系统的不同状态，例如，系统启动后页面发生错误的次数。
+17. ##### /proc/uptime
+系统启动的时间长度。
+18. ##### /proc/version
+核心版本</p>
+<h2 id="七grep">七、grep</h2>
+<ul>
+<li>-E ：开启扩展（Extend）的正则表达式。</li>
+<li>-i ：忽略大小写（ignore case）。</li>
+<li>-v ：反过来（invert），只打印没有匹配的，而匹配的反而不打印。</li>
+<li>-n ：显示行号</li>
+<li>-w ：被匹配的文本只能是单词，而不能是单词中的某一部分，如文本中有liker，而我搜寻的只是like，就可以使用-w选项来避免匹配liker</li>
+<li>-c ：显示总共有多少行被匹配到了，而不是显示被匹配到的内容，注意如果同时使用-cv选项是显示有多少行没有被匹配到。</li>
+<li>-o ：只显示被模式匹配到的字符串。</li>
+<li>&ndash;color :将匹配到的内容以颜色高亮显示。</li>
+<li>-A  n：显示匹配到的字符串所在的行及其后n行，after</li>
+<li>-B  n：显示匹配到的字符串所在的行及其前n行，before</li>
+<li>-C  n：显示匹配到的字符串所在的行及其前后各n行，context</li>
+</ul>
+<h5 id="1-a-显示匹配到的字符串所在的行及其后n行after">1、-A 显示匹配到的字符串所在的行及其后n行，after</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>grep -A 2 core id /proc/cpuinfo</code></pre></div><h5 id="2-b-显示匹配到的字符串所在的行及其前n行before">2、-B 显示匹配到的字符串所在的行及其前n行，before</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>grep -B 2 core id /proc/cpuinfo</code></pre></div><h5 id="3-c-显示匹配到的字符串所在的行及其前后n行context">3、-C 显示匹配到的字符串所在的行及其前后n行，context</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>grep -C 2 core id /proc/cpuinfo</code></pre></div><h5 id="4grep--e-word1word2word3-filetxt">4、grep -E word1|word2|word3 file.txt</h5>
+<h5 id="5egrep-rootbash-passwd">5、egrep ^root|bash$ passwd</h5>
+<h2 id="八tar-分卷压缩">八、tar 分卷压缩</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>举例说明：
+要将目录logs打包压缩并分割成多个1M的文件，可以用下面的命令：
+tar cjf - logs/ |split -b 1m - logs.tar.bz2.
+完成后会产生下列文件：
+logs.tar.bz2.aa, logs.tar.bz2.ab, logs.tar.bz2.ac
+要解压的时候只要执行下面的命令就可以了：
+cat logs.tar.bz2.a* | tar xj
+再举例：
+要将文件test.pdf分包压缩成500 bytes的文件：
+tar czf - test.pdf | split -b 500 - test.tar.gz
+最后要提醒但是那两个-不要漏了，那是tar的ouput和split的input的参数。
+tar cjf - logs/ |split -b 1m - logs.tar.bz2.
+完成后会产生下列文件：
+logs.tar.bz2.aa, logs.tar.bz2.ab, logs.tar.bz2.ac
+要解压的时候只要执行下面的命令就可以了：
+cat logs.tar.bz2.a* | tar xj</code></pre></div><h2 id="九修改用户名密码">九、修改用户名、密码</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/hostname
+vim /etc/hosts
+vim /etc/passwd
+vim /etc/shadow
+passwd {your_name}</code></pre></div><h2 id="十linux快捷键">十、linux快捷键</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ctrl + a  光标跳到行首
+ctrl + e  光标跳到行尾
+ctrl + b  光标左移一个字母
+ctrl + f  光标右移一个字母
+ctrl + u  清除光标前内容
+ctrl + k  清除光标后内容
+ctrl + w  清除光标前一个单词
+ctrl + y  恢复上次删除
+ctrl + x  光标移到行首，再按下移动到原处
+ctrl + h  同backspace
+ctrl + d  删除光标所在字母
+esc + f   往右跳一个单词
+esc + b   往左跳一个单词</code></pre></div><h2 id="十一网络吞吐量测试">十一、网络吞吐量测试</h2>
+<h5 id="1安装-1">1、安装</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>yum -y install iperf3</code></pre></div><h5 id="2server执行192168212">2、Server执行(192.168.21.2)</h5>
+<blockquote>
+<p>持续测试1个小时，每10秒打印一次输出结果</p>
+<p>-J 以Json格式输出测试结果</p>
+<p>-P 指定同时连接测试的数量，默认一条连接</p>
+<p>-u 使用UDP</p>
+<p>&ndash;sctp 使用SCTP</p>
+<p>缺省iperf3使用上传模式：Client负责发送数据，Server负责接收；如果需要测试下载速度，则在Client侧使用-R参数即可</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>iperf3 -s -p 5201 -i 10 -t 3600</code></pre></div><h5 id="3client执行">3、Client执行</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>iperf3 -c 192.168.21.2 -p 5201</code></pre></div><h2 id="十二python-环境切换">十二、Python 环境切换</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>update-alternatives --install /usr/bin/python python /usr/bin/python2 100
+update-alternatives --install /usr/bin/python python /usr/bin/python3 150
+update-alternatives --config python</code></pre></div><h2 id="十三永久修改-dns">十三、永久修改 DNS</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/systemd/resolved.conf
+[Resolve]
+DNS=119.29.29.29
+systemctl restart systemd-resolved</code></pre></div><h2 id="十四内核模块自动加载">十四、内核模块自动加载</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>echo test &gt; /etc/modules-load.d/test.conf
+cp test.ko /lib/modules/4.19.37-rt19/kernel/</code></pre></div><h2 id="十五缺少stdioh头文件">十五、缺少stdio.h头文件</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt install -y build-essential</code></pre></div><h2 id="十六c-多线性">十六、C 多线性</h2>
+<blockquote>
+<p>-g gdb 调试</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>gcc server.c -g -o server -lpthread
+gdb ./server</code></pre></div><h2 id="十七tar-拆分">十七、tar 拆分</h2>
+<blockquote>
+<p>-b     b、k、m 单位</p>
+<p>yolov3.om 可以是文件，也可以是目录</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>tar -zcvf - yolov3.om | split -b 100M - yolov3.om_
+cat yolov3.om_a* | tar -zxvf -</code></pre></div><h2 id="十八获取当前时间">十八、获取当前时间</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>`date +%Y%m%d%H%M%S`</code></pre></div><h2 id="十九tmux">十九、tmux</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>tmux ls
+tmux attach -t 0
+# 后台
+Ctrl+b d
+# 选则窗口
+Ctrl+b s
+# 水平拆分
+tmux split-window
+Ctrl+b %
+# 垂直拆分
+tmux split-window -h</code></pre></div>
+            <footer class="footline">
+            </footer>
+          </article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <style>
+            #R-logo svg,
+            #R-logo svg * {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              fill: #282828 !important;
+              fill: var(--MENU-SECTIONS-BG-color) !important;
+              opacity: .945;
+            }
+            a#R-logo {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+              font-size: 1.875rem;
+              font-weight: 300;
+              margin-top: -.8125rem;
+              max-width: 60%;
+              text-transform: uppercase;
+              width: 14.125rem;
+              white-space: nowrap;
+            }
+            a#R-logo:hover {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+            }
+            #R-logo svg {
+              margin-bottom: -1.25rem;
+              margin-inline-start: -1.47rem;
+              margin-inline-end: .5rem;
+              width: 40.5%;
+            }
+            @media only all and (max-width: 59.999rem) {
+              a#R-logo {
+                font-size: 1.5625rem;
+                margin-top: -.1875rem;
+              }
+              #R-logo svg {
+                margin-bottom: -.75rem;
+                margin-inline-start: -1.47rem;
+                margin-inline-end: .5rem;
+              }
+            }
+            @media all and (-ms-high-contrast:none) {
+              /* IE11s understanding of positioning is weird at best */
+              a#R-logo {
+                margin-top: -3.625rem;
+              }
+              #R-logo svg {
+                margin-bottom: -3.875rem;
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+            @media only all and (-ms-high-contrast:none) and (max-width: 59.999rem) {
+              #R-logo svg {
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+          </style>
+          <a id="R-logo" href="/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.044 64.044">
+              <path d="M46.103 136.34c-.642-.394-1.222-2.242-1.98-2.358-.76-.117-1.353.506-1.618 1.519-.266 1.012-.446 4.188.173 5.538.213.435.482.787 1.03.845.547.057.967-.504 1.45-1.027.482-.523.437-.9 1.142-.612.705.289 1.051.4 1.586 1.229.535.828 1.085 4.043.868 5.598-.241 1.458-.531 2.8-.59 4.088.26.075.517.148.772.217 2.68.724 5.373 1.037 7.873.02.001-.028.01-.105.008-.11-.048-.165-.18-.41-.36-.698-.18-.29-.414-.645-.586-1.114a3.212 3.212 0 0 1-.125-1.735c.056-.21.153-.342.249-.475 1.237-1.193 2.932-1.373 4.244-1.384.557-.004 1.389.016 2.198.255.809.239 1.706.724 2.068 1.843.187.578.114 1.17-.043 1.623-.153.438-.369.783-.545 1.091-.178.31-.329.6-.401.821-.007.02-.003.071-.005.094 2.256 1.008 4.716.91 7.189.398.55-.114 1.11-.247 1.673-.377.344-1.085.678-2.145.852-3.208.124-.752.158-2.311-.078-3.538-.118-.613-.306-1.15-.52-1.489-.221-.349-.413-.501-.747-.538-.243-.027-.51.013-.796.098-.67.223-1.33.606-1.966.76l-.008.002-.109.032c-.556.152-1.233.158-1.797-.36-.556-.51-.89-1.367-1.117-2.596-.283-1.528-.075-3.279.89-4.518l.071-.09h.07c.65-.71 1.485-.802 2.16-.599.706.213 1.333.629 1.772.84.736.354 1.185.319 1.475.171.291-.148.5-.439.668-.955.332-1.017.301-2.819.022-4.106-.148-.684-.13-1.292-.13-1.883-1.558-.463-3.067-.982-4.574-1.208-1.128-.169-2.263-.173-3.298.164-.13.046-.256.095-.38.15-.373.164-.633.342-.805.52-.077.098-.081.105-.087.21-.004.068.031.289.13.571.1.282.256.634.467 1.03.279.524.448 1.063.431 1.618a2.12 2.12 0 0 1-.499 1.309 1.757 1.757 0 0 1-.62.51h-.002c-.515.291-1.107.404-1.723.464-.86.083-1.787.026-2.598-.097-.806-.123-1.47-.28-1.948-.555-.444-.256-.79-.547-1.037-.925a2.273 2.273 0 0 1-.356-1.301c.029-.837.403-1.437.625-1.897.111-.23.191-.433.236-.583.045-.15.044-.25.046-.24-.005-.029-.127-.355-1.015-.741-1.138-.495-2.322-.673-3.533-.668h-.015a9.711 9.711 0 0 0-.521.016h-.002c-1.163.057-2.35.308-3.541.569.383 1.531.79 2.753.818 4.502-.096 1.297.158 2.114-1.03 2.935-.85.588-1.508.729-2.15.335" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:1.03763;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M61.472 101.34v.002c-.3-.003-.603.01-.894.04-.544.055-1.39.165-1.778.306-1.238.364.13 2.344.41 2.913.28.569.285 2.03.14 2.134-.144.103-.375.261-.934.345-.56.084.03-.037-1.589.086-1.62.122-5.506.29-8.265.248-.022.26-.036.521-.097.808-.309 1.442-.63 3.163-.494 4.074.071.473.168.65.414.8.23.14.737.235 1.62-.004.834-.227 1.3-.442 1.887-.456.595-.016 1.555.472 1.965.717.411.245-.03-.008.002 0s.128.05.176.102c.049.053-.276-.523.104.199.379.721.72 3.256.002 4.68-.46.913-1.01 1.49-1.64 1.711-.63.22-1.229.067-1.734-.135-.881-.353-1.584-.7-2.205-.647-1.199 1.94-1.186 4.17-.6 6.602.097.397.212.814.327 1.23 2.68-.556 5.542-1.016 8.337.132 1.064.437 1.73 1.015 1.902 1.857.169.831-.193 1.508-.438 1.986-.122.238-.23.46-.307.642-.07.164-.096.28-.104.324.069.429.309.723.686.945.385.227.89.355 1.35.423.723.104 1.567.152 2.287.086.693-.064 1.032-.338 1.241-.544a2.447 2.447 0 0 0 .303-.437.175.175 0 0 0 .013-.035c-.004-.066-.037-.246-.195-.527-.46-.816-.87-1.595-.817-2.51.028-.476.218-.938.529-1.288.304-.343.698-.586 1.186-.79 1.442-.606 2.96-.609 4.372-.409 1.525.216 2.963.679 4.378 1.083.226-2.09.784-3.9.592-5.77-.058-.565-.287-1.333-.598-1.827-.32-.508-.59-.717-1.036-.642-.648.11-1.472.935-2.707 1.078-.791.092-1.494-.267-1.95-.86-.45-.583-.678-1.335-.78-2.101-.202-1.525.031-3.229.89-4.27.615-.747 1.45-.887 2.15-.74.687.145 1.307.492 1.857.745v-.002c.546.252 1.033.388 1.281.344a.547.547 0 0 0 .353-.188c.113-.124.242-.35.384-.75.604-1.712.206-3.68-.303-5.654-.667.145-1.336.293-2.018.413-1.341.236-2.73.392-4.136.273-.656-.055-1.695-.085-2.58-.476-.442-.195-.903-.514-1.157-1.093-.259-.591-.205-1.313.08-2.014.223-.64 1.082-2.178.692-2.585-.391-.407-1.651-.56-2.554-.571z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.992837;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M83.128 98.116c-.484 1.875-1.057 3.757-2.486 5.033-.638.57-1.13.666-1.483.548-.401-.134-.715-.506-1.058-.973-.338-.461-.655-.97-1.076-1.332-.192-.165-.404-.315-.683-.38-.279-.066-.599-.02-.9.102-.489.196-.89.58-1.28 1.047a6.1 6.1 0 0 0-.985 1.632c-.234.591-.356 1.174-.277 1.713.072.487.392.977.905 1.185.463.187.926.156 1.36.154.433 0 .843.01 1.242.147.55.189.79.736.822 1.368.034.66-.145 1.412-.393 1.988l-.008.021c-.74 1.705-1.946 2.893-3.004 4.349l-.664.915.979.099c.924.092 1.788.26 2.468.675.46.281 1.806 1.205 2.794 2.222.497.513.888 1.031 1.047 1.502.078.231.095.422.05.6a.93.93 0 0 1-.345.474c-.301.223-.606.395-.864.532l-.354.186c-.107.058-.189.087-.345.228a.637.637 0 0 1 .062-.045l-.064.041-.209.236-.103.343s.003.126.007.152c.003.017.003.007.004.015v.002c.016.195.061.307.133.476a4.1 4.1 0 0 0 .32.596 5.7 5.7 0 0 0 2.8 2.258c.284.108.908.321 1.548.36.33.02.59.015.912-.13h.002c.08-.037.228-.095.382-.281.153-.186.19-.355.212-.445l.019-.075.003-.078c.023-.585-.037-1.296.072-1.899.153-.657.435-.956 1.009-.909 2.771.239 4.74 1.955 6.693 3.83l.742.714.279-1.155c.55-2.29 1.093-4.464 2.928-5.977.692-.57 1.184-.642 1.527-.509.39.151.676.536.996.995.319.458.605.926 1.07 1.212.194.119.464.232.784.209.32-.024.638-.163.988-.384 1.022-.645 1.778-1.756 2.086-2.942.136-.522.102-.991-.046-1.301-.158-.334-.433-.553-.754-.707-.653-.314-1.468-.373-2.094-.486-.825-.15-1.22-.475-1.345-.878-.13-.417 0-.953.335-1.61.6-1.173 1.887-2.602 3.13-3.911l.498-.526-.449-.432c-1.545-1.49-3.163-3.01-5.252-3.715h-.002c-.473-.16-1.097-.413-1.73-.424h-.003c-.311-.004-.596.04-.883.24v.002c-.22.155-.483.537-.583.937l-.008.036-.006.038c-.116.773-.06 1.467-.217 1.995-.063.212-.198.418-.359.507-.202.111-.492.153-.976.072-.582-.097-1.978-.69-3.021-1.503-.523-.407-.934-.85-1.117-1.3a1.153 1.153 0 0 1-.083-.63c.03-.184.1-.477.308-.593.21-.116.941-.32 1.377-.642h.002c.192-.141.403-.367.518-.64.114-.275.127-.526.123-.774-.006-.142-.036-.192-.08-.3a8.417 8.417 0 0 0-3-3.027c-1.226-.725-2.585-1.135-3.927-1.539-.434-.12-.844-.111-1.02.466zm.912.947c1.186.364 2.357.718 3.345 1.303 1.035.612 1.864 1.488 2.507 2.528-.514.263-1.095.5-1.44.79-.345.29-.729.914-.815 1.434-.084.509 0 .968.155 1.347.301.74.85 1.276 1.44 1.735 1.18.92 2.554 1.545 3.47 1.698.604.1 1.186.088 1.739-.216.594-.327.935-.911 1.088-1.427.264-.884.193-1.664.262-2.17h.1c.3.006.926.206 1.417.371 1.646.554 3.044 1.773 4.431 3.089-1.102 1.174-2.222 2.423-2.888 3.73-.42.823-.73 1.789-.453 2.687.283.913 1.1 1.415 2.138 1.603.691.126 1.472.226 1.84.403.19.091.258.182.278.223.03.064.058.075-.023.387-.21.804-.761 1.598-1.413 2.01-.247.155-.365.183-.407.187-.042.003-.061.002-.172-.066-.144-.088-.455-.473-.772-.929-.317-.454-.714-1.07-1.452-1.356-.783-.304-1.776-.022-2.713.75-1.942 1.6-2.626 3.764-3.146 5.8-1.802-1.676-3.772-3.138-6.589-3.517h-.002c-.346-.095-1.013-.031-1.293.143-.735.501-1.005 1.132-1.168 2.007-.125.69-.082 1.216-.074 1.659-.055.006-.046.01-.104.006-.42-.026-1.035-.215-1.244-.295-.947-.361-1.774-1.006-2.314-1.857-.054-.085-.072-.132-.109-.2l.027-.016c.284-.15.656-.36 1.045-.648.44-.327.789-.798.93-1.35a2.4 2.4 0 0 0-.068-1.379c-.254-.751-.753-1.353-1.295-1.911-1.09-1.124-2.452-2.049-2.99-2.378-.609-.372-1.303-.44-1.981-.56.875-1.094 1.878-2.251 2.596-3.921.294-.823.543-1.907.513-2.658-.049-.97-.489-2.013-1.52-2.367-.579-.2-1.131-.204-1.58-.203-.45.002-.786-.006-.97-.08h-.002c-.264-.107-.236-.108-.268-.33-.025-.17.021-.553.183-.962a4.67 4.67 0 0 1 .725-1.192c.29-.348.617-.59.705-.626.142-.057.176-.05.22-.04.045.011.127.052.263.17.235.201.56.671.92 1.161.354.484.791 1.08 1.543 1.33.8.267 1.784-.052 2.671-.846 1.594-1.424 2.235-3.317 2.714-5.051zm11.705 7.023c-.02.014.042-.002.042 0l-.008.035c.05-.2-.028-.04-.034-.035zM79.472 122.45a.198.198 0 0 1 .005.023v.014c-.002-.01-.003-.03-.005-.037zm-.29.732-.006.01-.044.027c.016-.01.033-.024.05-.036z" style="color:#000;fill:#282828;stroke-width:1.02352;-inkscape-stroke:none" transform="translate(-40.698 -95.175)"/>
+              <path d="M76.694 128.845c-.85-.012-1.668.253-2.434.67-.01.592-.015 1.17.109 1.772.323 1.573.422 3.553-.07 5.147-.247.804-.684 1.535-1.347 1.891-.663.356-1.467.296-2.362-.159-.522-.266-1.059-.62-1.487-.757-.223-.072-.392-.096-.522-.069-.13.027-.232.094-.362.27-.53.719-.681 1.823-.497 2.876.177 1.012.418 1.438.543 1.56.143.137.26.154.604.055.548-.158 1.523-.857 2.573-.972l.02-.002.5.058c.686.081 1.247.562 1.622 1.19.372.62.591 1.37.73 2.136.279 1.532.25 3.16.083 4.232-.14.91-.394 1.72-.632 2.53 1.719-.385 3.485-.692 5.307-.36 1.174.214 2.749.574 3.762 1.977l.088.122.046.159c.162.551.16 1.114.024 1.578-.13.45-.348.772-.533 1.023-.181.246-.336.444-.437.606-.102.16-.141.275-.145.336-.01.17 0 .197.07.315.057.1.186.242.39.366.408.246 1.106.414 1.843.45a7.842 7.842 0 0 0 2.174-.21 4.28 4.28 0 0 0 .822-.296c.218-.106.385-.242.377-.233l.029-.031c.025-.035.05-.072.05-.068 0-.004 0-.017-.003-.05a2.733 2.733 0 0 0-.21-.579c-.26-.548-.839-1.333-.822-2.46.01-.657.27-1.21.598-1.576.32-.357.696-.575 1.074-.736.759-.323 1.57-.418 2.054-.458 1.653-.136 3.252.296 4.755.765.457.142.905.29 1.352.434.325-2.258.902-4.247.598-6.217-.071-.46-.25-1.169-.486-1.684-.238-.518-.495-.762-.675-.779-.351-.032-.716.14-1.174.418-.457.277-1.005.665-1.695.742-.745.082-1.406-.291-1.84-.908-.428-.608-.653-1.394-.754-2.196-.203-1.596.016-3.377.794-4.493.568-.813 1.358-.984 2.024-.835.65.146 1.243.51 1.769.779.524.267.99.413 1.237.365a.527.527 0 0 0 .346-.2c.11-.132.235-.373.37-.798.612-1.918.27-3.894-.246-6.054-2.815-.851-5.49-1.534-8.089-.267a.727.727 0 0 0-.223.148c-.024.028-.018.021-.026.056.001-.003-.01.178.07.44.162.522.611 1.29.911 1.978l.004.009.029.063.024.084V133c.162.635.016 1.297-.274 1.727-.272.404-.618.636-.952.81-.675.353-1.399.484-1.724.533a5.888 5.888 0 0 1-3.973-.795c-.512-.311-.876-.594-1.133-1.02-.282-.466-.318-1.084-.172-1.557.252-.814.715-1.266.971-1.89a.663.663 0 0 0 .047-.14c.001-.013 0-.006-.007-.037a.761.761 0 0 0-.184-.268c-.264-.267-.865-.595-1.54-.826-1.356-.462-3.07-.659-3.583-.686-.062-.002-.121-.006-.178-.006z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.991342;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+            </svg>Relearn
+          </a>
+        </div>
+
+        <search>
+          <div class="searchbox default-animation">
+            <i class="fas fa-search" title="Search (CTRL+ALT+f)"></i>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1712919601" defer></script>
+        <script src="/js/lunr/lunr.min.js?1712919601" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1712919601" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1712919601" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1712919601" defer></script>
+        <script src="/js/search.js?1712919601" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-topics">
+          <ul class="enlarge morespace collapsible-menu">
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/index.html" class="parent "><a class="padding" href="/%E5%AE%B9%E5%99%A8/index.html">容器</a><ul id="R-subsections-aa16404bf92ba8ac9012a8ae97ecece8" class="morespace collapsible-menu">
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/abd-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/abd-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ansible-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ansible-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/apache_multi_ports-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/build/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/build/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/build_pypi-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/build_pypi-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/change_centos_boot_kernel-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/cobbler-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/cobbler-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/crontabs-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/crontabs-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/crushmap-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/crushmap-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/dd-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/dd-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/diy_centos_iso-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/dns-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/dns-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/etcd-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/etcd-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/frp-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/frp-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ftp-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ftp-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/gitlab-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/gitlab-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/guestfish-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/guestfish-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/haproxy-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/haproxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/iscsi-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/iscsi-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/kernel_make-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/kernel_make-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/libvirt-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/libvirt-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/linux-hl/index.html" class="active"><a class="padding" href="/%E5%AE%B9%E5%99%A8/linux-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/linux_network-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/linux_network-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/linux_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/linux_u-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/linux_u-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/lvm-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/lvm-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/mdadm-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/mdadm-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/mysql-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/mysql-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/nested-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/nested-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/net_bridge-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/net_bridge-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/nginx-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/nginx-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/nic_bond-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/nic_bond-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/proxychains_ng-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/proxychains_ng-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/pypi_local_source-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/pypi_local_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/qemu_img-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/qemu_img-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ramdisk-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ramdisk-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/root_extend-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/root_extend-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/rpm_build-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/rpm_build-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/samba-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/samba-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ssh-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ssh-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ssh_forwading-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ssh_forwading-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ssh_interval-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ssh_interval-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/ssr_privoxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/synology-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/synology-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/systemd-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/systemd-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/tcpdump-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/tcpdump-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/uboot-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/uboot-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/unixbench-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/unixbench-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/vim-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/vim-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/virt_manager-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/virt_manager-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/vm_to_router-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/vm_to_router-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/yum_install_conf_conflict-hl/index.html">Build</a></li>
+          <li data-nav-id="/%E5%AE%B9%E5%99%A8/docker/index.html" class=""><a class="padding" href="/%E5%AE%B9%E5%99%A8/docker/index.html">Docker</a></li></ul></li>
+          <li data-nav-id="/basics/index.html" class=""><a class="padding" href="/basics/index.html">Basics</a><ul id="R-subsections-a6deabe447afe1b2e1405bfc57ca61ff" class="morespace collapsible-menu">
+          <li data-nav-id="/basics/second-content/index.html" class=""><a class="padding" href="/basics/second-content/index.html">Second Content</a></li>
+          <li data-nav-id="/basics/first-content/index.html" class=""><a class="padding" href="/basics/first-content/index.html">First Content</a></li></ul></li>
+          <li data-nav-id="/linux/index.html" class=""><a class="padding" href="/linux/index.html">Linuxes</a><ul id="R-subsections-9e5aaccdf48687824ccd3b3097af8e41" class="morespace collapsible-menu">
+          <li data-nav-id="/linux/abd-hl/index.html" class=""><a class="padding" href="/linux/abd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ansible-hl/index.html" class=""><a class="padding" href="/linux/ansible-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/linux/apache_multi_ports-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/build_pypi-hl/index.html" class=""><a class="padding" href="/linux/build_pypi-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/linux/change_centos_boot_kernel-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/cobbler-hl/index.html" class=""><a class="padding" href="/linux/cobbler-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/crontabs-hl/index.html" class=""><a class="padding" href="/linux/crontabs-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/dd-hl/index.html" class=""><a class="padding" href="/linux/dd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/linux/diy_centos_iso-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/dns-hl/index.html" class=""><a class="padding" href="/linux/dns-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/etcd-hl/index.html" class=""><a class="padding" href="/linux/etcd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/frp-hl/index.html" class=""><a class="padding" href="/linux/frp-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ftp-hl/index.html" class=""><a class="padding" href="/linux/ftp-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/gitlab-hl/index.html" class=""><a class="padding" href="/linux/gitlab-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/guestfish-hl/index.html" class=""><a class="padding" href="/linux/guestfish-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/haproxy-hl/index.html" class=""><a class="padding" href="/linux/haproxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/iscsi-hl/index.html" class=""><a class="padding" href="/linux/iscsi-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/kernel_make-hl/index.html" class=""><a class="padding" href="/linux/kernel_make-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/libvirt-hl/index.html" class=""><a class="padding" href="/linux/libvirt-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux-hl/index.html" class=""><a class="padding" href="/linux/linux-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_network-hl/index.html" class=""><a class="padding" href="/linux/linux_network-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_source-hl/index.html" class=""><a class="padding" href="/linux/linux_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/linux_u-hl/index.html" class=""><a class="padding" href="/linux/linux_u-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/lvm-hl/index.html" class=""><a class="padding" href="/linux/lvm-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/mdadm-hl/index.html" class=""><a class="padding" href="/linux/mdadm-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/mysql-hl/index.html" class=""><a class="padding" href="/linux/mysql-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nested-hl/index.html" class=""><a class="padding" href="/linux/nested-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/net_bridge-hl/index.html" class=""><a class="padding" href="/linux/net_bridge-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nginx-hl/index.html" class=""><a class="padding" href="/linux/nginx-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/nic_bond-hl/index.html" class=""><a class="padding" href="/linux/nic_bond-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/proxychains_ng-hl/index.html" class=""><a class="padding" href="/linux/proxychains_ng-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/pypi_local_source-hl/index.html" class=""><a class="padding" href="/linux/pypi_local_source-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/qemu_img-hl/index.html" class=""><a class="padding" href="/linux/qemu_img-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ramdisk-hl/index.html" class=""><a class="padding" href="/linux/ramdisk-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/root_extend-hl/index.html" class=""><a class="padding" href="/linux/root_extend-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/rpm_build-hl/index.html" class=""><a class="padding" href="/linux/rpm_build-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/samba-hl/index.html" class=""><a class="padding" href="/linux/samba-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh-hl/index.html" class=""><a class="padding" href="/linux/ssh-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh_forwading-hl/index.html" class=""><a class="padding" href="/linux/ssh_forwading-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssh_interval-hl/index.html" class=""><a class="padding" href="/linux/ssh_interval-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/linux/ssr_privoxy-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/synology-hl/index.html" class=""><a class="padding" href="/linux/synology-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/systemd-hl/index.html" class=""><a class="padding" href="/linux/systemd-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/tcpdump-hl/index.html" class=""><a class="padding" href="/linux/tcpdump-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/uboot-hl/index.html" class=""><a class="padding" href="/linux/uboot-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/unixbench-hl/index.html" class=""><a class="padding" href="/linux/unixbench-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/vim-hl/index.html" class=""><a class="padding" href="/linux/vim-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/virt_manager-hl/index.html" class=""><a class="padding" href="/linux/virt_manager-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/vm_to_router-hl/index.html" class=""><a class="padding" href="/linux/vm_to_router-hl/index.html">Build</a></li>
+          <li data-nav-id="/linux/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/linux/yum_install_conf_conflict-hl/index.html">Build</a></li></ul></li>
+          <li data-nav-id="/posts/index.html" class=""><a class="padding" href="/posts/index.html">Posts</a><ul id="R-subsections-6c8465a20210a85121ce7f08ddd74896" class="morespace collapsible-menu">
+          <li data-nav-id="/posts/fisrt-blog/index.html" class=""><a class="padding" href="/posts/fisrt-blog/index.html">Fisrt Blog</a></li></ul></li>
+          <li data-nav-id="/golang/index.html" class=""><a class="padding" href="/golang/index.html">Golangs</a></li>
+          </ul>
+        </div>
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/%E5%AE%B9%E5%99%A8/linux-hl/index.html" lang="zh_CN" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.variants && variants.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.variants && variants.markSelectedVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+	    <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1712919601" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1712919601" defer></script>
+    <script src="/js/theme.js?1712919601" defer></script>
+  </body>
+</html>

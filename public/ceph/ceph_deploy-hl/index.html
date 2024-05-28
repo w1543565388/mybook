@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="zh_CN" dir="ltr">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.126.1">
+    <meta name="generator" content="Relearn 5.27.0+tip">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Ceph 相关 :: My New Hugo Site">
+    <meta name="twitter:description" content="PG = Placement Group PGP = Placement Group for Placement purpose
+pg_num = number of placement groups mapped to an OSD
+When pg_num is increased for any pool, every PG of this pool splits into half, but they all remain mapped to their parent OSD.
+Until this time, Ceph does not start rebalancing. Now, when you increase the pgp_num value for the same pool, PGs start to migrate from the parent to some other OSD, and cluster rebalancing starts.">
+    <meta property="og:url" content="http://ip:1313/ceph/ceph_deploy-hl/index.html">
+    <meta property="og:site_name" content="My New Hugo Site">
+    <meta property="og:title" content="Ceph 相关 :: My New Hugo Site">
+    <meta property="og:description" content="PG = Placement Group PGP = Placement Group for Placement purpose
+pg_num = number of placement groups mapped to an OSD
+When pg_num is increased for any pool, every PG of this pool splits into half, but they all remain mapped to their parent OSD.
+Until this time, Ceph does not start rebalancing. Now, when you increase the pgp_num value for the same pool, PGs start to migrate from the parent to some other OSD, and cluster rebalancing starts.">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="Cephs :: My New Hugo Site">
+    <meta property="article:published_time" content="2024-04-12T09:39:39+00:00">
+    <meta property="article:modified_time" content="2024-04-12T09:39:39+00:00">
+    <title>Ceph 相关 :: My New Hugo Site</title>
+    <!-- https://github.com/filamentgroup/loadCSS/blob/master/README.md#how-to-use -->
+    <link href="/css/fontawesome-all.min.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fontawesome-all.min.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/nucleus.css?1716876877" rel="stylesheet">
+    <link href="/css/auto-complete.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/auto-complete.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar.min.css?1716876877" rel="stylesheet">
+    <link href="/css/fonts.css?1716876877" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/css/fonts.css?1716876877" rel="stylesheet"></noscript>
+    <link href="/css/theme.css?1716876877" rel="stylesheet">
+    <link href="/css/theme-auto.css?1716876877" rel="stylesheet" id="R-variant-style">
+    <link href="/css/chroma-auto.css?1716876877" rel="stylesheet" id="R-variant-chroma-style">
+    <link href="/css/variant.css?1716876877" rel="stylesheet">
+    <link href="/css/print.css?1716876877" rel="stylesheet" media="print">
+    <link href="/css/ie.css?1716876877" rel="stylesheet">
+    <script src="/js/url.js?1716876877"></script>
+    <script src="/js/variant.js?1716876877"></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='http:\/\/ip:1313';
+      // variant stuff
+      window.relearn.themeVariantModifier='';
+      window.variants && variants.init( [ 'auto' ] );
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/ceph/ceph_deploy-hl/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper"><nav class="TableOfContents">
+  <ul>
+    <li><a href="#一常用命令">一、常用命令</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#1安装依赖">1、安装依赖</a></li>
+    <li><a href="#2初始化">2、初始化</a></li>
+    <li><a href="#3host-配置">3、host 配置</a></li>
+    <li><a href="#4osd-配置">4、osd 配置</a></li>
+    <li><a href="#5使用-cephfs">5、使用 cephfs</a></li>
+    <li><a href="#6使用-rbd">6、使用 rbd</a></li>
+    <li><a href="#7性能测试">7、性能测试</a></li>
+    <li><a href="#8其他">8、其他</a></li>
+    <li><a href="#9faq">9、FAQ</a>
+      <ul>
+        <li><a href="#1新版本特性问题">1、新版本特性问题</a></li>
+        <li><a href="#2源">2、源</a></li>
+        <li><a href="#3时间同步问题">3、时间同步问题</a></li>
+        <li><a href="#4ceph在容器启动前先启动">4、ceph在容器启动前先启动</a></li>
+        <li><a href="#5possible-data-damage-1-pg-inconsistent">5、Possible data damage: 1 pg inconsistent</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#一ceph-deploy-部署ceph">一、ceph deploy 部署ceph</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#二将ceph配置文openstack的后端配置">二、将ceph配置文openstack的后端配置</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#四使用glance-task-create上传镜像并将格式转为raw">四、使用glance task-create上传镜像并将格式转为raw。</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#五移除osd">五、移除osd。</a></li>
+    <li><a href="#六添加mon移除mon">六、添加mon，移除mon</a></li>
+    <li><a href="#七启动ceph自带监控界面">七、启动ceph自带监控界面</a></li>
+    <li><a href="#八kolla-中ceph相关">八、kolla 中ceph相关</a></li>
+    <li><a href="#九pg状态表">九、pg状态表</a></li>
+    <li><a href="#十常见问题">十、常见问题</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><a itemprop="item" href="/ceph/index.html"><span itemprop="name">Cephs</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li><li
+            itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement"><span itemprop="name">Ceph 相关</span><meta itemprop="position" content="2"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/ceph/ceph_dashboard-hl/index.html" title="Ceph 启用 Dashboard (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/ceph/ceph_optimize-hl/index.html" title="Ceph 调优参考 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable default" tabindex="-1">
+        <div class="flex-block-wrapper">
+          <article class="default">
+            <header class="headline">
+            </header>
+
+<h1 id="ceph-相关">Ceph 相关</h1>
+
+<blockquote>
+<p>PG = Placement Group
+PGP = Placement Group for Placement purpose</p>
+<p>pg_num = number of placement groups mapped to an OSD</p>
+<p>When pg_num is increased for any pool, every PG of this pool splits into half, but they all remain mapped to their parent OSD.</p>
+<p>Until this time, Ceph does not start rebalancing. Now, when you increase the pgp_num value for the same pool, PGs start to migrate from the parent to some other OSD, and cluster rebalancing starts. This is how PGP plays an important role.
+By Karan Singh</p>
+<p>PG是指定存储池存储对象的目录有多少个，PGP是存储池PG的OSD分布组合个数
+PG的增加会引起PG内的数据进行分裂，分裂到相同的OSD上新生成的PG当中
+PGP的增加会引起部分PG的分布进行变化，但是不会引起PG内对象的变动</p>
+<p>pg_num的增加会使原来PG中的对象均匀地分布到新建的PG中，原来的副本分布方式不变
+pgp_num的增加会使PG的分布方式发生变化，但是PG内的对象并不会变动
+pgp决定pg分布时的组合方式的变化</p>
+</blockquote>
+<h2 id="一常用命令">一、常用命令</h2>
+<h5 id="1查询集群状态">1、查询集群状态</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code># 健康状态
+ceph -s
+ceph health
+ceph health detail
+ceph pg stat
+ceph pg dump_stuck unclean|grep unknown
+ceph crash ls
+
+# 查看集群得分
+ceph balancer eval
+
+# pool
+ceph osd lspools
+ceph osd pool ls
+ceph osd pool ls detail
+
+# osd
+ceph osd tree
+
+# 资源使用状态
+ceph df
+ceph df detail
+ceph osd df
+ceph osd df rbd
+ceph osd df tree
+
+# 其他
+ ceph quorum_status --format json-pretty
+ ceph osd pool get-quota volumes
+ ceph osd pool get rbd crush_rule</code></pre></div><h5 id="2删除datametadata池">2、删除data，metadata池</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd pool delete metadata metadata --yes-i-really-really-mean-it
+ceph osd pool delete data data --yes-i-really-really-mean-it</code></pre></div><h5 id="3创建volumes存储池">3、创建volumes存储池</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd pool create volumes 4000 4000</code></pre></div><h5 id="4查询-volumes-池当前复制副本数量">4、查询 volumes 池当前复制副本数量</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd dump | grep &#39;replicated size&#39; | grep volumes</code></pre></div><h5 id="5修改复制副本为-2-并验证">5、修改复制副本为 2 并验证</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd pool set volumes size 2
+ceph osd dump | grep &#39;replicated size&#39; | grep volumes</code></pre></div><h5 id="6查看存储使用情况">6、查看存储使用情况</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph df</code></pre></div><h5 id="7查看集群得分">7、查看集群得分</h5>
+<blockquote>
+<p>分数越低越好</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph balancer eval
+
+current cluster score 0.032004 (lower is better)</code></pre></div><h5 id="8修复">8、修复</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph pg deep-scrub 4.b6
+ceph pg repair 4.b6</code></pre></div><h5 id="9暂停与恢复osd对外访问">9、暂停与恢复osd对外访问</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd pause
+ceph osd unpause</code></pre></div><h5 id="10数据均衡调整">10、数据均衡调整</h5>
+<blockquote>
+<p>按利用率调整OSD的权重</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd reweight-by-utilization</code></pre></div><blockquote>
+<p>按归置组分布情况调整OSD的权重</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd reweight-by-pg</code></pre></div><h5 id="11重新设置osd权重">11、重新设置OSD权重</h5>
+<blockquote>
+<p>crush 显示osd磁盘本身大小的标签</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd crush reweight osd.8 1
+ceph osd reweight osd.8 0.2</code></pre></div><h5 id="12删除pool">12、删除pool</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph tell mon.\* injectargs &#39;--mon-allow-pool-delete=true&#39;
+ceph osd pool rm tmp tmp --yes-i-really-really-mean-it
+ceph tell mon.\* injectargs &#39;--mon-allow-pool-delete=false&#39;</code></pre></div><h5 id="13rbdmap">13、rbdmap</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt -y install ceph-common
+
+cat &gt; /etc/ceph/rbdmap &lt;&lt;EOF
+foo/bar1    id=admin,keyring=/etc/ceph/ceph.client.admin.keyring
+foo/bar2    id=admin,keyring=/etc/ceph/ceph.client.admin.keyring,options=&#39;lock_on_read,queue_depth=1024&#39;
+EOF
+
+systemctl enable rbdmap.service
+systemctl restart rbdmap.service</code></pre></div><h5 id="14rbd快照">14、rbd快照</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>rbd snap create --snap snapshot1 rbd/hl
+rbd snap list rbd/hl
+rbd info rbd/hl
+rbd snap rollback rbd/hl@snapshot1
+rbd snap rm rbd/hl@snapshot1</code></pre></div><h5 id="15rbd调整大小">15、rbd调整大小</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>rbd showmapped
+
+rbd info foo
+rbd resize --size 20480 foo
+blockdev --getsize64 /dev/rbd0
+resize2fs /dev/rbd0</code></pre></div><h1 id="二cephadm">二、cephadm</h1>
+<h2 id="1安装依赖">1、安装依赖</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt install -y cephadm
+
+#curl --silent --remote-name --location https://github.com/ceph/ceph/raw/pacific/src/cephadm/cephadm
+#chmod +x cephadm
+
+cephadm add-repo --release pacific
+cephadm install ceph-common</code></pre></div><h2 id="2初始化">2、初始化</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>cephadm bootstrap --mon-ip 192.168.0.31</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>#ceph config assimilate-conf -i &lt;input file&gt; -o &lt;output file&gt;
+
+cat &lt;&lt;EOF &gt; initial-ceph.conf
+[global]
+    osd_pool_default_size = 2
+    osd_pool_default_min_size = 1
+    mon_osd_full_ratio = .90
+    mon_osd_nearfull_ratio = .80
+    public_network = 192.168.0.0/24
+    cluster_network = 10.0.0.0/24
+EOF
+
+cephadm bootstrap --config initial-ceph.conf --mon-ip 192.168.0.31
+
+cephadm shell -- ceph -s
+#cephadm shell --fsid XXX -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.client.admin.keyring</code></pre></div><h2 id="3host-配置">3、host 配置</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ssh-copy-id -f -i /etc/ceph/ceph.pub node2
+ssh-copy-id -f -i /etc/ceph/ceph.pub node3</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>ceph orch host add node2 mon
+#ceph orch host rm node2
+
+ceph orch host add node3 mon
+
+ceph orch host label add node1 mon
+#ceph orch host label rm node1 mon</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>ceph orch apply mon &#34;node1,node2,node3&#34;
+ceph orch host ls</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>禁用自动部署 mon
+ceph orch apply mon --unmanaged
+
+不同网络添加 mon
+ceph orch apply mon --unmanaged
+ceph orch daemon add mon newhost1:10.1.2.123
+ceph orch daemon add mon newhost2:10.1.2.0/24</code></pre></div><h2 id="4osd-配置">4、osd 配置</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph orch device ls
+ceph orch apply osd --all-available-devices  
+#ceph orch daemon add osd node1:/dev/sdb</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>删除 osd
+ceph osd crush remove {name}
+ceph auth del osd.{osd-num}
+ceph osd stop {osd-num}
+ceph osd rm {osd-num}</code></pre></div><h2 id="5使用-cephfs">5、使用 cephfs</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph fs volume create fs</code></pre></div><blockquote>
+<p>_netdev：表示当系统联网后再进行挂载操作
+noatime：这个参数来禁止记录最近一次访问时间戳，提高性能</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>使用 ceph-fuse
+cephadm install ceph-fuse
+#apt install -y ceph-fuse
+
+ceph-fuse -m 192.168.0.31:6789,192.168.0.32:6789,192.168.0.33:6789 /fs
+
+scp -r 192.168.0.61:/etc/ceph /etc
+vim /etc/fstab
+192.168.0.61:6789,192.168.0.62:6789,192.168.0.64:6789:/ /fs fuse.ceph ceph.id=admin,ceph.conf=/etc/ceph/ceph.conf,noatime,_netdev,defaults 0 0</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>ceph fs authorize *file_system_name* client.*client_name* /*specified_directory* rw
+
+ceph fs authorize fs client.fs / rw
+[client.fs]
+        key = AQA8DK5g7FkeFhAA4B6gk6M5nc+17XVKzjv27Q==
+
+#ceph auth rm client.fs
+
+mount -t ceph :/ /fs -o name=fs,secret=AQA8DK5g7FkeFhAA4B6gk6M5nc+17XVKzjv27Q==
+
+ceph fs authorize fs client.fs /yani rw
+mount -t ceph :/yani /fs -o name=fs,secret=AQA8DK5g7FkeFhAA4B6gk6M5nc+17XVKzjv27Q==</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>使用 linux kernel
+
+ssh 192.168.0.61 &#34;ceph-authtool -p /etc/ceph/ceph.client.admin.keyring&#34; &gt; admin.key
+
+mount -t ceph 192.168.0.61:6789,192.168.0.62:6789,192.168.0.64:6789:/ /fs -o name=admin,secret=AQDXXXXX==
+#mount -t ceph :/ /fs -o name=admin,secret=AQDXXXXX==
+#mount -t ceph 192.168.0.61:6789,192.168.0.62:6789,192.168.0.64:6789:/ /fs -o name=admin,secretfile=admin.key
+vim /etc/fstab
+192.168.0.61:6789,192.168.0.62:6789,192.168.0.64:6789:/ /fs ceph name=admin,secret=AQDXXXXX==,noatime,_netdev,defaults 0 0
+#:/ /fs ceph name=admin,secret=AQDXXXXX==,noatime,_netdev,defaults 0 0</code></pre></div><h2 id="6使用-rbd">6、使用 rbd</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>1、创建 rbd
+ceph osd pool create rbd
+rbd pool init rbd
+
+#rbd create --size {megabytes} {pool-name}/{image-name}
+
+要创建一个1GB的映像test，该映像将信息存储在rbd Pool中
+rbd create --size 1024 rbd/test
+
+#开机自动映射
+ls /etc/ceph/
+ceph.client.guest.keyring  ceph.conf  rbdmap
+
+vim /etc/ceph/rbdmap
+#poolname/imagename     id=client,keyring=/etc/ceph/ceph.client.guest.keyring
+rbd/test id=guest,keyring=/etc/ceph/ceph.client.guest.keyring
+
+vim /etc/fstab
+/dev/rbd0 /test xfs noatime,_netdev,defaults 0 0
+
+# 查看已映射
+rbd showmapped 
+
+rbdmap unmap 
+rbdmap unmap-all
+
+创建块存储 pool 用户
+ceph auth get-or-create client.libvirt mon &#39;profile rbd&#39; osd &#39;profile rbd pool=rbd&#39;
+[client.libvirt]
+        key = AQCUD65goRI3ARAAtMHtLBivJ39eikR4ZRjEgg==
+        
+rbd map rbd/test
+/dev/rbd1
+
+mkfs.xfs -f /dev/rbd1
+mount /dev/rbd1 /mnt
+
+2、创建快照
+rbd snap create --snap mysnap rbd/test
+#rbd snap create rbd/test@mysnap
+rbd snap list rbd/test
+rbd ls -l
+rbd info rbd/test@mysnap
+
+回滚
+rbd snap rollback rbd/test@mysnap
+
+删除快照
+rbd snap remove rbd/test@mysnap
+
+3、模板与克隆
+
+查看设备是否支持创建快照模板，image-format 必须为2
+rbd info rbd/test
+rbd image &#39;test&#39;:
+        size 1 GiB in 256 objects
+        order 22 (4 MiB objects)
+        snapshot_count: 0
+        id: 170e5acc1f4a7
+        block_name_prefix: rbd_data.170e5acc1f4a7
+        format: 2
+        features: layering, exclusive-lock, object-map, fast-diff, deep-flatten
+        op_features: 
+        flags: 
+        create_timestamp: Wed May 26 11:13:38 2021
+        access_timestamp: Wed May 26 11:13:38 2021
+        modify_timestamp: Wed May 26 11:13:38 2021
+
+rbd create rbd/test --size 1024 --image-format 2
+
+把该块做成模板，首先要把做成模板的快照做成protect
+rbd snap protect rbd/test@mysnap
+
+可以去掉这个保护，但是这样的话就不能克隆
+rbd snap unprotect rbd/test@mysnap
+
+克隆
+rbd clone rbd/test@mysnap rbd/test1
+
+查看快照children
+rbd children rbd/test@mysnap
+
+这个时候的test1还是依赖test的镜像mysnap的，如果test的mysnap被删除或者怎么样，test1也不能够使用了，要想独立出去，就必须将父镜像的信息合并flattern到子镜像中
+去掉快照的parent
+rbd flatten rbd/test1</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>rbd create       创建块设备映像
+rbd ls           列出 rbd 存储池中的块设备
+rbd info         查看块设备信息
+rbd diff         可以统计 rbd 使用量
+rbd map          映射块设备
+rbd showmapped   查看已映射块设备
+rbd remove       删除块设备
+rbd resize       更改块设备的大小
+rbd export rbd/test /tmp/test                     导出rbd镜像
+rbd import /tmp/test rbd/test --image-format 2    导入rbd镜像</code></pre></div><h2 id="7性能测试">7、性能测试</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>rados bench -p $poolname 60 write  [ --no-cleanup ]  #测试写性能，不删除写入的数据用来测试读取性能
+rados bench -p $poolname 60 [ seq | rand ]  #测试读取性能
+rados -p $poolname cleanup #清理测试写性能时写入的数据</code></pre></div><h2 id="8其他">8、其他</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>创建 pool
+ceph osd pool create test_metadata 32 32
+
+重新设置权重
+ceph osd crush reweight osd.3 3.3
+ceph osd reweight osd.4 0.3
+ceph osd crush tree --show-shadow
+
+获取 osdmap
+ceph osd dump
+ceph osd getmap -o osds.map
+osdmaptool --print osds.map
+
+获取 monmap
+ceph mon dump
+ceph mon getmap -o monmap.map
+monmaptool --print monmap.map
+
+获取 crushmap
+ceph osd getcrushmap -o crushmap.dump
+crushtool -d crushmap.dump -o crushmap.txt
+
+crushtool -c crushmap.txt -o crushmap.done
+ceph osd setcrushmap -i crushmap.done
+
+新创建的 osd 不会自动加入 crushmap
+osd crush update on start = false
+
+ceph osd lspools
+rbd ls -l
+rbd remove rbd-name
+rbd map disk01
+rbd showmapped
+ceph fs ls
+ceph mds stat</code></pre></div><h2 id="9faq">9、FAQ</h2>
+<h3 id="1新版本特性问题">1、新版本特性问题</h3>
+<blockquote>
+<p>rbd: image foo: image uses unsupported features: 0x38</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>rbd info foo
+
+rbd image &#39;foo&#39;:
+    size 1024 MB in 256 objects
+    order 22 (4096 kB objects)
+    block_name_prefix: rbd_data.10612ae7234b
+    format: 2    features: layering, exclusive-lock, object-map, fast-diff, deep-flatten
+    flags:
+layering: 支持分层
+striping: 支持条带化 v2
+exclusive-lock: 支持独占锁
+object-map: 支持对象映射（依赖 exclusive-lock ）
+fast-diff: 快速计算差异（依赖 object-map ）
+deep-flatten: 支持快照扁平化操作
+journaling: 支持记录 IO 操作（依赖独占锁）</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>rbd feature disable foo exclusive-lock, object-map, fast-diff, deep-flatten</code></pre></div><h3 id="2源">2、源</h3>
+<div class="highlight wrap-code"><pre tabindex="0"><code>echo &#34;deb https://download.ceph.com/debian-octopus/ bionic main&#34; &gt; /etc/apt/sources.list.d/ceph.list
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E84AC2C0460F3994
+apt update
+apt install ceph-common</code></pre></div><h3 id="3时间同步问题">3、时间同步问题</h3>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /etc/chrony/chrony.conf
+pool node1 iburst
+allow 192.168.0.0/24
+
+chronyc sources -v</code></pre></div><h3 id="4ceph在容器启动前先启动">4、ceph在容器启动前先启动</h3>
+<div class="highlight wrap-code"><pre tabindex="0"><code>需要在每个节点的 service 中添加 docker.service，等 docker 先启动
+
+vim /etc/systemd/system/ceph-de9c839a-bd3e-11eb-aefc-377d8c7eac71@.service
+...
+After=network-online.target local-fs.target time-sync.target docker.service
+Wants=network-online.target local-fs.target time-sync.target docker.service
+...</code></pre></div><h3 id="5possible-data-damage-1-pg-inconsistent">5、Possible data damage: 1 pg inconsistent</h3>
+<blockquote>
+<p>不一致性校验失败，数据不一致性（inconsisitent）指对象的大小不正确，恢复结束后某副本出现了对象丢失的情况，数据不一致会导致清理失败（scrub error）。Ceph在存储过程中，由于特殊原因，可能遇到对象信息大小和物理磁盘上实际数据大小不一致的情况，也会导致清理失败。</p>
+</blockquote>
+<h5 id="1停止osd">(1)、停止osd</h5>
+<blockquote>
+<p>先查看所要恢复pg</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph health detail</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>ceph pg repair 4.3f</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>systemctl stop ceph-de9c839a-bd3e-11eb-aefc-377d8c7eac71@osd.14.service</code></pre></div><h5 id="2刷入日志">(2)、刷入日志</h5>
+<blockquote>
+<p>需将相应数据复制进容器</p>
+</blockquote>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker cp /etc/ceph b951114a1b9d:/etc
+docker cp /var/lib/ceph/de9c839a-bd3e-11eb-aefc-377d8c7eac71/osd.14/ b951114a1b9d:/var/lib/ceph/osd/ceph-14/
+docker exec -it b951114a1b9d bash</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>ceph-osd -i 14 --flush-journal</code></pre></div><h5 id="3启动osd">(3)、启动osd</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>systemctl start ceph-de9c839a-bd3e-11eb-aefc-377d8c7eac71@osd.14.service</code></pre></div><h5 id="4修复">(4)、修复</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph health detail</code></pre></div><div class="highlight wrap-code"><pre tabindex="0"><code>ceph pg repair 4.3f</code></pre></div><h1 id="三ceph-deploy">三、ceph deploy</h1>
+<h2 id="一ceph-deploy-部署ceph">一、ceph deploy 部署ceph</h2>
+<h5 id="1添加releasekey">1、添加release.key</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get update &amp;&amp; apt-get -y upgrade
+
+wget -q -O- &#39;https://download.ceph.com/keys/autobuild.asc&#39; | apt-key add -</code></pre></div><h5 id="2查看当前系统的发行版本信息">2、查看当前系统的发行版本信息</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>lsb_release -sc</code></pre></div><h5 id="3添加ceph软件包源用ceph稳定版如cuttlefishdumplingemperorfireflyhammerjewel等替换掉jewel">3、添加Ceph软件包源，用Ceph稳定版（如cuttlefish、dumpling、emperor、firefly、hammer、jewel等）替换掉jewel</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>echo deb http://mirrors.aliyun.com/ceph/debian-jewel/ $(lsb_release -sc) main | tee /etc/apt/sources.list.d/ceph.list
+
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E84AC2C0460F3994</code></pre></div><h5 id="4更新源仓库并安装ceph">4、更新源仓库并安装Ceph</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get update &amp;&amp; apt-get -y install ceph-deploy</code></pre></div><h5 id="5将ceph-deploy源换为国内源">5、将ceph deploy源换为国内源</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>vim /usr/lib/python2.7/dist-packages/ceph_deploy/hosts/debian/install.py
+
+sed -i &#39;s/{protocol}:\/\/download.ceph.com/http:\/\/mirrors.aliyun.com\/ceph/g&#39; /usr/lib/python2.7/dist-packages/ceph_deploy/hosts/debian/install.py
+sed -i &#39;s/{protocol}:\/\/download.ceph.com/http:\/\/mirrors.aliyun.com\/ceph/g&#39; /usr/lib/python2.7/dist-packages/ceph_deploy/hosts/debian/install.py
+sed -i &#39;s/download.ceph.com/mirrors.tuna.tsinghua.edu.cn\/ceph/g&#39; /usr/lib/python2.7/dist-packages/ceph_deploy/util/constants.py</code></pre></div><h5 id="6安装ntp以免因时钟漂移导致故障">6、安装NTP（以免因时钟漂移导致故障）</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get -y install ntp</code></pre></div><h5 id="7安装-ssh-服务器">7、安装 SSH 服务器</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get -y install openssh-server</code></pre></div><h5 id="8配置hosts">8、配置hosts</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>echo &#34;
+172.18.20.181 ceph-node1
+172.18.20.182 ceph-node2
+172.18.20.183 ceph-node3&#34; | tee &gt;&gt; /etc/hosts</code></pre></div><h5 id="9创建部署-ceph-的用户可不用">9、创建部署 CEPH 的用户（可不用）</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>1、在各 Ceph 节点创建新用户。
+useradd -d /home/myCeph -m myCeph
+passwd myCeph
+2、确保各 Ceph 节点上新创建的用户都有 sudo 权限。
+echo &#34;myCeph ALL = (root) NOPASSWD:ALL&#34; | sudo tee /etc/sudoers.d/myCeph
+chmod 0440 /etc/sudoers.d/myCeph</code></pre></div><h5 id="10允许无密码-ssh-登录">10、允许无密码 SSH 登录</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>1、生成 SSH 密钥对，但不要用 sudo 或 root 用户。提示 “Enter passphrase” 时，直接回车，口令即为空：
+ssh-keygen
+2、把公钥拷贝到各 Ceph 节点，把下列命令中的 myCeph 替换成前面创建部署 Ceph 的用户里的用户名。
+ssh-copy-id myCeph@node1
+3、（推荐做法）修改 ceph-deploy 管理节点上的 ~/.ssh/config 文件，这样 ceph-deploy 就能用你所建的用户名登录 Ceph 节点了，而无需每次执行 ceph-deploy 都要指定 --username {username} 。这样做同时也简化了 ssh 和 scp 的用法。把 {username} 替换成你创建的用户名。
+
+Host node1
+   Hostname node1
+   User myCeph
+   
+ssh-copy-id ceph-node1</code></pre></div><h5 id="11安装ceph">11、安装Ceph</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-deploy install controller compute{2,3,4,5,6,7,8}</code></pre></div><h5 id="12创建集群">12、创建集群</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-deploy new controller compute{2,3,4,5}</code></pre></div><h5 id="13修改配置文件-把下面这行加入-global-段">13、修改配置文件 ，把下面这行加入 [global] 段：</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>echo &#34;osd crush chooseleaf type = 0&#34; &gt;&gt; ceph.conf
+        echo &#34;osd pool default size = 1&#34; &gt;&gt; ceph.conf
+        echo &#34;osd journal size = 100&#34; &gt;&gt; ceph.conf</code></pre></div><h5 id="14配置初始monitors并收集所有秘钥">14、配置初始monitor(s)、并收集所有秘钥：</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>#ceph-deploy mon create-initial
+
+ceph-deploy mon create controller compute{2,3,4,5}
+
+ceph-deploy gatherkeys controller compute{2,3,4,5}</code></pre></div><h5 id="15擦净磁盘">15、擦净磁盘</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-deploy disk zap controller:sd{b,c,d,e} compute2:sd{b,c,d} compute{3,4,5,6,7,8}:sd{b,c,d,e}</code></pre></div><h5 id="16准备磁盘">16、准备磁盘</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-deploy osd prepare controller:sd{b,c,d,e} compute2:sd{b,c,d} compute{3,4,5,6,7,8}:sd{b,c,d,e}
+
+ceph-deploy osd prepare ceph-node1:xvdb ceph-node1:xvdc ceph-node1:xvde ceph-node2:xvdb ceph-node2:xvdc ceph-node2:xvde ceph-node3:xvdb ceph-node3:xvdc ceph-node3:xvde</code></pre></div><h5 id="17激活磁盘">17、激活磁盘</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-deploy osd activate controller:sd{b1,c1,d1,e1} compute2:sd{b1,c1,d1} compute{3,4,5,6,7,8}:sd{b1,c1,d1,e1}</code></pre></div><h5 id="18复制配置文件到所有节点用ceph-deploy-把配置文件和-admin-密钥拷贝到管理节点和-ceph-节点这样每次执行-ceph-命令行时就无需指定-monitor-地址和-cephclientadminkeyring-了">18、复制配置文件到所有节点，用ceph-deploy 把配置文件和 admin 密钥拷贝到管理节点和 Ceph 节点，这样每次执行 Ceph 命令行时就无需指定 monitor 地址和 ceph.client.admin.keyring 了。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-deploy admin node1
+
+ceph-deploy --overwrite-conf admin ceph-node1 ceph-node2 ceph-node3</code></pre></div><h5 id="19确保你对-cephclientadminkeyring-有正确的操作权限">19、确保你对 ceph.client.admin.keyring 有正确的操作权限。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>chmod +r /etc/ceph/ceph.client.admin.keyring</code></pre></div><h5 id="20检查集群的健康状况">20、检查集群的健康状况</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph health
+ceph -s
+ceph osd tree </code></pre></div><h5 id="21清除部署">21、清除部署</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-deploy purge ceph-node1 ceph-node2 ceph-node3
+ceph-deploy purgedata ceph-node1 ceph-node2 ceph-node3
+ceph-deploy forgetkeys
+
+ceph osd pool delete rbd rbd --yes-i-really-really-mean-it</code></pre></div><h5 id="22修改crushmap">22、修改crushmap</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>1、获得 crush map，获得默认 crushmap (加密)
+ceph osd getcrushmap -o crushmap.dump
+2、转换 crushmap 格式 (加密 -&gt; 明文格式)
+crushtool -d crushmap.dump -o crushmap.txt
+3、转换 crushmap 格式(明文 -&gt; 加密格式)
+crushtool -c crushmap.txt -o crushmap.done
+4、重新使用新 crushmap
+ceph osd setcrushmap -i crushmap.done</code></pre></div><h5 id="23修改osd权重">23、修改osd权重</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd crush reweight osd.1 1</code></pre></div><h2 id="二将ceph配置文openstack的后端配置">二、将ceph配置文openstack的后端配置</h2>
+<h5 id="1创建pool初始化pool">1、创建pool，初始化pool。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd pool create volumes 128
+ceph osd pool create images 128
+ceph osd pool create backups 128
+ceph osd pool create vms 128
+
+rbd pool init volumes
+rbd pool init images
+rbd pool init backups
+rbd pool init vms</code></pre></div><h5 id="2在glance-api节点安装以下包">2、在glance-api节点安装以下包。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get -y install python-rbd
+yum -y install python-rbd</code></pre></div><h5 id="3在nova-compute-cinder-backupcinder-volume安装以下包">3、在nova-compute, cinder-backup,cinder-volume安装以下包。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-get -y install ceph-common
+yum -y install ceph-common</code></pre></div><h5 id="4如果开启了-cephx-authentication-需要为novacinderglance创建新用户">4、如果开启了 cephx authentication, 需要为nova、cinder、glance创建新用户。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>#ceph auth get-or-create client.glance mon &#39;allow r&#39; osd &#39;allow class-read object_prefix rbd_children, allow rwx pool=images, allow rwx pool=images.cache&#39;
+
+ceph auth get-or-create client.glance mon &#39;profile rbd&#39; osd &#39;profile rbd pool=images&#39;
+
+ceph auth get-or-create client.cinder mon &#39;profile rbd&#39; osd &#39;profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images&#39;
+
+ceph auth get-or-create client.cinder-backup mon &#39;profile rbd&#39; osd &#39;profile rbd pool=backups&#39;</code></pre></div><h5 id="5为相应节点的clientcinder-clientglance-clientcinder-backup添加keyrings改变它们的所有权">5、为相应节点的client.cinder, client.glance, client.cinder-backup添加keyrings，改变它们的所有权。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph auth get-or-create client.glance | ssh {your-glance-api-server} tee /etc/ceph/ceph.client.glance.keyring
+ssh {your-glance-api-server} chown glance:glance /etc/ceph/ceph.client.glance.keyring
+ceph auth get-or-create client.cinder | ssh {your-volume-server} tee /etc/ceph/ceph.client.cinder.keyring
+ssh {your-cinder-volume-server} chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
+ceph auth get-or-create client.cinder-backup | ssh {your-cinder-backup-server} tee /etc/ceph/ceph.client.cinder-backup.keyring
+ssh {your-cinder-backup-server} chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring</code></pre></div><h5 id="6运行了nova-compute的节点需要keyring文件">6、运行了nova-compute的节点需要keyring文件。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph auth get-or-create client.cinder | ssh {your-nova-compute-server} tee /etc/ceph/ceph.client.cinder.keyring</code></pre></div><h5 id="7需要将clientcinder用户的秘钥配置到libvirt中libvirt进程从cinder挂载块设备时需要有权限访问ceph集群获取并拷贝一个临时的secret-key到所有运行的nova-compute节点">7、需要将client.cinder用户的秘钥配置到libvirt中，libvirt进程从cinder挂载块设备时，需要有权限访问ceph集群。获取并拷贝一个临时的secret key到所有运行的nova-compute节点。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph auth get-key client.cinder | ssh {your-compute-node} tee client.cinder.key</code></pre></div><h5 id="8然后在compute节点添加secret-key到libvirt再删除临时的secret-key">8、然后，在compute节点，添加secret key到libvirt，再删除临时的secret key。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code># 保存uuid，后面会用到
+uuidgen
+457eb676-33da-42ec-9a8c-9293d545c337
+
+cat &gt; secret.xml &lt;&lt;EOF
+&lt;secret ephemeral=&#39;no&#39; private=&#39;no&#39;&gt;
+  &lt;uuid&gt;457eb676-33da-42ec-9a8c-9293d545c337&lt;/uuid&gt;
+  &lt;usage type=&#39;ceph&#39;&gt;
+    &lt;name&gt;client.cinder secret&lt;/name&gt;
+  &lt;/usage&gt;
+&lt;/secret&gt;
+EOF
+virsh secret-define --file secret.xml
+Secret 457eb676-33da-42ec-9a8c-9293d545c337 created
+
+virsh secret-set-value --secret 457eb676-33da-42ec-9a8c-9293d545c337 --base64 $(cat client.cinder.key) &amp;&amp; rm client.cinder.key secret.xml</code></pre></div><h5 id="9修改glance-apiconf">9、修改glance-api.conf。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[glance_store]
+stores = rbd
+default_store = rbd
+rbd_store_pool = images
+rbd_store_user = glance
+rbd_store_ceph_conf = /etc/ceph/ceph.conf
+rbd_store_chunk_size = 8
+...
+# 启用copy-on-write
+[DEFAULT]
+show_image_direct_url = True
+...
+[paste_deploy]
+flavor = keystone</code></pre></div><h5 id="10修改cinderconf">10、修改cinder.conf。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[DEFAULT]
+...
+enabled_backends = ceph
+glance_api_version = 2
+...
+# 配置cinder backup
+backup_driver = cinder.backup.drivers.ceph
+backup_ceph_conf = /etc/ceph/ceph.conf
+backup_ceph_user = cinder-backup
+backup_ceph_chunk_size = 134217728
+backup_ceph_pool = backups
+backup_ceph_stripe_unit = 0
+backup_ceph_stripe_count = 0
+restore_discard_excess_bytes = true
+...
+[ceph]
+volume_driver = cinder.volume.drivers.rbd.RBDDriver
+volume_backend_name = ceph
+rbd_pool = volumes
+rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_flatten_volume_from_snapshot = false
+rbd_max_clone_depth = 5
+rbd_store_chunk_size = 4
+rados_connect_timeout = -1
+rbd_user = cinder
+rbd_secret_uuid = 457eb676-33da-42ec-9a8c-9293d545c337</code></pre></div><h5 id="11配置novaconf将nova挂载到ceph-rbd块设备">11、配置nova.conf将nova挂载到ceph rbd块设备。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[libvirt]
+...
+images_type = rbd
+images_rbd_pool = vms
+images_rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_user = cinder
+rbd_secret_uuid = 457eb676-33da-42ec-9a8c-9293d545c337
+disk_cachemodes=&#34;network=writeback&#34;</code></pre></div><h5 id="12重启服务">12、重启服务</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>glance-control api restart
+service nova-compute restart
+service cinder-volume restart
+service cinder-backup restart
+
+service openstack-glance-api restart
+service openstack-nova-compute restart
+service openstack-cinder-volume restart
+service openstack-cinder-backup restart</code></pre></div><h5 id="13使用块设备">13、使用块设备</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>cinder create --image-id {id of image} --display-name {name of volume} {size of volume}
+
+qemu-img convert -f {source-format} -O {output-format} {source-filename} {output-filename}
+qemu-img convert -f qcow2 -O raw precise-cloudimg.img precise-cloudimg.raw</code></pre></div><h2 id="四使用glance-task-create上传镜像并将格式转为raw">四、使用glance task-create上传镜像并将格式转为raw。</h2>
+<h5 id="1编辑glance-apiconf">1、编辑glance-api.conf。</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>[task]
+task_executor = taskflow
+work_dir=/tmp
+
+[taskflow_executor]
+engine_mode = serial
+max_workers = 10
+conversion_format=raw</code></pre></div><h5 id="2重启服务">2、重启服务</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>glance-control api restart
+
+service openstack-glance-api restart</code></pre></div><h5 id="3上传镜像">3、上传镜像</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>glance task-create --type import --input &#39;{&#34;import_from_format&#34;: &#34;qcow2&#34;, &#34;import_from&#34;: &#34;http://172.18.20.160/cirros-0.3.4-x86_64-disk.img&#34;, &#34;image_properties&#34;: {&#34;name&#34;: &#34;cirros-RAW&#34;, &#34;disk_format&#34;: &#34;qcow2&#34;, &#34;container_format&#34;: &#34;bare&#34;}}&#39;</code></pre></div><h2 id="五移除osd">五、移除osd。</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd tree
+ceph osd out osd.0
+ceph osd crush rm osd.0
+ceph auth del osd.0
+ceph osd rm osd.0</code></pre></div><h2 id="六添加mon移除mon">六、添加mon，移除mon</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-deploy install ctrl
+ceph-deploy mon create ctrl 
+ceph-deploy mon add ctrl
+ceph-deploy mon create-initial
+ceph quorum_status --format json-pretty
+
+ceph-deploy mon destroy comp-3
+ceph quorum_status --format json-pretty
+
+ceph-deploy gatherkeys comp-1</code></pre></div><h2 id="七启动ceph自带监控界面">七、启动ceph自带监控界面</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph mgr module enable dashboard</code></pre></div><h2 id="八kolla-中ceph相关">八、kolla 中ceph相关</h2>
+<div class="highlight wrap-code"><pre tabindex="0"><code>parted /dev/xvdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1
+
+修改globalsl.yaml
+enable_ceph: &#34;yes&#34;
+ceph_enable_cache: &#34;yes&#34;
+ceph_cache_mode: &#34;writeback&#34;
+
+2个240 固态(一个做journal，一个做cache)
+
+【cache】
+parted /dev/xvdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_CACHE_BOOTSTRAP 1 -1
+
+【journal】
+parted /dev/xvdd \
+-s mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDB_J 0% 5G \
+-s mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC_J 5G 10G \
+-s mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC_J 10G 15G \
+-s mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC_J 15G 20G \
+-s mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC_J 20G 25G \
+-s mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC_J 25G 30G \
+-s mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC_J 30G 35G \
+-s mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC_J 35G 40G \
+-s mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC_J 40G 45G
+
+9个2T SATA
+
+parted /dev/vdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDB 1 -1
+parted /dev/vdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC 1 -1
+parted /dev/vdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC 1 -1
+parted /dev/vdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC 1 -1
+parted /dev/vdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC 1 -1
+parted /dev/vdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC 1 -1
+parted /dev/vdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC 1 -1
+parted /dev/vdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC 1 -1
+parted /dev/vdc -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_VDC 1 -1</code></pre></div><h2 id="九pg状态表">九、pg状态表</h2>
+<table>
+<thead>
+<tr>
+<th><strong>状态</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Activating</td>
+<td>PG已经互联，但是还没有active。  <em>Peering<strong>已经完成，<strong>PG</strong>正在等待所有</strong>PG<strong>实例同步并固化</strong>Peering<strong>的结果</strong>(Info</em>*、<strong>Log</strong>等**)*</td>
+</tr>
+<tr>
+<td>Active</td>
+<td>活跃态。PG可以正常处理来自客户端的读写请求  PG正常的状态应该是Active+Clean的。</td>
+</tr>
+<tr>
+<td>Backfilling</td>
+<td>Ceph正常扫描并同步整个PG的数据，而不是从最近的操作日志中推断需要同步的数据，Backfill（回填）是恢复的一个特殊状态。  正在后台填充态。 backfill是recovery的一种特殊场景，指peering完成后，如果基于当前权威日志无法对Up Set当中的某些PG实例实施增量同步(例如承载这些PG实例的OSD离线太久，或者是新的OSD加入集群导致的PG实例整体迁移) 则通过完全拷贝当前Primary所有对象的方式进行全量同步</td>
+</tr>
+<tr>
+<td>Backfill-toofull</td>
+<td><em>backfill_toofull</em> backfill操作因为目标OSD容量超过指标而挂起  某个需要被Backfill的PG实例，其所在的OSD可用空间不足，Backfill流程当前被挂起</td>
+</tr>
+<tr>
+<td><em>backfill_unfound</em></td>
+<td>Backfill因为没有找到对应对象而停止</td>
+</tr>
+<tr>
+<td>Backfill-wait</td>
+<td><em>backfill_wait</em> PG正在等待backfill被调度执行。  等待Backfill 资源预留</td>
+</tr>
+<tr>
+<td>Clean</td>
+<td>干净态。PG内所有的对象都被正确的复制了对应的份数。  <em>PG**当前不存在待修复的对象，</em> <em>Acting Set<strong>和</strong>Up Set**内容一致，并且大小等于存储池的副本数</em></td>
+</tr>
+<tr>
+<td>Creating</td>
+<td>PG正在被创建</td>
+</tr>
+<tr>
+<td>Deep</td>
+<td>Ceph 正在检查PG数据和checksums的一致性。  <em>PG**正在或者即将进行对象一致性扫描清洗</em></td>
+</tr>
+<tr>
+<td>Degraded</td>
+<td>PG中的一些对象还没有被复制到规定的份数。  <em>降级状态。<strong>Peering</strong>完成后，<strong>PG</strong>检测到任意一个<strong>PG</strong>实例存在不一致</em>*(<strong>需要被同步</strong>/<strong>修复</strong>)<strong>的对象，或者当前</strong>ActingSet* <em>小于存储池副本数</em></td>
+</tr>
+<tr>
+<td>Down</td>
+<td>一个包含必备数据的副本离线，所以PG也离线了  <em>Peering<strong>过程中，<strong>PG</strong>检测到某个不能被跳过的</strong>Interval<strong>中</strong>(<strong>例如该</strong>Interval<strong>期间，<strong>PG</strong>完成了</strong>Peering</em>*，并且成功切换至<strong>Active</strong>状态，从而有可能正常处理了来自客户端的读写请求**),<strong>当前剩余在线的</strong>OSD**不足以完成数据修复*</td>
+</tr>
+<tr>
+<td>Incomplete</td>
+<td>Ceph 探测到某一PG可能丢失了写入信息，或者没有健康的副本。如果你看到了这个状态，尝试启动有可能包含所需信息的失败OSD，  如果是erasure coded  pool的话，临时调整一下<code>min_size</code>也可能完成恢复  <em>Peering**过程中，</em> <em>由于</em> <em>a.</em> <em>无非选出权威日志</em> <em>b.</em> <em>通过<strong>choose_acting</strong>选出的<strong>Acting Set</strong>后续不足以完成数据修复，导致<strong>Peering</strong>无非正常完成</em></td>
+</tr>
+<tr>
+<td>Inconsistent</td>
+<td>Ceph检测到PG中对象的一份或多份数据不一致（比如对象大学不一直，或者恢复成功后对象依然没有等）  <em>不一致态。集群清理和深度清理后检测到<strong>PG</strong>中的对象在副本存在不一致，例如对象的文件大小不一致或<strong>Recovery</strong>结束后一个对象的副本丢失</em></td>
+</tr>
+<tr>
+<td>Peered</td>
+<td>PG已互联，但是不能向客户端提供服务，因为其副本数没达到本存储池的配置值（ min_size 参数）。  在此状态下恢复会进行，所以此PG最终能达到 min_size 。  Peering已经完成，但是PG当前ActingSet规模小于存储池规定的最小副本数(min_size)</td>
+</tr>
+<tr>
+<td>Peering</td>
+<td>PG正在互联过程中。正在同步态。PG正在执行同步处理。  类似Raft的Leader选举，使一个PG内的OSD达成一致，不涉及数据迁移等操作。</td>
+</tr>
+<tr>
+<td>Recovering</td>
+<td>正在恢复态。集群正在执行迁移或同步对象和他们的副本</td>
+</tr>
+<tr>
+<td>Recovering-wait</td>
+<td>等待recovery资源预留。PG正在等待恢复被调度执行。</td>
+</tr>
+<tr>
+<td>recovery_toofull</td>
+<td>恢复操作因为目标OSD容量超过指标而挂起。</td>
+</tr>
+<tr>
+<td><em>recovery_unfound</em></td>
+<td>恢复因为没有找到对应对象而停止。</td>
+</tr>
+<tr>
+<td>Remapped</td>
+<td>PG被临时分配到了和CRUSH所指定的不同的OSD上。  重新映射态。PG活动集任何的一个改变，数据发生从老活动集到新活动集的迁移。在迁移期间还是用老的活动集中的主OSD处理客户端请求，一旦迁移完成新活动集中的主OSD开始处理</td>
+</tr>
+<tr>
+<td>Repair</td>
+<td>Ceph正在检查PG并且修复所有发现的不一致情况（如果有的话）  <em>PG<strong>在执行</strong>Scrub**过程中，如果发现存在不一致的对象，并且能够修复，则自动进行修复状态</em></td>
+</tr>
+<tr>
+<td>Scrubbing</td>
+<td>Ceph 正在检查PG metadata的一致性。  PG正在或者即将进行对象一致性扫描</td>
+</tr>
+<tr>
+<td>Unactive</td>
+<td>非活跃态。PG不能处理读写请求</td>
+</tr>
+<tr>
+<td>Unclean</td>
+<td>非干净态。PG不能从上一个失败中恢复</td>
+</tr>
+<tr>
+<td>Stale</td>
+<td>PG状态未知，从PG mapping更新后Monitor一直没有收到更新  <em>未刷新态。<strong>PG</strong>状态没有被任何<strong>OSD</strong>更新，这说明所有存储这个<strong>PG</strong>的<strong>OSD</strong>可能挂掉</em>*,* <em>或者<strong>Mon</strong>没有检测到<strong>Primary</strong>统计信息</em>*(<strong>网络抖动</strong>)*</td>
+</tr>
+<tr>
+<td><em>snaptrim</em></td>
+<td>正在对快照做Trim操作。</td>
+</tr>
+<tr>
+<td><em>snaptrim_Wait</em></td>
+<td>Trim操作等待被调度执行</td>
+</tr>
+<tr>
+<td><em>snaptrim_Error</em></td>
+<td>Trim操作因为错误而停止</td>
+</tr>
+<tr>
+<td>Undersized</td>
+<td>该PG的副本数量小于存储池所配置的副本数量。  PG当前Acting Set小于存储池副本数。ceph默认3副本，min_size参数通常为2，即副本数&gt;=2时就可以进行IO，否则阻塞IO。</td>
+</tr>
+<tr>
+<td>forced_recovery</td>
+<td>用户指定的PG高优先级恢复</td>
+</tr>
+<tr>
+<td><em>forced_backfill</em></td>
+<td>用户指定的高优先级backfill</td>
+</tr>
+</tbody>
+</table>
+<h2 id="十常见问题">十、常见问题</h2>
+<h5 id="1日志盘bug">1、日志盘bug</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph-disk list
+
+vim /usr/lib/python2.7/dist-packages/ceph_disk/main.py
+
+sgdisk --typecode=6:4fbd7e29-9d25-41b8-afd0-062c0ceff05d -- /dev/sda
+
+sgdisk --typecode=1:45b0969e-9b03-4f30-b4c6-b4b80ceff106 -- /dev/ssd
+
+chown -R ceph:ceph /dev/nvme0n1p2
+
+parted /dev/sdg
+mklabel        GPT
+
+mkpart cache xfs 0G 380G
+mkpart sdb_journal xfs 380G 385G</code></pre></div><h5 id="2no_pubkey-e84ac2c0460f3994">2、NO_PUBKEY E84AC2C0460F3994</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E84AC2C0460F3994</code></pre></div><h5 id="3-error-error-creating-empty-object-store-in-varlibcephtmpmntblv9da-13-permission-denied">3、** ERROR: error creating empty object store in /var/lib/ceph/tmp/mnt.blV9DA: (13) Permission denied</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>将ceph集群需要使用的所有磁盘权限，所属用户、用户组改给ceph
+ 
+chown ceph:ceph /dev/xvdb</code></pre></div><h5 id="4clock-skew-detected-on-monceph-node2-monceph-node3--monitor-clock-skew-detected">4、clock skew detected on mon.ceph-node2, mon.ceph-node3  Monitor clock skew detected</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>/etc/init.d/ntpd stop
+
+service chrony stop
+ntpdate time.nist.gov
+service chrony start</code></pre></div><h5 id="5-osd_scrub_errors-1-scrub-errorspg_damaged-possible-data-damage-1-pg-inconsistent">5、 OSD_SCRUB_ERRORS: 1 scrub errors；PG_DAMAGED: Possible data damage: 1 pg inconsistent</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>docker exec ceph_mon sh -c &#39;for i in &#34;`ceph health detail|grep -vE \&#34;(PG_DAMAGED|HEALTH_ERR|OSD_SCRUB_ERRORS)\&#34;|awk \&#34;{print $2}\&#34;`&#34;;do ceph pg repair $i ;done&#39;
+
+for i in `ceph health  detail|grep &#39;active+clean+inconsistent&#39;|awk &#39;{print $2}&#39;`;do ceph pg repair $i ;done
+ceph -s</code></pre></div><h5 id="6往下刷缓存">6、往下刷缓存</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>rados -p images-cache cache-flush-evict-all
+rados -p volumes-cache cache-flush-evict-all
+rados -p backups-cache cache-flush-evict-all
+rados -p vms-cache cache-flush-evict-all
+rados -p gnocchi-cache cache-flush-evict-all</code></pre></div><h5 id="7application-not-enabled-on-1-pools">7、application not enabled on 1 pool(s)</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>ceph osd pool application enable k8s rbd</code></pre></div><h5 id="8手动刷新-ceph-cache">8、手动刷新 ceph-cache</h5>
+<div class="highlight wrap-code"><pre tabindex="0"><code>rados -p cache cache-flush-evict-all</code></pre></div>
+            <footer class="footline">
+            </footer>
+          </article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <style>
+            #R-logo svg,
+            #R-logo svg * {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              fill: #282828 !important;
+              fill: var(--MENU-SECTIONS-BG-color) !important;
+              opacity: .945;
+            }
+            a#R-logo {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+              font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+              font-size: 1.875rem;
+              font-weight: 300;
+              margin-top: -.8125rem;
+              max-width: 60%;
+              text-transform: uppercase;
+              width: 14.125rem;
+              white-space: nowrap;
+            }
+            a#R-logo:hover {
+              color: #282828;
+              color: var(--MENU-SECTIONS-BG-color);
+            }
+            #R-logo svg {
+              margin-bottom: -1.25rem;
+              margin-inline-start: -1.47rem;
+              margin-inline-end: .5rem;
+              width: 40.5%;
+            }
+            @media only all and (max-width: 59.999rem) {
+              a#R-logo {
+                font-size: 1.5625rem;
+                margin-top: -.1875rem;
+              }
+              #R-logo svg {
+                margin-bottom: -.75rem;
+                margin-inline-start: -1.47rem;
+                margin-inline-end: .5rem;
+              }
+            }
+            @media all and (-ms-high-contrast:none) {
+              /* IE11s understanding of positioning is weird at best */
+              a#R-logo {
+                margin-top: -3.625rem;
+              }
+              #R-logo svg {
+                margin-bottom: -3.875rem;
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+            @media only all and (-ms-high-contrast:none) and (max-width: 59.999rem) {
+              #R-logo svg {
+                margin-left: -1.47rem;
+                margin-right: .5rem;
+              }
+            }
+          </style>
+          <a id="R-logo" href="/index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.044 64.044">
+              <path d="M46.103 136.34c-.642-.394-1.222-2.242-1.98-2.358-.76-.117-1.353.506-1.618 1.519-.266 1.012-.446 4.188.173 5.538.213.435.482.787 1.03.845.547.057.967-.504 1.45-1.027.482-.523.437-.9 1.142-.612.705.289 1.051.4 1.586 1.229.535.828 1.085 4.043.868 5.598-.241 1.458-.531 2.8-.59 4.088.26.075.517.148.772.217 2.68.724 5.373 1.037 7.873.02.001-.028.01-.105.008-.11-.048-.165-.18-.41-.36-.698-.18-.29-.414-.645-.586-1.114a3.212 3.212 0 0 1-.125-1.735c.056-.21.153-.342.249-.475 1.237-1.193 2.932-1.373 4.244-1.384.557-.004 1.389.016 2.198.255.809.239 1.706.724 2.068 1.843.187.578.114 1.17-.043 1.623-.153.438-.369.783-.545 1.091-.178.31-.329.6-.401.821-.007.02-.003.071-.005.094 2.256 1.008 4.716.91 7.189.398.55-.114 1.11-.247 1.673-.377.344-1.085.678-2.145.852-3.208.124-.752.158-2.311-.078-3.538-.118-.613-.306-1.15-.52-1.489-.221-.349-.413-.501-.747-.538-.243-.027-.51.013-.796.098-.67.223-1.33.606-1.966.76l-.008.002-.109.032c-.556.152-1.233.158-1.797-.36-.556-.51-.89-1.367-1.117-2.596-.283-1.528-.075-3.279.89-4.518l.071-.09h.07c.65-.71 1.485-.802 2.16-.599.706.213 1.333.629 1.772.84.736.354 1.185.319 1.475.171.291-.148.5-.439.668-.955.332-1.017.301-2.819.022-4.106-.148-.684-.13-1.292-.13-1.883-1.558-.463-3.067-.982-4.574-1.208-1.128-.169-2.263-.173-3.298.164-.13.046-.256.095-.38.15-.373.164-.633.342-.805.52-.077.098-.081.105-.087.21-.004.068.031.289.13.571.1.282.256.634.467 1.03.279.524.448 1.063.431 1.618a2.12 2.12 0 0 1-.499 1.309 1.757 1.757 0 0 1-.62.51h-.002c-.515.291-1.107.404-1.723.464-.86.083-1.787.026-2.598-.097-.806-.123-1.47-.28-1.948-.555-.444-.256-.79-.547-1.037-.925a2.273 2.273 0 0 1-.356-1.301c.029-.837.403-1.437.625-1.897.111-.23.191-.433.236-.583.045-.15.044-.25.046-.24-.005-.029-.127-.355-1.015-.741-1.138-.495-2.322-.673-3.533-.668h-.015a9.711 9.711 0 0 0-.521.016h-.002c-1.163.057-2.35.308-3.541.569.383 1.531.79 2.753.818 4.502-.096 1.297.158 2.114-1.03 2.935-.85.588-1.508.729-2.15.335" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:1.03763;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M61.472 101.34v.002c-.3-.003-.603.01-.894.04-.544.055-1.39.165-1.778.306-1.238.364.13 2.344.41 2.913.28.569.285 2.03.14 2.134-.144.103-.375.261-.934.345-.56.084.03-.037-1.589.086-1.62.122-5.506.29-8.265.248-.022.26-.036.521-.097.808-.309 1.442-.63 3.163-.494 4.074.071.473.168.65.414.8.23.14.737.235 1.62-.004.834-.227 1.3-.442 1.887-.456.595-.016 1.555.472 1.965.717.411.245-.03-.008.002 0s.128.05.176.102c.049.053-.276-.523.104.199.379.721.72 3.256.002 4.68-.46.913-1.01 1.49-1.64 1.711-.63.22-1.229.067-1.734-.135-.881-.353-1.584-.7-2.205-.647-1.199 1.94-1.186 4.17-.6 6.602.097.397.212.814.327 1.23 2.68-.556 5.542-1.016 8.337.132 1.064.437 1.73 1.015 1.902 1.857.169.831-.193 1.508-.438 1.986-.122.238-.23.46-.307.642-.07.164-.096.28-.104.324.069.429.309.723.686.945.385.227.89.355 1.35.423.723.104 1.567.152 2.287.086.693-.064 1.032-.338 1.241-.544a2.447 2.447 0 0 0 .303-.437.175.175 0 0 0 .013-.035c-.004-.066-.037-.246-.195-.527-.46-.816-.87-1.595-.817-2.51.028-.476.218-.938.529-1.288.304-.343.698-.586 1.186-.79 1.442-.606 2.96-.609 4.372-.409 1.525.216 2.963.679 4.378 1.083.226-2.09.784-3.9.592-5.77-.058-.565-.287-1.333-.598-1.827-.32-.508-.59-.717-1.036-.642-.648.11-1.472.935-2.707 1.078-.791.092-1.494-.267-1.95-.86-.45-.583-.678-1.335-.78-2.101-.202-1.525.031-3.229.89-4.27.615-.747 1.45-.887 2.15-.74.687.145 1.307.492 1.857.745v-.002c.546.252 1.033.388 1.281.344a.547.547 0 0 0 .353-.188c.113-.124.242-.35.384-.75.604-1.712.206-3.68-.303-5.654-.667.145-1.336.293-2.018.413-1.341.236-2.73.392-4.136.273-.656-.055-1.695-.085-2.58-.476-.442-.195-.903-.514-1.157-1.093-.259-.591-.205-1.313.08-2.014.223-.64 1.082-2.178.692-2.585-.391-.407-1.651-.56-2.554-.571z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.992837;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+              <path d="M83.128 98.116c-.484 1.875-1.057 3.757-2.486 5.033-.638.57-1.13.666-1.483.548-.401-.134-.715-.506-1.058-.973-.338-.461-.655-.97-1.076-1.332-.192-.165-.404-.315-.683-.38-.279-.066-.599-.02-.9.102-.489.196-.89.58-1.28 1.047a6.1 6.1 0 0 0-.985 1.632c-.234.591-.356 1.174-.277 1.713.072.487.392.977.905 1.185.463.187.926.156 1.36.154.433 0 .843.01 1.242.147.55.189.79.736.822 1.368.034.66-.145 1.412-.393 1.988l-.008.021c-.74 1.705-1.946 2.893-3.004 4.349l-.664.915.979.099c.924.092 1.788.26 2.468.675.46.281 1.806 1.205 2.794 2.222.497.513.888 1.031 1.047 1.502.078.231.095.422.05.6a.93.93 0 0 1-.345.474c-.301.223-.606.395-.864.532l-.354.186c-.107.058-.189.087-.345.228a.637.637 0 0 1 .062-.045l-.064.041-.209.236-.103.343s.003.126.007.152c.003.017.003.007.004.015v.002c.016.195.061.307.133.476a4.1 4.1 0 0 0 .32.596 5.7 5.7 0 0 0 2.8 2.258c.284.108.908.321 1.548.36.33.02.59.015.912-.13h.002c.08-.037.228-.095.382-.281.153-.186.19-.355.212-.445l.019-.075.003-.078c.023-.585-.037-1.296.072-1.899.153-.657.435-.956 1.009-.909 2.771.239 4.74 1.955 6.693 3.83l.742.714.279-1.155c.55-2.29 1.093-4.464 2.928-5.977.692-.57 1.184-.642 1.527-.509.39.151.676.536.996.995.319.458.605.926 1.07 1.212.194.119.464.232.784.209.32-.024.638-.163.988-.384 1.022-.645 1.778-1.756 2.086-2.942.136-.522.102-.991-.046-1.301-.158-.334-.433-.553-.754-.707-.653-.314-1.468-.373-2.094-.486-.825-.15-1.22-.475-1.345-.878-.13-.417 0-.953.335-1.61.6-1.173 1.887-2.602 3.13-3.911l.498-.526-.449-.432c-1.545-1.49-3.163-3.01-5.252-3.715h-.002c-.473-.16-1.097-.413-1.73-.424h-.003c-.311-.004-.596.04-.883.24v.002c-.22.155-.483.537-.583.937l-.008.036-.006.038c-.116.773-.06 1.467-.217 1.995-.063.212-.198.418-.359.507-.202.111-.492.153-.976.072-.582-.097-1.978-.69-3.021-1.503-.523-.407-.934-.85-1.117-1.3a1.153 1.153 0 0 1-.083-.63c.03-.184.1-.477.308-.593.21-.116.941-.32 1.377-.642h.002c.192-.141.403-.367.518-.64.114-.275.127-.526.123-.774-.006-.142-.036-.192-.08-.3a8.417 8.417 0 0 0-3-3.027c-1.226-.725-2.585-1.135-3.927-1.539-.434-.12-.844-.111-1.02.466zm.912.947c1.186.364 2.357.718 3.345 1.303 1.035.612 1.864 1.488 2.507 2.528-.514.263-1.095.5-1.44.79-.345.29-.729.914-.815 1.434-.084.509 0 .968.155 1.347.301.74.85 1.276 1.44 1.735 1.18.92 2.554 1.545 3.47 1.698.604.1 1.186.088 1.739-.216.594-.327.935-.911 1.088-1.427.264-.884.193-1.664.262-2.17h.1c.3.006.926.206 1.417.371 1.646.554 3.044 1.773 4.431 3.089-1.102 1.174-2.222 2.423-2.888 3.73-.42.823-.73 1.789-.453 2.687.283.913 1.1 1.415 2.138 1.603.691.126 1.472.226 1.84.403.19.091.258.182.278.223.03.064.058.075-.023.387-.21.804-.761 1.598-1.413 2.01-.247.155-.365.183-.407.187-.042.003-.061.002-.172-.066-.144-.088-.455-.473-.772-.929-.317-.454-.714-1.07-1.452-1.356-.783-.304-1.776-.022-2.713.75-1.942 1.6-2.626 3.764-3.146 5.8-1.802-1.676-3.772-3.138-6.589-3.517h-.002c-.346-.095-1.013-.031-1.293.143-.735.501-1.005 1.132-1.168 2.007-.125.69-.082 1.216-.074 1.659-.055.006-.046.01-.104.006-.42-.026-1.035-.215-1.244-.295-.947-.361-1.774-1.006-2.314-1.857-.054-.085-.072-.132-.109-.2l.027-.016c.284-.15.656-.36 1.045-.648.44-.327.789-.798.93-1.35a2.4 2.4 0 0 0-.068-1.379c-.254-.751-.753-1.353-1.295-1.911-1.09-1.124-2.452-2.049-2.99-2.378-.609-.372-1.303-.44-1.981-.56.875-1.094 1.878-2.251 2.596-3.921.294-.823.543-1.907.513-2.658-.049-.97-.489-2.013-1.52-2.367-.579-.2-1.131-.204-1.58-.203-.45.002-.786-.006-.97-.08h-.002c-.264-.107-.236-.108-.268-.33-.025-.17.021-.553.183-.962a4.67 4.67 0 0 1 .725-1.192c.29-.348.617-.59.705-.626.142-.057.176-.05.22-.04.045.011.127.052.263.17.235.201.56.671.92 1.161.354.484.791 1.08 1.543 1.33.8.267 1.784-.052 2.671-.846 1.594-1.424 2.235-3.317 2.714-5.051zm11.705 7.023c-.02.014.042-.002.042 0l-.008.035c.05-.2-.028-.04-.034-.035zM79.472 122.45a.198.198 0 0 1 .005.023v.014c-.002-.01-.003-.03-.005-.037zm-.29.732-.006.01-.044.027c.016-.01.033-.024.05-.036z" style="color:#000;fill:#282828;stroke-width:1.02352;-inkscape-stroke:none" transform="translate(-40.698 -95.175)"/>
+              <path d="M76.694 128.845c-.85-.012-1.668.253-2.434.67-.01.592-.015 1.17.109 1.772.323 1.573.422 3.553-.07 5.147-.247.804-.684 1.535-1.347 1.891-.663.356-1.467.296-2.362-.159-.522-.266-1.059-.62-1.487-.757-.223-.072-.392-.096-.522-.069-.13.027-.232.094-.362.27-.53.719-.681 1.823-.497 2.876.177 1.012.418 1.438.543 1.56.143.137.26.154.604.055.548-.158 1.523-.857 2.573-.972l.02-.002.5.058c.686.081 1.247.562 1.622 1.19.372.62.591 1.37.73 2.136.279 1.532.25 3.16.083 4.232-.14.91-.394 1.72-.632 2.53 1.719-.385 3.485-.692 5.307-.36 1.174.214 2.749.574 3.762 1.977l.088.122.046.159c.162.551.16 1.114.024 1.578-.13.45-.348.772-.533 1.023-.181.246-.336.444-.437.606-.102.16-.141.275-.145.336-.01.17 0 .197.07.315.057.1.186.242.39.366.408.246 1.106.414 1.843.45a7.842 7.842 0 0 0 2.174-.21 4.28 4.28 0 0 0 .822-.296c.218-.106.385-.242.377-.233l.029-.031c.025-.035.05-.072.05-.068 0-.004 0-.017-.003-.05a2.733 2.733 0 0 0-.21-.579c-.26-.548-.839-1.333-.822-2.46.01-.657.27-1.21.598-1.576.32-.357.696-.575 1.074-.736.759-.323 1.57-.418 2.054-.458 1.653-.136 3.252.296 4.755.765.457.142.905.29 1.352.434.325-2.258.902-4.247.598-6.217-.071-.46-.25-1.169-.486-1.684-.238-.518-.495-.762-.675-.779-.351-.032-.716.14-1.174.418-.457.277-1.005.665-1.695.742-.745.082-1.406-.291-1.84-.908-.428-.608-.653-1.394-.754-2.196-.203-1.596.016-3.377.794-4.493.568-.813 1.358-.984 2.024-.835.65.146 1.243.51 1.769.779.524.267.99.413 1.237.365a.527.527 0 0 0 .346-.2c.11-.132.235-.373.37-.798.612-1.918.27-3.894-.246-6.054-2.815-.851-5.49-1.534-8.089-.267a.727.727 0 0 0-.223.148c-.024.028-.018.021-.026.056.001-.003-.01.178.07.44.162.522.611 1.29.911 1.978l.004.009.029.063.024.084V133c.162.635.016 1.297-.274 1.727-.272.404-.618.636-.952.81-.675.353-1.399.484-1.724.533a5.888 5.888 0 0 1-3.973-.795c-.512-.311-.876-.594-1.133-1.02-.282-.466-.318-1.084-.172-1.557.252-.814.715-1.266.971-1.89a.663.663 0 0 0 .047-.14c.001-.013 0-.006-.007-.037a.761.761 0 0 0-.184-.268c-.264-.267-.865-.595-1.54-.826-1.356-.462-3.07-.659-3.583-.686-.062-.002-.121-.006-.178-.006z" style="fill:#282828;fill-opacity:1;stroke:none;stroke-width:.991342;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="translate(-40.698 -95.175)"/>
+            </svg>Relearn
+          </a>
+        </div>
+
+        <search>
+          <div class="searchbox default-animation">
+            <i class="fas fa-search" title="Search (CTRL+ALT+f)"></i>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </search>
+        <script>
+          var contentLangs=['zh'];
+        </script>
+        <script src="/js/auto-complete.js?1716876877" defer></script>
+        <script src="/js/lunr/lunr.min.js?1716876877" defer></script>
+        <script src="/js/lunr/lunr.stemmer.support.min.js?1716876877" defer></script>
+        <script src="/js/lunr/lunr.multi.min.js?1716876877" defer></script>
+        <script src="/js/lunr/lunr.zh.min.js?1716876877" defer></script>
+        <script src="/js/search.js?1716876877" defer></script>
+      </div>
+      <div id="R-homelinks" class="default-animation homelinks">
+        <ul>
+          <li><a class="padding" href="/index.html"><i class="fa-fw fas fa-home"></i> Home</a></li>
+        </ul>
+        <hr class="padding">
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div id="R-topics">
+          <ul class="enlarge morespace collapsible-menu">
+          <li data-nav-id="/ceph/index.html" class="parent "><a class="padding" href="/ceph/index.html">Cephs</a><ul id="R-subsections-fd10f71351f87e0d2cf3e598548366c8" class="morespace collapsible-menu">
+          <li data-nav-id="/ceph/first/index.html" class=""><a class="padding" href="/ceph/first/index.html">First</a></li>
+          <li data-nav-id="/ceph/ceph_dashboard-hl/index.html" class=""><a class="padding" href="/ceph/ceph_dashboard-hl/index.html">Ceph 启用 Dashboard</a></li>
+          <li data-nav-id="/ceph/ceph_deploy-hl/index.html" class="active"><a class="padding" href="/ceph/ceph_deploy-hl/index.html">Ceph 相关</a></li>
+          <li data-nav-id="/ceph/ceph_optimize-hl/index.html" class=""><a class="padding" href="/ceph/ceph_optimize-hl/index.html">Ceph 调优参考</a></li>
+          <li data-nav-id="/ceph/cephconf-hl/index.html" class=""><a class="padding" href="/ceph/cephconf-hl/index.html">ceph.conf</a></li>
+          <li data-nav-id="/ceph/crushmap-hl/index.html" class=""><a class="padding" href="/ceph/crushmap-hl/index.html">crushmap</a></li></ul></li>
+          <li data-nav-id="/python/index.html" class=""><a class="padding" href="/python/index.html">Pythons</a><ul id="R-subsections-36a3ed262b315ff04085d7b53a448994" class="morespace collapsible-menu">
+          <li data-nav-id="/python/first/index.html" class=""><a class="padding" href="/python/first/index.html">First</a></li>
+          <li data-nav-id="/python/django-hl/index.html" class=""><a class="padding" href="/python/django-hl/index.html">Django 相关</a></li>
+          <li data-nav-id="/python/flask-hl/index.html" class=""><a class="padding" href="/python/flask-hl/index.html">Flask 相关</a></li>
+          <li data-nav-id="/python/jinja2-hl/index.html" class=""><a class="padding" href="/python/jinja2-hl/index.html">Jinja2 相关</a></li>
+          <li data-nav-id="/python/python_logging-hl/index.html" class=""><a class="padding" href="/python/python_logging-hl/index.html">Python logging模块</a></li>
+          <li data-nav-id="/python/sqlalchemy-hl/index.html" class=""><a class="padding" href="/python/sqlalchemy-hl/index.html">Python Sqlalchemy</a></li>
+          <li data-nav-id="/python/python_obfuscated_code-hl/index.html" class=""><a class="padding" href="/python/python_obfuscated_code-hl/index.html">Python 代码混淆</a></li>
+          <li data-nav-id="/python/python_code_standards-hl/index.html" class=""><a class="padding" href="/python/python_code_standards-hl/index.html">Python 代码规范</a></li>
+          <li data-nav-id="/python/python_file-hl/index.html" class=""><a class="padding" href="/python/python_file-hl/index.html">Python 文件操作</a></li>
+          <li data-nav-id="/python/python-hl/index.html" class=""><a class="padding" href="/python/python-hl/index.html">Python 相关</a></li>
+          <li data-nav-id="/python/python_decorators-hl/index.html" class=""><a class="padding" href="/python/python_decorators-hl/index.html">Python 装饰器</a></li>
+          <li data-nav-id="/python/scrapy-hl/index.html" class=""><a class="padding" href="/python/scrapy-hl/index.html">scrapy 爬虫</a></li>
+          <li data-nav-id="/python/urllib2-hl/index.html" class=""><a class="padding" href="/python/urllib2-hl/index.html">urllib2 爬虫</a></li>
+          <li data-nav-id="/python/xpath-hl/index.html" class=""><a class="padding" href="/python/xpath-hl/index.html">xpath 相关</a></li>
+          <li data-nav-id="/python/yield-hl/index.html" class=""><a class="padding" href="/python/yield-hl/index.html">yield</a></li>
+          <li data-nav-id="/python/regular_expression-hl/index.html" class=""><a class="padding" href="/python/regular_expression-hl/index.html">正则表达式相关</a></li></ul></li>
+          <li data-nav-id="/proxy/index.html" class=""><a class="padding" href="/proxy/index.html">Proxy</a><ul id="R-subsections-7af45055f134bf4d7ad1ff39a99c084b" class="morespace collapsible-menu">
+          <li data-nav-id="/proxy/proxy/index.html" class=""><a class="padding" href="/proxy/proxy/index.html">Proxy相关</a></li></ul></li>
+          <li data-nav-id="/other/index.html" class=""><a class="padding" href="/other/index.html">Other</a><ul id="R-subsections-dd17f32865650128ca32bc9ce5ee4fdf" class="morespace collapsible-menu">
+          <li data-nav-id="/other/anaconda-hl/index.html" class=""><a class="padding" href="/other/anaconda-hl/index.html">anaconda 相关</a></li>
+          <li data-nav-id="/other/apidoc-hl/index.html" class=""><a class="padding" href="/other/apidoc-hl/index.html">apidoc 相关</a></li>
+          <li data-nav-id="/other/build_atlas-hl/index.html" class=""><a class="padding" href="/other/build_atlas-hl/index.html">Atlas 驱动构建</a></li>
+          <li data-nav-id="/other/cloudfoundry-hl/index.html" class=""><a class="padding" href="/other/cloudfoundry-hl/index.html">cloudfoundry 相关</a></li>
+          <li data-nav-id="/other/github_pages-hl/index.html" class=""><a class="padding" href="/other/github_pages-hl/index.html">github pages</a></li>
+          <li data-nav-id="/other/ionic_cordova-hl/index.html" class=""><a class="padding" href="/other/ionic_cordova-hl/index.html">ionic 、cordova 编译 andriod</a></li>
+          <li data-nav-id="/other/java-hl/index.html" class=""><a class="padding" href="/other/java-hl/index.html">Java 相关</a></li>
+          <li data-nav-id="/other/jupyter-hl/index.html" class=""><a class="padding" href="/other/jupyter-hl/index.html">jupyter 相关</a></li>
+          <li data-nav-id="/other/kafka-hl/index.html" class=""><a class="padding" href="/other/kafka-hl/index.html">Kafka 相关</a></li>
+          <li data-nav-id="/other/keepalived-hl/index.html" class=""><a class="padding" href="/other/keepalived-hl/index.html">keepalived 相关</a></li>
+          <li data-nav-id="/other/linux_desktop_rdp-hl/index.html" class=""><a class="padding" href="/other/linux_desktop_rdp-hl/index.html">Linux Desktop rdp 相关</a></li>
+          <li data-nav-id="/other/mqtt-hl/index.html" class=""><a class="padding" href="/other/mqtt-hl/index.html">MQTT 相关</a></li>
+          <li data-nav-id="/other/nativefier-hl/index.html" class=""><a class="padding" href="/other/nativefier-hl/index.html">Nativefier 相关</a></li>
+          <li data-nav-id="/other/ovirt-hl/index.html" class=""><a class="padding" href="/other/ovirt-hl/index.html">Ovirt 相关</a></li>
+          <li data-nav-id="/other/ptp-hl/index.html" class=""><a class="padding" href="/other/ptp-hl/index.html">ptp 相关</a></li>
+          <li data-nav-id="/other/pyqt5-hl/index.html" class=""><a class="padding" href="/other/pyqt5-hl/index.html">PyQt5 相关</a></li>
+          <li data-nav-id="/other/stratos_ui-hl/index.html" class=""><a class="padding" href="/other/stratos_ui-hl/index.html">stratos-ui 相关</a></li>
+          <li data-nav-id="/other/svn-hl/index.html" class=""><a class="padding" href="/other/svn-hl/index.html">svn 相关</a></li>
+          <li data-nav-id="/other/web-hl/index.html" class=""><a class="padding" href="/other/web-hl/index.html">Web 相关</a></li>
+          <li data-nav-id="/other/webdriver-hl/index.html" class=""><a class="padding" href="/other/webdriver-hl/index.html">webdriver 相关</a></li>
+          <li data-nav-id="/other/websocket-hl/index.html" class=""><a class="padding" href="/other/websocket-hl/index.html">websocket 相关</a></li>
+          <li data-nav-id="/other/xenserver-hl/index.html" class=""><a class="padding" href="/other/xenserver-hl/index.html">xenserver 相关</a></li>
+          <li data-nav-id="/other/gitbook-hl/index.html" class=""><a class="padding" href="/other/gitbook-hl/index.html">一、gitbook 相关</a></li>
+          <li data-nav-id="/other/computer_network_foundation-hl/index.html" class=""><a class="padding" href="/other/computer_network_foundation-hl/index.html">计算机网络基础</a></li>
+          <li data-nav-id="/other/be_mined-hl/index.html" class=""><a class="padding" href="/other/be_mined-hl/index.html">记一次被挖矿</a></li></ul></li>
+          <li data-nav-id="/question/index.html" class=""><a class="padding" href="/question/index.html">Question</a></li>
+          <li data-nav-id="/database/index.html" class=""><a class="padding" href="/database/index.html">Database</a></li>
+          <li data-nav-id="/istio/index.html" class=""><a class="padding" href="/istio/index.html">Istio</a></li>
+          <li data-nav-id="/k8s/index.html" class=""><a class="padding" href="/k8s/index.html">K8s</a></li>
+          <li data-nav-id="/openstack/index.html" class=""><a class="padding" href="/openstack/index.html">Openstack</a><ul id="R-subsections-9bba764a9f110e94af4bc7a89f9db759" class="morespace collapsible-menu">
+          <li data-nav-id="/openstack/devstack-hl/index.html" class=""><a class="padding" href="/openstack/devstack-hl/index.html">devstack相关</a></li>
+          <li data-nav-id="/openstack/heat-hl/index.html" class=""><a class="padding" href="/openstack/heat-hl/index.html">heat相关</a></li>
+          <li data-nav-id="/openstack/kolla_network-hl/index.html" class=""><a class="padding" href="/openstack/kolla_network-hl/index.html">kolla网络规划</a></li>
+          <li data-nav-id="/openstack/kolla_deploy-hl/index.html" class=""><a class="padding" href="/openstack/kolla_deploy-hl/index.html">kolla部署相关</a></li>
+          <li data-nav-id="/openstack/kolla_image_build-hl/index.html" class=""><a class="padding" href="/openstack/kolla_image_build-hl/index.html">kolla镜像构建</a></li>
+          <li data-nav-id="/openstack/lsf_install_openstack-hl/index.html" class=""><a class="padding" href="/openstack/lsf_install_openstack-hl/index.html">Lfs上安装OpenStack</a></li>
+          <li data-nav-id="/openstack/openstack_win_vm_diaplay-hl/index.html" class=""><a class="padding" href="/openstack/openstack_win_vm_diaplay-hl/index.html">openstack windows虚拟机分辨率问题</a></li>
+          <li data-nav-id="/openstack/openstack-hl/index.html" class=""><a class="padding" href="/openstack/openstack-hl/index.html">OpenStack 相关</a></li>
+          <li data-nav-id="/openstack/openstack_faq-hl/index.html" class=""><a class="padding" href="/openstack/openstack_faq-hl/index.html">openstack中遇到的问题</a></li>
+          <li data-nav-id="/openstack/openstack_hygon_patch-hl/index.html" class=""><a class="padding" href="/openstack/openstack_hygon_patch-hl/index.html">OpenStack对hygon的兼容</a></li>
+          <li data-nav-id="/openstack/ovs-hl/index.html" class=""><a class="padding" href="/openstack/ovs-hl/index.html">OVS 相关</a></li>
+          <li data-nav-id="/openstack/qemu_make-hl/index.html" class=""><a class="padding" href="/openstack/qemu_make-hl/index.html">QEMU 源码编译</a></li>
+          <li data-nav-id="/openstack/qga-hl/index.html" class=""><a class="padding" href="/openstack/qga-hl/index.html">qemu-guest-agent 相关</a></li>
+          <li data-nav-id="/openstack/delete_cinder_volume-hl/index.html" class=""><a class="padding" href="/openstack/delete_cinder_volume-hl/index.html">删除cinder僵尸实例</a></li>
+          <li data-nav-id="/openstack/make_openstack_image-hl/index.html" class=""><a class="padding" href="/openstack/make_openstack_image-hl/index.html">制作openstack镜像</a></li>
+          <li data-nav-id="/openstack/add_nic_to_vm-hl/index.html" class=""><a class="padding" href="/openstack/add_nic_to_vm-hl/index.html">给虚拟机添加网卡</a></li>
+          <li data-nav-id="/openstack/migrate_to_other_platform-hl/index.html" class=""><a class="padding" href="/openstack/migrate_to_other_platform-hl/index.html">迁移虚拟机到其他平台</a></li></ul></li>
+          <li data-nav-id="/golang/index.html" class=""><a class="padding" href="/golang/index.html">Golang</a><ul id="R-subsections-9846d6388830934b21e07a0f7d630c6c" class="morespace collapsible-menu">
+          <li data-nav-id="/golang/go_athens-hl/index.html" class=""><a class="padding" href="/golang/go_athens-hl/index.html">Go Authens</a></li>
+          <li data-nav-id="/golang/go-hl/index.html" class=""><a class="padding" href="/golang/go-hl/index.html">Go 语言相关</a></li></ul></li>
+          <li data-nav-id="/docker/index.html" class=""><a class="padding" href="/docker/index.html">Docker</a><ul id="R-subsections-37ef7d0ce1cc039dbba9ad71298a0daf" class="morespace collapsible-menu">
+          <li data-nav-id="/docker/buildah-hl/index.html" class=""><a class="padding" href="/docker/buildah-hl/index.html">Buildah</a></li>
+          <li data-nav-id="/docker/chartmuseum-hl/index.html" class=""><a class="padding" href="/docker/chartmuseum-hl/index.html">chartmuseum 相关</a></li>
+          <li data-nav-id="/docker/containerd-hl/index.html" class=""><a class="padding" href="/docker/containerd-hl/index.html">Containerd</a></li>
+          <li data-nav-id="/docker/docker_compose-hl/index.html" class=""><a class="padding" href="/docker/docker_compose-hl/index.html">docker compose 相关</a></li>
+          <li data-nav-id="/docker/docker_registry-hl/index.html" class=""><a class="padding" href="/docker/docker_registry-hl/index.html">docker registry 相关</a></li>
+          <li data-nav-id="/docker/docker_swarm-hl/index.html" class=""><a class="padding" href="/docker/docker_swarm-hl/index.html">docker swarm 相关</a></li>
+          <li data-nav-id="/docker/docker-hl/index.html" class=""><a class="padding" href="/docker/docker-hl/index.html">docker 相关</a></li>
+          <li data-nav-id="/docker/docker_net-hl/index.html" class=""><a class="padding" href="/docker/docker_net-hl/index.html">docker 网络相关</a></li>
+          <li data-nav-id="/docker/harbor-hl/index.html" class=""><a class="padding" href="/docker/harbor-hl/index.html">harbor 相关</a></li>
+          <li data-nav-id="/docker/helm-hl/index.html" class=""><a class="padding" href="/docker/helm-hl/index.html">helm 相关</a></li>
+          <li data-nav-id="/docker/k3s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k3s_deploy-hl/index.html">k3s 安装与使用</a></li>
+          <li data-nav-id="/docker/k3s_make-hl/index.html" class=""><a class="padding" href="/docker/k3s_make-hl/index.html">k3s 源码编译</a></li>
+          <li data-nav-id="/docker/k8s_use-hl/index.html" class=""><a class="padding" href="/docker/k8s_use-hl/index.html">k8s 使用</a></li>
+          <li data-nav-id="/docker/k8s_ceph-hl/index.html" class=""><a class="padding" href="/docker/k8s_ceph-hl/index.html">k8s 使用 ceph 储存</a></li>
+          <li data-nav-id="/docker/k8s_deploy-hl/index.html" class=""><a class="padding" href="/docker/k8s_deploy-hl/index.html">k8s 安装部署</a></li>
+          <li data-nav-id="/docker/k8s-hl/index.html" class=""><a class="padding" href="/docker/k8s-hl/index.html">k8s 相关</a></li>
+          <li data-nav-id="/docker/kubebuilder-hl/index.html" class=""><a class="padding" href="/docker/kubebuilder-hl/index.html">kubebuilder</a></li>
+          <li data-nav-id="/docker/kubeedge-hl/index.html" class=""><a class="padding" href="/docker/kubeedge-hl/index.html">kubeedge</a></li>
+          <li data-nav-id="/docker/openshift-hl/index.html" class=""><a class="padding" href="/docker/openshift-hl/index.html">openshift 相关</a></li>
+          <li data-nav-id="/docker/overlay2-hl/index.html" class=""><a class="padding" href="/docker/overlay2-hl/index.html">overlay2</a></li>
+          <li data-nav-id="/docker/rancher-hl/index.html" class=""><a class="padding" href="/docker/rancher-hl/index.html">rancher 相关</a></li>
+          <li data-nav-id="/docker/multiarch-hl/index.html" class=""><a class="padding" href="/docker/multiarch-hl/index.html">容器交叉编译</a></li>
+          <li data-nav-id="/docker/debootstrap-hl/index.html" class=""><a class="padding" href="/docker/debootstrap-hl/index.html">容器基础镜像构建</a></li>
+          <li data-nav-id="/docker/convert_iso_to_docker_img-hl/index.html" class=""><a class="padding" href="/docker/convert_iso_to_docker_img-hl/index.html">将ISO镜像转换为docker镜像</a></li>
+          <li data-nav-id="/docker/usual_software-hl/index.html" class=""><a class="padding" href="/docker/usual_software-hl/index.html">常用软件安装</a></li>
+          <li data-nav-id="/docker/mount_usb_to_docker-hl/index.html" class=""><a class="padding" href="/docker/mount_usb_to_docker-hl/index.html">挂载USB到docker容器</a></li></ul></li>
+          <li data-nav-id="/linux/index.html" class=""><a class="padding" href="/linux/index.html">Linux</a><ul id="R-subsections-9e5aaccdf48687824ccd3b3097af8e41" class="morespace collapsible-menu">
+          <li data-nav-id="/linux/libvirt-hl/index.html" class=""><a class="padding" href="/linux/libvirt-hl/index.html">[libvirt 相关](/etc/sysconfig/libvirtd )</a></li>
+          <li data-nav-id="/linux/abd-hl/index.html" class=""><a class="padding" href="/linux/abd-hl/index.html">abd</a></li>
+          <li data-nav-id="/linux/ansible-hl/index.html" class=""><a class="padding" href="/linux/ansible-hl/index.html">ansible 相关</a></li>
+          <li data-nav-id="/linux/apache_multi_ports-hl/index.html" class=""><a class="padding" href="/linux/apache_multi_ports-hl/index.html">apache 多端口</a></li>
+          <li data-nav-id="/linux/diy_centos_iso-hl/index.html" class=""><a class="padding" href="/linux/diy_centos_iso-hl/index.html">CentOS iso 镜像定制</a></li>
+          <li data-nav-id="/linux/change_centos_boot_kernel-hl/index.html" class=""><a class="padding" href="/linux/change_centos_boot_kernel-hl/index.html">CentOS 修改默认启动内核</a></li>
+          <li data-nav-id="/linux/cobbler-hl/index.html" class=""><a class="padding" href="/linux/cobbler-hl/index.html">cobbler 相关</a></li>
+          <li data-nav-id="/linux/crontabs-hl/index.html" class=""><a class="padding" href="/linux/crontabs-hl/index.html">crontabs 计划任务相关</a></li>
+          <li data-nav-id="/linux/dd-hl/index.html" class=""><a class="padding" href="/linux/dd-hl/index.html">dd 相关</a></li>
+          <li data-nav-id="/linux/etcd-hl/index.html" class=""><a class="padding" href="/linux/etcd-hl/index.html">ETCD 相关</a></li>
+          <li data-nav-id="/linux/frp-hl/index.html" class=""><a class="padding" href="/linux/frp-hl/index.html">frp 相关</a></li>
+          <li data-nav-id="/linux/ftp-hl/index.html" class=""><a class="padding" href="/linux/ftp-hl/index.html">ftp 相关</a></li>
+          <li data-nav-id="/linux/gitlab-hl/index.html" class=""><a class="padding" href="/linux/gitlab-hl/index.html">GitLab</a></li>
+          <li data-nav-id="/linux/guestfish-hl/index.html" class=""><a class="padding" href="/linux/guestfish-hl/index.html">guestfish 相关</a></li>
+          <li data-nav-id="/linux/haproxy-hl/index.html" class=""><a class="padding" href="/linux/haproxy-hl/index.html">haproxy 相关</a></li>
+          <li data-nav-id="/linux/iscsi-hl/index.html" class=""><a class="padding" href="/linux/iscsi-hl/index.html">iscsi 相关</a></li>
+          <li data-nav-id="/linux/kernel_make-hl/index.html" class=""><a class="padding" href="/linux/kernel_make-hl/index.html">kernel 内核编译</a></li>
+          <li data-nav-id="/linux/linux_u-hl/index.html" class=""><a class="padding" href="/linux/linux_u-hl/index.html">Linux U盘占用</a></li>
+          <li data-nav-id="/linux/linux_source-hl/index.html" class=""><a class="padding" href="/linux/linux_source-hl/index.html">Linux 源制作</a></li>
+          <li data-nav-id="/linux/linux-hl/index.html" class=""><a class="padding" href="/linux/linux-hl/index.html">Linux 相关</a></li>
+          <li data-nav-id="/linux/linux_network-hl/index.html" class=""><a class="padding" href="/linux/linux_network-hl/index.html">linux 网络配置</a></li>
+          <li data-nav-id="/linux/lvm-hl/index.html" class=""><a class="padding" href="/linux/lvm-hl/index.html">LVM 逻辑卷相关</a></li>
+          <li data-nav-id="/linux/mysql-hl/index.html" class=""><a class="padding" href="/linux/mysql-hl/index.html">mysql 相关</a></li>
+          <li data-nav-id="/linux/nginx-hl/index.html" class=""><a class="padding" href="/linux/nginx-hl/index.html">nginx 相关</a></li>
+          <li data-nav-id="/linux/pypi_local_source-hl/index.html" class=""><a class="padding" href="/linux/pypi_local_source-hl/index.html">pip 本地源</a></li>
+          <li data-nav-id="/linux/proxychains_ng-hl/index.html" class=""><a class="padding" href="/linux/proxychains_ng-hl/index.html">proxychains-ng 代理工具</a></li>
+          <li data-nav-id="/linux/rpm_build-hl/index.html" class=""><a class="padding" href="/linux/rpm_build-hl/index.html">Python rpm编译</a></li>
+          <li data-nav-id="/linux/qemu_img-hl/index.html" class=""><a class="padding" href="/linux/qemu_img-hl/index.html">qemu-img</a></li>
+          <li data-nav-id="/linux/samba-hl/index.html" class=""><a class="padding" href="/linux/samba-hl/index.html">Samba 相关</a></li>
+          <li data-nav-id="/linux/ssh-hl/index.html" class=""><a class="padding" href="/linux/ssh-hl/index.html">ssh 相关</a></li>
+          <li data-nav-id="/linux/ssh_interval-hl/index.html" class=""><a class="padding" href="/linux/ssh_interval-hl/index.html">ssh 自动断开</a></li>
+          <li data-nav-id="/linux/ssh_forwading-hl/index.html" class=""><a class="padding" href="/linux/ssh_forwading-hl/index.html">ssh 转发</a></li>
+          <li data-nav-id="/linux/ssr_privoxy-hl/index.html" class=""><a class="padding" href="/linux/ssr_privoxy-hl/index.html">ssr privoxy 相关</a></li>
+          <li data-nav-id="/linux/synology-hl/index.html" class=""><a class="padding" href="/linux/synology-hl/index.html">Synology</a></li>
+          <li data-nav-id="/linux/systemd-hl/index.html" class=""><a class="padding" href="/linux/systemd-hl/index.html">systemd</a></li>
+          <li data-nav-id="/linux/tcpdump-hl/index.html" class=""><a class="padding" href="/linux/tcpdump-hl/index.html">tcpdump 相关</a></li>
+          <li data-nav-id="/linux/uboot-hl/index.html" class=""><a class="padding" href="/linux/uboot-hl/index.html">uboot</a></li>
+          <li data-nav-id="/linux/vim-hl/index.html" class=""><a class="padding" href="/linux/vim-hl/index.html">Vim 常用命令</a></li>
+          <li data-nav-id="/linux/virt_manager-hl/index.html" class=""><a class="padding" href="/linux/virt_manager-hl/index.html">virt-manager 相关</a></li>
+          <li data-nav-id="/linux/yum_install_conf_conflict-hl/index.html" class=""><a class="padding" href="/linux/yum_install_conf_conflict-hl/index.html">yum 安装时文件冲突</a></li>
+          <li data-nav-id="/linux/net_bridge-hl/index.html" class=""><a class="padding" href="/linux/net_bridge-hl/index.html">创建网桥</a></li>
+          <li data-nav-id="/linux/build_pypi-hl/index.html" class=""><a class="padding" href="/linux/build_pypi-hl/index.html">发布pypi软件包</a></li>
+          <li data-nav-id="/linux/root_extend-hl/index.html" class=""><a class="padding" href="/linux/root_extend-hl/index.html">将 home 目录空间扩容到根目录</a></li>
+          <li data-nav-id="/linux/vm_to_router-hl/index.html" class=""><a class="padding" href="/linux/vm_to_router-hl/index.html">将虚拟机作为router</a></li>
+          <li data-nav-id="/linux/nested-hl/index.html" class=""><a class="padding" href="/linux/nested-hl/index.html">嵌套虚拟化</a></li>
+          <li data-nav-id="/linux/dns-hl/index.html" class=""><a class="padding" href="/linux/dns-hl/index.html">搭建本地 dns 服务器</a></li>
+          <li data-nav-id="/linux/nic_bond-hl/index.html" class=""><a class="padding" href="/linux/nic_bond-hl/index.html">网络端口聚合绑定</a></li>
+          <li data-nav-id="/linux/ramdisk-hl/index.html" class=""><a class="padding" href="/linux/ramdisk-hl/index.html">虚拟内存盘</a></li>
+          <li data-nav-id="/linux/mdadm-hl/index.html" class=""><a class="padding" href="/linux/mdadm-hl/index.html">软 raid</a></li></ul></li>
+          </ul>
+        </div>
+        <div class="padding footermargin footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter"></div>
+        <div id="R-menu-footer">
+          <hr class="padding default-animation footerLangSwitch footerVariantSwitch footerVisitedLinks footerFooter showFooter">
+          <div id="R-prefooter" class="footerLangSwitch footerVariantSwitch footerVisitedLinks">
+            <ul>
+              <li id="R-select-language-container" class="footerLangSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-language"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-language">Language</label>
+                    <select id="R-select-language" onchange="location = this.querySelector( this.value ).dataset.url;">
+                      <option id="R-select-language-en" value="#R-select-language-en" data-url="/ceph/ceph_deploy-hl/index.html" lang="zh_CN" selected></option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li id="R-select-variant-container" class="footerVariantSwitch">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-paint-brush"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <label class="a11y-only" for="R-select-variant">Theme</label>
+                    <select id="R-select-variant" onchange="window.variants && variants.changeVariant( this.value );">
+                      <option id="R-select-variant-auto" value="auto" selected>Auto</option>
+                    </select>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <script>window.variants && variants.markSelectedVariant();</script>
+              </li>
+              <li class="footerVisitedLinks">
+                <div class="padding menu-control">
+                  <i class="fa-fw fas fa-history"></i>
+                  <span>&nbsp;</span>
+                  <div class="control-style">
+                    <button onclick="clearHistory();">Clear History</button>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div id="R-footer" class="footerFooter showFooter">
+	    <p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <script src="/js/clipboard.min.js?1716876877" defer></script>
+    <script src="/js/perfect-scrollbar.min.js?1716876877" defer></script>
+    <script src="/js/theme.js?1716876877" defer></script>
+  </body>
+</html>
